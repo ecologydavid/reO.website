@@ -1,0 +1,45 @@
+re.O demo design specification — 2026-10-15
+Built-in ImageGen concept set: hero.png, collection.png, materials.png, editor.png.
+Direction: warm-white editorial product catalogue, graphite/olive typography,
+large Traditional Chinese serif headlines, square controls, real product photos.
+
+Tokens: paper #f5f3ed; ink #252d28; olive #53614d; rule #cdcec5;
+white #fff; muted #7d8178. Spacing 8/12/16/24/32/48/64/80.
+Typography: Noto Serif TC / Microsoft JhengHei serif fallback headlines;
+Noto Sans TC / Microsoft JhengHei UI. Desktop H1 82px, H2 44px,
+body 16px, controls 14px, UI section headings 16px. Mobile H1 46px.
+Header 90px, main gutters 48–72px. Hero 43/57 split, no overlay.
+Six open catalogue items in three columns; no card borders or floating frames.
+Material section two columns, then dark olive CTA band and minimal footer.
+Editor: 230px model rail, flexible photo canvas, 280px inspector;
+mobile: compact model strip, canvas, inspector. Meaningful controls only.
+Icons: custom consistent SVG outlines, 20px, stroke 1.5, currentColor.
+Motion: subtle photograph hover scale and 180ms UI transitions, reduced-motion aware.
+
+Allowed first-viewport copy:
+re.O; 公版獎盃; 循環材料; 關於我們; 排版預覽;
+讓榮耀，循環而生。; A NEW LIFE. A LASTING HONOR.;
+以再生材料，為每一份成就留下獨特印記。;
+探索公版獎盃; 開始排版;
+公版獎盃 A—F; 再生材料 × 循環設計; 台灣設計・製造.
+
+Implementation necessities / intentional differences from concepts:
+- Keep the hero navigation throughout downstream sections; generated section
+  references invented different navigation and language controls, which are omitted.
+- Use original official A–F product names, not generated poetic A–D aliases.
+- Use the archived official photographs rather than generated product approximations.
+- Actual photo preview overlays use explicitly stored per-model projected surfaces;
+  display the unchanged official red-area drawing alongside the material reference.
+- Add surface selector, F shape selector, save, undo/redo, logo upload and a
+  magnified plaque mode to support the requested editing workflow.
+- PDFs are preview confirmation sheets, not 1:1 production files.
+- Product variant colours are not invented. Demo uses one actual photo per model;
+  F's three official shapes have separate editable masks.
+
+Final prompts: the concepts were generated with the following coordinated brief:
+Taiwanese circular design brand re.O; warm white/graphite/olive editorial catalogue;
+hero with exact E trophies and headline/CTAs above; six actual A–F products;
+material origin/process story plus company contact band; full three-column
+interactive plaque editor with A–F choice, text/logo editing and PDF export.
+No hero badges, fake metrics, certifications, card clutter, tint or new claims.
+Product contact sheet was supplied as supporting reference, not an edit target.
