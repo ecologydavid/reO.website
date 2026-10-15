@@ -20,8 +20,8 @@ headline scales for real variable-length titles. Native1024 view verified.
 4. Logo grid: six open columns and fine rules ->40 authentic colored marks, six
 desktop/two mobile columns. Fixed tiny marks by measuring original blank margins
 and fitting original art on canvas, without retouching source files. Actual brand
-names replace invented sector captions. Mobile heading reduced30->28px to remove
-one-character orphan. Brand routes all stay in the site.
+names replace invented sector captions. Mobile heading reduced30->28px and final
+phrase grouped without breaking to remove the orphan. Brand routes stay in the site.
 5. Library: open three-column image index/filter/search ->9 genuine material pages,
 real original source photos replacing generated examples. Added source-backed
 industry-byproduct filter.144 on-demand routes, no heavy full-content initial load.
