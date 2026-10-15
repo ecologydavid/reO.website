@@ -1,10 +1,13 @@
 import {loadImage} from './render.js';
 import {objectBounds,textLayout} from './geometry.mjs';
 import {objectFits} from './constraints.mjs';
+import {ensureMaterialMaps,photoMaterialTexture} from './materialMaps.js';
+import {meshFrontFaces} from './modelGeometry.mjs';
 export function makeCanvas(w,h){const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));return c}
 export function polygonPath(ctx,polygon,w=1,h=1){ctx.beginPath();polygon.forEach(([x,y],i)=>i?ctx.lineTo(x*w,y*h):ctx.moveTo(x*w,y*h));ctx.closePath()}
 const textureCache=new Map();
-export function materialTexture(material,color){
+export function materialTexture(material,color,options={}){
+  const photo=photoMaterialTexture(material,color,options);if(photo)return photo;
   const key=material+color;if(textureCache.has(key))return textureCache.get(key);
   const c=makeCanvas(512,512),ctx=c.getContext('2d');ctx.fillStyle=color;ctx.fillRect(0,0,512,512);
   let seed=314159;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
@@ -41,11 +44,12 @@ export function drawObject(ctx,o,images){
   }ctx.restore();
 }
 export async function renderCanonicalSurface(surface,objects,{selection=null,withBackground=true}={}){
+  await ensureMaterialMaps();
   const c=makeCanvas(surface.width,surface.height),ctx=c.getContext('2d');
   const images=new Map(await Promise.all(objects.filter(o=>o.type==='image').map(async o=>[o.src,await loadImage(o.src)])));
   const overflow=objects.some(o=>!objectFits(o,surface,ctx));
   ctx.save();polygonPath(ctx,surface.polygon,c.width,c.height);ctx.clip();
-  if(withBackground)ctx.drawImage(materialTexture(surface.material,surface.fill),0,0,c.width,c.height);
+  if(withBackground)ctx.drawImage(materialTexture(surface.material,surface.fill,surface),0,0,c.width,c.height);
   objects.forEach(o=>drawObject(ctx,o,images));
   if(selection){
     const o=objects.find(o=>o.id===selection);
@@ -61,20 +65,24 @@ export async function fDecoration(scene){
 }
 export function frontPlacement(scene,width,height,padding=60){const scale=Math.min((width-padding*2)/scene.width,(height-padding*2)/scene.height);return {scale,x:(width-scene.width*scale)/2,y:(height-scene.height*scale)/2}}
 export async function renderCanonicalProduct(scene,documents,{width=800,height=1100,activeSurface=null,selection=null}={}){
+  await ensureMaterialMaps();
   const c=makeCanvas(width,height),ctx=c.getContext('2d'),placement=frontPlacement(scene,c.width,c.height);
   ctx.fillStyle='#eaece5';ctx.fillRect(0,0,c.width,c.height);ctx.save();ctx.translate(placement.x,placement.y);ctx.scale(placement.scale,placement.scale);
   const shadow=ctx.createRadialGradient(scene.width*.5,scene.height+12,0,scene.width*.5,scene.height+12,scene.width*.6);shadow.addColorStop(0,'#252d281c');shadow.addColorStop(1,'#252d2800');ctx.save();ctx.translate(0,scene.height*.86);ctx.scale(1,.15);ctx.fillStyle=shadow;ctx.fillRect(-scene.width,0,scene.width*3,scene.height);ctx.restore();
   if(scene.id==='F'){
-    ctx.save();ctx.beginPath();ctx.arc(500,500,500,0,Math.PI*2);ctx.clip();ctx.drawImage(materialTexture('stone',scene.fills.stone),0,0,1000,1000);ctx.restore();
+    ctx.save();ctx.beginPath();ctx.arc(500,500,500,0,Math.PI*2);ctx.clip();ctx.drawImage(materialTexture('stone',scene.fills.stone,{modelId:scene.id,finish:scene.finish}),0,0,1000,1000);ctx.restore();
     ctx.strokeStyle=scene.fills.metal;ctx.lineWidth=65;ctx.beginPath();ctx.arc(500,500,451,0,Math.PI*2);ctx.stroke();
     const count=scene.shape==='diamond'?20:scene.shape==='ridge'?72:32;
     for(let i=0;i<count;i++){const a=i/count*Math.PI*2;ctx.strokeStyle=i%2?'#ffffff30':'#252d2820';ctx.lineWidth=scene.shape==='diamond'?5:1.7;ctx.beginPath();ctx.moveTo(500+418*Math.cos(a),500+418*Math.sin(a));ctx.lineTo(500+483*Math.cos(a+.04),500+483*Math.sin(a+.04));ctx.stroke();}
     ctx.fillStyle='#c2a05d';ctx.fillRect(420,-110,160,142);ctx.fillStyle='#eaece5';ctx.fillRect(390,50,220,18);
+  }else if(scene.meshes?.length){
+    const faces=meshFrontFaces(scene.meshes);
+    for(const f of faces){ctx.save();polygonPath(ctx,f.points.map(([x,y])=>[x,y]));ctx.clip();const points=scene.meshes.filter(m=>m.material===f.material).flatMap(m=>m.vertices),ys=points.map(p=>p[1]),top=Math.min(...ys),bottom=Math.max(...ys);ctx.drawImage(materialTexture(f.material,scene.fills[f.material],{modelId:scene.id,finish:scene.finish,endgrain:f.group==='triangular-corner-cut'&&scene.id==='A'}),0,top,scene.width,bottom-top);const shade=.25+Math.max(0,f.normal[0]*-.36+f.normal[1]*.5+f.normal[2]*.8)*.75;ctx.fillStyle=`rgba(0,0,0,${Math.max(0,1-shade)*.5})`;ctx.fillRect(0,0,scene.width,scene.height);ctx.restore();}
   }else{
     for(const body of scene.bodies){ctx.save();polygonPath(ctx,body.polygon);ctx.clip();ctx.drawImage(materialTexture(body.material,scene.fills[body.material]),0,0,scene.width,scene.height);ctx.restore();ctx.strokeStyle='#252d2824';ctx.lineWidth=2;polygonPath(ctx,body.polygon);ctx.stroke();}
   }
-  const rendered=await Promise.all(scene.surfaces.map(async s=>[s.id,await renderCanonicalSurface(s,documents[s.id]||[],{withBackground:['metal','acrylic'].includes(s.material)})]));
-  for(const s of scene.surfaces){ctx.drawImage(rendered.find(([id])=>id===s.id)[1].canvas,s.x,s.y,s.displayWidth,s.displayHeight);if(activeSurface===s.id){ctx.save();ctx.translate(s.x,s.y);ctx.strokeStyle='#53614d';ctx.lineWidth=3/placement.scale;ctx.setLineDash([8/placement.scale,5/placement.scale]);polygonPath(ctx,s.polygon,s.displayWidth,s.displayHeight);ctx.stroke();ctx.restore();}}
+  const rendered=await Promise.all(scene.surfaces.map(async s=>[s.id,await renderCanonicalSurface(s,documents[s.id]||[],{withBackground:s.material==='metal'})]));
+  for(const s of scene.surfaces){if(s.material==='acrylic'){ctx.save();ctx.translate(s.x,s.y);polygonPath(ctx,s.polygon,s.displayWidth,s.displayHeight);ctx.fillStyle='#e8efeb38';ctx.fill();ctx.strokeStyle='#ffffff70';ctx.lineWidth=2;ctx.stroke();ctx.restore()}ctx.drawImage(rendered.find(([id])=>id===s.id)[1].canvas,s.x,s.y,s.displayWidth,s.displayHeight);if(activeSurface===s.id){ctx.save();ctx.translate(s.x,s.y);ctx.strokeStyle='#53614d';ctx.lineWidth=3/placement.scale;ctx.setLineDash([8/placement.scale,5/placement.scale]);polygonPath(ctx,s.polygon,s.displayWidth,s.displayHeight);ctx.stroke();ctx.restore();}}
   if(scene.id==='F')ctx.drawImage(await fDecoration(scene),0,0,1000,1000);
   ctx.restore();return {canvas:c,overflow:rendered.some(([,r])=>r.overflow),placement};
 }

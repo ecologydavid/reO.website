@@ -1,0 +1,26 @@
+V4 brief — 2026-10-16. Calibrate real XYZ model/materials from multi-view photos;
+all detail reading stays in new site; prominent40-logo wall; expanded navigation.
+References: v4-navigation-wall.png, v4-library.png, v4-article.png.
+Retain ivory#f4f1e9/ink#242923/rule#cbc8bd, Ming headings/sansUI; header104,
+official circle logo100 incl margins, 64px native1536 gutters, thin arrows.
+Existing hero/catalogue/IP/craft preserved except richer header/internal links.
+Editor chrome/layout/typing/draft/PDF retained.
+Nav6: 公版與訂製 / 企業與IP案例 / 循環材料 / 設計與工藝 / 關於 re.O /
+服務指南 + 排版工作室. Grouped mega menus contain real local destinations.
+Logo wall: original40logos, six columns desktop/two mobile, white cells/fine rules,
+generous original-color marks. No invented sector captions. All real relationships.
+Library: title/intro, subfilters/search, open3column photoindex, progressive12items;
+mobile singlecolumn. Article: breadcrumbs/source-grounded title/metadata table,
+image+intro/full sections/gallery/related LOCAL pages. No old-site readmore.
+Concept corrections: source-exact copy replaces generated example headlines;
+shared nav keeps all6groups (generator library/article omitted some). Actual nine
+material photographs replace generated examples. Article concept1024x1536;
+test actual width1536 desktop plus390 mobile. No generated asset in production.
+Content:167URLs/144routes,3unfilled policy templates held. Page JSON lazy loaded.
+Geometry: closedXYZ polyhedra, A/D/C facets, B wrapped stone/steeper top,
+E wedge/folded plates. One attachment basis per surface for 3D content and mask.
+Local document polygons preserved; only B/C product position adjusted.
+Photo color textures sampled from unlettered original regions at runtime, visual
+references rather than measured PBR/CAD. Original asset files not retouched.
+Verify: logo->case->fullbody/gallery/related; nav->material->article; search/filter;
+mobilemenu; A-F editor->color->3D/flat->text drag->PDF maintained.

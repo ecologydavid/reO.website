@@ -1,5 +1,6 @@
 import React,{useMemo,useState,useRef,useCallback,useEffect} from 'react';
 import models from '../data/models.json';
+import {contentHref} from '../components/site/navigation.js';
 import {getLayout} from '../data/geometry.js';
 import {getModelScene,defaultFinish,shapeChoices,stoneColors,metalColors} from '../data/canonical.js';
 import {defaultObjects} from './geometry.mjs';
@@ -91,6 +92,7 @@ export default function Editor({modelId,onModelChange,onHome}){
     </div>
     <input ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp" aria-label="上傳圖案檔案" className="file-input" onChange={upload}/>
     {notice?<div className="toast" role="status"><Icon name="check" size={18}/>{notice}</div>:null}
-    {reference?<div className="modal-backdrop" onClick={()=>setReference(false)}><section className="reference-modal" role="dialog" aria-modal="true" aria-labelledby="reference-title" onClick={e=>e.stopPropagation()}><div><h2 id="reference-title">{model.id} 款・官方客製範圍</h2><button className="icon-button" aria-label="關閉客製範圍" onClick={()=>setReference(false)}><Icon name="close"/></button></div><img src={model.referenceImage} alt={`${model.id} 款官網紅色客製範圍線稿`}/><details><summary>對照原始實品照片</summary><img src={model.photo} alt={`${model.id} 款官網實品照片`}/></details><p>紅色表示可排版區，不代表整片皆為金屬。A 上區為木面，D 下區為石面，F 客製區為透明壓克力。</p><p className="small-copy">模型依公開線稿視覺重建；局部尺寸、斜度與留邊仍需製作圖確認。</p><a className="text-control" href={model.source_url} target="_blank" rel="noopener noreferrer">查看原商品介紹<Icon name="arrow" size={16}/></a></section></div>:null}
+    {reference?<div className="modal-backdrop" onClick={()=>setReference(false)}><section className="reference-modal" role="dialog" aria-modal="true" aria-labelledby="reference-title" onClick={e=>e.stopPropagation()}><div><h2 id="reference-title">{model.id} 款・官方客製範圍</h2><button className="icon-button" aria-label="關閉客製範圍" onClick={()=>setReference(false)}><Icon name="close"/></button></div><img src={model.referenceImage} alt={`${model.id} 款官網紅色客製範圍線稿`}/><details><summary>對照原始實品照片</summary><img src={model.photo} alt={`${model.id} 款官網實品照片`}/></details><p>紅色表示可排版區，不代表整片皆為金屬。A 上區為木面，D 下區為石面，F 客製區為透明壓克力。</p><p className="small-copy">模型依實品多角度照片與線稿重建；局部尺寸、斜度與留邊仍需製作圖確認。</p><a className="text-control" href={contentHref(model.source_url)}>查看完整商品介紹<Icon name="arrow" size={16}/></a></section></div>:null}
   </div>;
 }
+

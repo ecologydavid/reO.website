@@ -44,3 +44,13 @@ statistics/certifications, excessive cards, gradients and promotional badges.
 ## Current homepage direction (v3)
 The rejected v2 cool gray and thin sans treatment is superseded. Use warm ivory, Ming/Song editorial headlines, authentic large enterprise/IP photographs, an open public catalogue, asymmetric portfolio work pairs and a dark craft/material band. Follow design/HOME-V3.txt. Preserve the official circle logo and verified relationships. Protect all editor functionality from future home-only redesigns.
 
+## Photo calibration and content migration (v4)
+The user supplied actual multi-angle photos and diagrams and requested more faithful
+geometry/material rendering. Preserve real A/D corner cuts, B wrapped stone, C depth
+facets and E tilted plates/folded foot. Use the same canonical layout in front, detail,
+3D and PDF. Photo-derived textures are visual references, not measured PBR/CAD.
+Detailed content must stay INSIDE this site. Never restore old re-o.co read-more links.
+Retain six navigation groups, searchable/filterable libraries, full articles and the
+prominent40-logo wall with verified relationships. Original empty policy templates
+must not be published as company policies. Follow design/V4.txt and V4-QA.txt.
+

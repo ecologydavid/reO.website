@@ -12,6 +12,6 @@ const paths={
   center:'M4 4h16M7 8h10M4 12h16M7 16h10M4 20h16',
   right:'M4 4h16M10 8h10M4 12h16M10 16h10M4 20h16',
   up:'M12 20V4m-6 6 6-6 6 6',down:'M12 4v16m-6-6 6 6 6-6',
-  check:'m4 12 5 5L20 6',expand:'M4 9V4h5m6 0h5v5M4 15v5h5m6 0h5v-5',
+  check:'m4 12 5 5L20 6',chevronDown:'m6 9 6 6 6-6',expand:'M4 9V4h5m6 0h5v5M4 15v5h5m6 0h5v-5',
 };
 export default function Icon({name,size=20,...props}) {return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}><path d={paths[name]||paths.arrow}/></svg>}

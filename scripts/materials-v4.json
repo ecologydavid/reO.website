@@ -1,0 +1,11 @@
+[
+ {"slug":"material-recycled-marble","title":"再生大理石","summary":"將大理石邊料研磨為粉末，再與樹脂結合，重新應用於獎盃、器物與品牌作品。","image":0},
+ {"slug":"glass","title":"回收玻璃","summary":"從回收玻璃與工廠報廢玻璃出發，透過熔製與再加工，延續透明材質的使用價值。","image":1},
+ {"slug":"coffee-waste","title":"咖啡渣","summary":"保留咖啡渣天然的棕色質感，探索植物性剩餘材料在生活器物中的應用。","image":2},
+ {"slug":"wooden-beam","title":"退役木橫擔","summary":"回收電線桿退役的木橫擔，保留木材原有的紋理與使用故事，重新轉化為設計物件。","image":3},
+ {"slug":"reservoir-silt","title":"水庫淤泥","summary":"以水庫清淤材料為起點，透過改質與製程轉化，探索礦物質地的再利用。","image":5},
+ {"slug":"wood-chips","title":"木屑","summary":"讓木材加工產生的剩餘木屑重新成形，延續木質纖維與自然色調。","image":6},
+ {"slug":"fly-ash","title":"煤灰","summary":"從火力發電產生的煤灰與底渣出發，透過材料分層與製程評估，尋找新的設計用途。","image":4},
+ {"slug":"wood-veneer-panel","title":"木頭拼板","summary":"將短小的木材邊料重新拼接，延續木材的使用壽命，應用於立體設計與生活物件。","image":7},
+ {"slug":"incineration-aggergates","title":"焚化再生粒料","summary":"將焚化底渣再生粒料帶入材料與產品開發，探索產業副產物的循環應用。","image":8}
+]

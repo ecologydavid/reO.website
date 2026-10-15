@@ -1,0 +1,70 @@
+V4 fidelity and functional verification — 2026-10-16
+
+Concepts: v4-navigation-wall.png (1536x1024), v4-library.png (1536x1024),
+v4-article.png (1024x1536). Browser/IAB screenshots at1536x1024,1024x1536,
+and390x844. Concepts and corresponding final screenshots inspected with view_image
+in the same QA pass. Evidence is in the task visualization directory /qa, filenames
+brands-v4-desktop.png, library-v4-final.png, article-v4-final.png,
+article-v4-native.png and matching *-mobile.png; editor-v4-A through F.png.
+
+Fidelity ledger (concept evidence -> implementation -> resolution):
+1. Header: circle logo, six groups, right studio arrow -> shared104px header with
+all six groups and internal mega links. Library/article concept omitted some groups;
+intentional correction to the navigation brief. Existing v3 UI font14px retained,
+12px at medium widths; mobile accordion below960px. No generated browser chrome.
+2. Palette: warm ivory and dark ink with thin rules -> #f4f1e9/#242923/#cbc8bd.
+No new gradients, tinted hero overlays, pills or decorative ornaments.
+3. Typography: Ming headline/sans information -> same established v3 type system.
+Article uses the actual source project title instead of generated editorial slogan;
+headline scales for real variable-length titles. Native1024 view verified.
+4. Logo grid: six open columns and fine rules ->40 authentic colored marks, six
+desktop/two mobile columns. Fixed tiny marks by measuring original blank margins
+and fitting original art on canvas, without retouching source files. Actual brand
+names replace invented sector captions. Mobile heading reduced30->28px to remove
+one-character orphan. Brand routes all stay in the site.
+5. Library: open three-column image index/filter/search ->9 genuine material pages,
+real original source photos replacing generated examples. Added source-backed
+industry-byproduct filter.144 on-demand routes, no heavy full-content initial load.
+Maintains useful reading space rather than compressing all nine rows into one view.
+6. Article: breadcrumb/title/metadata, left hero/right prose, full gallery and related
+content -> source-grounded title, complete text and original media. Images retain
+their natural aspect ratio. Removed8 unrelated/reference gallery images; corrected
+62 visible captions/alt text from the actual photos. Full layout extends vertically
+to accommodate complete content; this is intentional rather than a short mockup.
+7. Icons: consistent fine SVG arrows and chevrons, existing editor tool icons retained.
+8. Responsive: desktop/native portrait and390px mobile checked; no horizontal overflow,
+images load, six groups collapse into usable mobile accordion, article metadata stacks.
+
+Above-fold copy diff against allowed brief:
+Logo-wall title and descriptor unchanged. Real brand names replace placeholders.
+Library title/intro/CTA unchanged; extra industry filter and9-content count are
+functional additions recorded in V4 brief. Library copy uses verified source summaries.
+Article generated slogan is intentionally replaced by exact source title and actual
+first-section heading; complete source prose replaces generated illustrative prose.
+Shared six-group navigation supersedes incomplete generated library/article menus.
+No invented ESG statistics, certifications, cleaning promises or legal policies.
+
+Functional path exercised through IAB:
+6-group mega -> materials -> search coffee/filter wood; logo -> ASE full article ->
+gallery enlargement -> Tab focus trap/Escape and return focus; mobile menu -> brand
+wall -> article -> studio. Homepage/editor detail links resolve inside the new site.
+Home and brand wall DOM audit: zero old-site hrefs and broken images.
+A-F 3D/flat and material selections checked; F ridge/water/diamond contours switch.
+C text edited to 循環設計獎: detail and 3D both update, then Undo restores original.
+E PDF downloaded as3 A4 pages and first page rendered with Poppler/view_image;
+overall and both plate pages retain shared layout. Existing23 tests plus11 new
+content/mesh tests pass (34 total). No draft was saved or overwritten during QA.
+
+Material issues fixed during visual QA:
+C/F wide models clipped in narrow preview -> camera fits product width and viewport.
+Shadow acne -> shadow bias/normal bias and2048 shadow map.
+B coplanar wood/stone side flicker -> stone polygon offset; per-face side/top UVs.
+F overall acrylic was opaque gray -> translucent overall material; gray editing
+backdrop retained for white-ink legibility. Editor chrome unchanged.
+ResizeObserver callback after unmount -> null guard, followed by mount/unmount QA.
+Development watcher cached old textures -> restarted Vite and reloaded actual assets.
+
+Faithfully verified against the V4 design system and recorded source-copy corrections.
+No material layout mismatch remains. Intentional limitations: visual reconstruction
+from public photos/diagrams, not measured CAD or calibrated PBR. Stone/wood patterns
+vary between physical pieces. PDF is a visual approval sheet, not1:1 production CAD.

@@ -1,0 +1,18 @@
+from pathlib import Path
+import re
+p=Path(__file__).resolve().parents[1]/'src/components/Home.jsx';s=p.read_text(encoding='utf-8')
+s=s.replace("import Icon from './Icon.jsx';\nimport CaseDialog from './home/CaseDialog.jsx';","import SiteHeader from './site/SiteHeader.jsx';\nimport SiteFooter from './site/SiteFooter.jsx';\nimport LogoWall from './site/LogoWall.jsx';\nimport {contentHref} from './site/navigation.js';")
+s=s.replace("const [menu,setMenu]=useState(false),[activeCase,setActiveCase]=useState(null),[more,setMore]=useState(false),[service,setService]=useState(null);","const [more,setMore]=useState(false),[service,setService]=useState(null);")
+s=s.replace("const root=useRef(null),trigger=useRef(null);","const root=useRef(null);")
+s=s.replace("function openCase(c,element){trigger.current=element;setActiveCase(c)}","function openCase(c){window.location.hash=contentHref(c.source_url).slice(1)}")
+s=re.sub(r"  useEffect\(\(\)=>\{if\(!menu\)return;.*?\},\[menu\]\);\n",'',s)
+s=re.sub(r'<header className="folio-header folio-gutter">.*?</header>','<SiteHeader/>',s,flags=re.S)
+s=re.sub(r'<div className="folio-client-line".*?</div>','',s,flags=re.S)
+s=s.replace('<section className="folio-ip folio-gutter">','<LogoWall/><section className="folio-ip folio-gutter">')
+s=s.replace('href="https://www.re-o.co/pages/material" target="_blank" rel="noopener noreferrer"','href="#/explore/materials"')
+s=s.replace('href="https://www.re-o.co/pages/about" target="_blank" rel="noopener noreferrer"','href="#/read/pages/about"')
+s=re.sub(r'</main><footer className="folio-footer folio-gutter">.*?</footer>','</main><SiteFooter/>',s,flags=re.S)
+s=re.sub(r'\s*\{activeCase&&<CaseDialog.*?/>\}', '',s)
+s=s.replace('{materialLabels[m.id]}</p></article>','{materialLabels[m.id]}</p><a className="folio-product-detail-link" href={contentHref(m.source_url)}>查看商品詳情<Arrow/></a></article>')
+p.write_text(s,encoding='utf-8')
+print('Home now uses shared grouped navigation, local case routes, 40-logo wall and internal detail links')

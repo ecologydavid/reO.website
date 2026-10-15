@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync,existsSync} from 'node:fs';
+import {pages,findPage,collectionPages,editorFor} from '../src/content/catalogue.js';
+import {navigation,contentHref} from '../src/components/site/navigation.js';
+const root=new URL('../',import.meta.url);
+test('all migrated pages and local related links resolve without old-site redirects',()=>{assert.equal(pages.length,144);assert.equal(new Set(pages.map(p=>p.path)).size,144);for(const p of pages){const data=JSON.parse(readFileSync(new URL('public/content/pages/'+p.id+'.json',root),'utf8'));assert.equal(data.path,p.path);assert(data.sections.length||data.images.length,p.title);for(const l of data.links)assert(findPage(l.path),p.title+' -> '+l.path);for(const im of [data.hero,...data.images].filter(Boolean))assert(existsSync(new URL('public'+im.src,root)),im.src);}});
+test('six navigation groups lead to valid internal pages or collections',()=>{assert.equal(navigation.length,6);for(const n of navigation)for(const [,href] of n.links){assert(href.startsWith('#/'));if(href.startsWith('#/read/'))assert(findPage(href),href);if(href.startsWith('#/explore/'))assert(collectionPages(href.slice(10).split('?')[0]).length>0,href);}});
+test('nine material pages and64 case details exclude old listing indexes',()=>{assert.equal(collectionPages('materials').length,9);assert.equal(collectionPages('cases').length,64);});
+test('six standard products keep one-click access to every editor model',()=>{assert.deepEqual(collectionPages('standard').map(editorFor),['A','B','C','D','E','F']);});
+test('40 original logo entries retain valid local destinations and source artwork',()=>{const logos=JSON.parse(readFileSync(new URL('src/data/logo-wall.json',root),'utf8'));assert.equal(logos.length,40);for(const l of logos){assert(existsSync(new URL('public'+l.image.src,root)));if(l.href)assert(findPage(l.href),l.name);}});
+test('canonical old source URLs resolve to new internal paths',()=>{assert(findPage(contentHref('https://www.re-o.co/pages/ase-outstanding-supplier-trophy')));assert(findPage(contentHref('https://www.re-o.co/products/trophy-1')));});
