@@ -1,22 +1,26 @@
 import React from 'react';
 import Icon from '../components/Icon.jsx';
-function Field({label,children}) {return <label className="field"><span>{label}</span>{children}</label>}
-export default function Inspector({object,objects,onPatch,onSelect,onDuplicate,onDelete,onReorder,surface}) {
-  return <aside className="inspector"><h2>{object?.type==='image'?'圖案設定':'文字設定'}</h2>
-    {object ? <div className="property-fields">
-      {object.type==='text'?<>
-        <Field label="文字內容"><textarea aria-label="文字內容" value={object.text} onChange={event=>onPatch({text:event.target.value.slice(0,300)})} rows={3}/></Field>
-        <Field label="字體"><select aria-label="字體" value={object.font} onChange={event=>onPatch({font:event.target.value})}><option value="sans">黑體・清晰簡潔</option><option value="serif">明體・經典優雅</option></select></Field>
-        <Field label={`字級 ${Math.round(object.fontSize)}`}><input aria-label="字級" type="range" min="14" max="200" value={object.fontSize} onChange={event=>onPatch({fontSize:Number(event.target.value)})}/></Field>
-        <div className="split-field"><span>文字對齊</span><div className="segmented">{['left','center','right'].map((align,i)=><button key={align} aria-label={['靠左對齊','置中對齊','靠右對齊'][i]} aria-pressed={object.align===align} onClick={()=>onPatch({align})}><Icon name={align}/></button>)}</div><button className={`weight-control ${object.bold?'active':''}`} aria-label="粗體" aria-pressed={object.bold} onClick={()=>onPatch({bold:!object.bold})}>B</button></div>
-        <Field label="文字顏色"><div className="color-field"><input aria-label="文字顏色" type="color" value={object.color} onChange={event=>onPatch({color:event.target.value})}/><span>{object.color.toUpperCase()}</span></div></Field>
-      </>:<>
-        <p className="small-copy">{object.name||'上傳圖案'}<br/>拖曳圖案即可調整位置。</p>
-        <Field label={`圖案大小 ${Math.round(object.width)}`}><input aria-label="圖案大小" type="range" min="40" max="800" value={object.width} onChange={event=>{const width=Number(event.target.value);onPatch({width,height:width*object.height/object.width})}}/></Field>
-      </>}
-      <Field label={`旋轉 ${Math.round(object.rotation)}°`}><input aria-label="旋轉角度" type="range" min="-180" max="180" value={object.rotation} onChange={event=>onPatch({rotation:Number(event.target.value)})}/></Field>
-      <div className="object-actions"><button className="outline compact" onClick={()=>onPatch({x:surface.width/2,y:surface.height/2})}>銘版置中</button><button className="icon-button" aria-label="複製物件" onClick={onDuplicate}><Icon name="copy"/></button><button className="icon-button" aria-label="刪除物件" onClick={onDelete}><Icon name="trash"/></button></div>
-    </div>:<p className="empty-selection">點選預覽中的文字或圖案，<br/>開始調整你的排版。</p>}
-    <div className="layer-panel"><h2>圖層管理 <span>{objects.length}</span></h2><div className="layers">{[...objects].reverse().map(o=><button key={o.id} className={`layer-row ${o.id===object?.id?'selected':''}`} onClick={()=>onSelect(o.id)}><Icon name={o.type==='image'?'image':'text'} size={16}/><span>{o.type==='text'?o.text||'空白文字':o.name||'圖案'}</span><span className="layer-dot"/></button>)}</div><div className="layer-actions"><button className="text-control" disabled={!object} onClick={()=>onReorder(1)}><Icon name="up" size={16}/>上移一層</button><button className="text-control" disabled={!object} onClick={()=>onReorder(-1)}><Icon name="down" size={16}/>下移一層</button></div></div>
+function Field({label,children}){return <label className="field"><span>{label}</span>{children}</label>}
+function NumberField({label,value,min,max,step=1,onChange}){return <Field label={label}><input aria-label={label} type="number" min={min} max={max} step={step} value={Math.round(value*100)/100} onChange={e=>{if(e.target.value!==''&&Number.isFinite(e.target.valueAsNumber))onChange(Math.max(min,Math.min(max,e.target.valueAsNumber)))}}/></Field>}
+export default function Inspector({object,objects,onPatch,onPatchLayer,onSelect,onDuplicate,onDelete,onReorder,surface,onFit}){
+  const locked=object?.locked;
+  return <aside className="inspector"><h2>{object?.type==='image'?'圖案設定':'文字設定'}</h2>{object?<div className="property-fields">
+    {locked?<p className="locked-notice">物件已鎖定。<button onClick={()=>onPatch({locked:false})}>解除鎖定</button></p>:null}
+    <fieldset className="object-properties" disabled={locked}>
+    {object.type==='text'?<><Field label="文字內容"><textarea aria-label="文字內容" value={object.text} onChange={e=>onPatch({text:e.target.value.slice(0,300)})} rows={3}/></Field><Field label="字體"><select aria-label="字體" value={object.font} onChange={e=>onPatch({font:e.target.value})}><option value="sans">黑體・微軟正黑體</option><option value="serif">明體・新細明體</option><option value="kai">標楷體・書寫風格</option><option value="arial">Arial・西文無襯線</option><option value="georgia">Georgia・西文襯線</option><option value="mono">Courier New・等寬</option></select></Field>
+      <div className="font-size-field"><NumberField label="字級" value={object.fontSize} min={3} max={400} onChange={fontSize=>onPatch({fontSize})}/><input aria-label="字級滑桿" type="range" min="3" max="240" value={Math.min(240,object.fontSize)} onChange={e=>onPatch({fontSize:Number(e.target.value)})}/></div>
+      <div className="type-tools"><div className="type-style">{[['bold','粗體','B'],['italic','斜體','I'],['underline','底線','U']].map(([key,label,text])=><button key={key} aria-label={label} aria-pressed={!!object[key]} className={object[key]?'active':''} onClick={()=>onPatch({[key]:!object[key]})}>{text}</button>)}</div><div className="segmented">{['left','center','right'].map((align,i)=><button key={align} aria-label={['靠左對齊','置中對齊','靠右對齊'][i]} aria-pressed={object.align===align} onClick={()=>onPatch({align})}><Icon name={align} size={18}/></button>)}</div></div>
+      <div className="paired-fields"><NumberField label="行距" value={object.lineHeight||1.35} min={.8} max={3} step={.05} onChange={lineHeight=>onPatch({lineHeight})}/><NumberField label="字距" value={object.letterSpacing||0} min={-2} max={40} onChange={letterSpacing=>onPatch({letterSpacing})}/></div>
+      <Field label="文字方向"><select aria-label="文字方向" value={object.writingMode||'horizontal'} onChange={e=>onPatch({writingMode:e.target.value})}><option value="horizontal">橫排</option><option value="vertical">直排（由右至左）</option></select></Field>
+      <NumberField label="文字框寬度" value={object.boxWidth||surface.width*.8} min={30} max={surface.width} onChange={boxWidth=>onPatch({boxWidth})}/>
+      <Field label="文字顏色"><div className="color-field"><input aria-label="文字顏色" type="color" value={object.color} onChange={e=>onPatch({color:e.target.value})}/><span>{object.color.toUpperCase()}</span></div></Field>
+    </>:<><p className="small-copy">{object.name||'上傳圖案'}</p><NumberField label="圖案寬度" value={object.width} min={10} max={surface.width} onChange={width=>onPatch({width,height:width*object.height/object.width})}/></>}
+    <div className="paired-fields"><NumberField label="水平位置" value={object.x} min={0} max={surface.width} onChange={x=>onPatch({x})}/><NumberField label="垂直位置" value={object.y} min={0} max={surface.height} onChange={y=>onPatch({y})}/></div>
+    <NumberField label="旋轉角度" value={object.rotation} min={-180} max={180} onChange={rotation=>onPatch({rotation})}/>
+    <div className="object-actions"><button className="outline compact" onClick={onFit}>符合輪廓</button><button className="icon-button" aria-label="複製物件" onClick={onDuplicate}><Icon name="copy"/></button><button className="icon-button" aria-label="刪除物件" onClick={onDelete}><Icon name="trash"/></button></div>
+    </fieldset>
+  </div>:<p className="empty-selection">選取特寫中的文字或圖案，<br/>開始調整排版。</p>}
+    <div className="layer-panel"><h2>圖層管理<span>{objects.length}</span></h2><div className="layers">{[...objects].reverse().map(o=><div key={o.id} className={`layer-line ${o.id===object?.id?'selected':''}`}><button className="layer-select" onClick={()=>onSelect(o.id)}><Icon name={o.type==='image'?'image':'text'} size={15}/><span>{o.type==='text'?o.text||'空白文字':o.name||'圖案'}</span></button><button className="layer-lock" aria-label={`${o.locked?'解鎖':'鎖定'} ${o.type==='text'?o.text:o.name}`} aria-pressed={!!o.locked} onClick={()=>{onSelect(o.id);onPatchForLayer(o)}}>{o.locked?'已鎖':'鎖定'}</button></div>)}</div><div className="layer-actions"><button className="text-control" disabled={!object} onClick={()=>onReorder(1)}><Icon name="up" size={15}/>上移一層</button><button className="text-control" disabled={!object} onClick={()=>onReorder(-1)}><Icon name="down" size={15}/>下移一層</button></div></div>
   </aside>;
+  function onPatchForLayer(o){onPatchLayer(o.id,{locked:!o.locked})}
 }

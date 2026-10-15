@@ -11,5 +11,6 @@ export default function useHistory(initial) {
   // Capture before changing the ref: React may evaluate queued updaters later.
   const undo=()=>{if(!past.length)return;const previous=current.current,next=past[past.length-1];setFuture(f=>[previous,...f]);setPast(p=>p.slice(0,-1));current.current=next;setState(next)};
   const redo=()=>{if(!future.length)return;const previous=current.current,next=future[0];setPast(p=>[...p,previous]);setFuture(f=>f.slice(1));current.current=next;setState(next)};
-  return {state,change,checkpoint,undo,redo,canUndo:past.length>0,canRedo:future.length>0};
+  const getState=useCallback(()=>current.current,[]);
+  return {state,getState,change,checkpoint,undo,redo,canUndo:past.length>0,canRedo:future.length>0};
 }

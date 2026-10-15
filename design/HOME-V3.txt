@@ -1,0 +1,39 @@
+HOME V3 — 2026-10-16
+Accepted working concepts: home-{hero,catalogue,works,ip,craft}-v3.png.
+Direction: warm industrial design portfolio; actual official circle logo, original
+enterprise photographs, open editorial layouts, asymmetric work pairs, a dark
+artisan band. The rejected v2 cool gray/thin sans direction is superseded.
+Color lock: ivory #f4f1e9, charcoal #242923, muted #74776f, rule #cbc8bd.
+Typography: Ming/Song Chinese serif headings, sans UI/body, Georgia letters.
+Desktop: 64px gutters at1536; header104; h1 88/1.3; h2 56/1.35; UI14–16;
+body16–18; captions12–14. No radii/shadows/cards/badges/eyebrows. Thin arrow
+stroke1.2; underline links; optional circular work arrows. Whitespace40/64/96.
+Hero allowed copy: 公版獎盃 / 企業案例 / 循環材料 / 關於 re.O / 排版工作室;
+重新看見，材料的可能。; 從循環材料研發、產品設計，到職人手作。
+讓品牌心意，化為可珍藏的作品。; 探索公版獎盃 / 進入排版工作室;
+台達｜50週年模範獎座; 水庫淤泥 × 金色鋁材銘版.
+Sections: hero > A–F > enterprise cases > IP > materials/craft > about/contact.
+Catalogue: real A–F photos, letters, names, reference prices, always visible CTA.
+Works: ASE and Pinkoi asymmetric pair; actual PwC/SDGs additional works; optional
+expanded list for Delta, Uber Eats (Agility commissioned), Tmall. Real clientlogos.
+IP: HOLA commissions for Disney/Marvel; Golden Horse×Pinkoi separate case.
+Materials9: 再生大理石/回收玻璃/咖啡渣/退役木橫擔/煤灰/水庫淤泥/木屑/
+木頭拼板/焚化再生粒料. Services3: 材料研發/產品設計/製造組裝.
+Awards: 2018金點設計獎積木收納;2019金點設計獎摺紙花器;
+2024台北亮點企業潛力企業獎. Do not claim the SDGs trophy as our award.
+Mobile: same hierarchy; stacked title/copy; two public products per row; single
+column works; materials3 columns; contacts wrap. Mobile menu accessible.
+Interaction inventory: section navigation, A–F editor routes, work detail modal
+with image/material/story/source, expanded remaining cases, material service
+details, email/tel, close/Escape/focus return. Editor remains scoped and protected.
+Media: ALL production images real official photographs, no overlays or tints.
+Intentional corrections to generated concepts: catalogue's fabricated A/C objects,
+prices/names and PwC thumbnail replaced by source data; real photo proportions
+and white Delta backdrop preserved. IP generator could not render supplied IP
+photos, so a fresh typography/placeholder concept defines layout; implementation
+inserts original licensed-case photographs. No generated image used as site asset.
+Comparison checks: header/official logo; hero Ming hierarchy/actions; open six
+product grid; asymmetric case rhythm; genuine IP frames; dark craft/light footer.
+
+Final fidelity review: concept and latest native1536 screenshots viewed together. Passed: official circle/header rules; two-line Ming hero and two actions; real full Delta silhouette with original white backdrop; open A-F catalogue and source prices; asymmetric real enterprise/IP photographs; charcoal craft band and ivory about/footer. Native photograph aspect ratios take priority over generated distortions. Type is scaled to actual browser readability; desktop h2 now64px, materials18px. Copy diff: only source-corrected catalogue names/prices, verified additional cases, material/service descriptions, official awards/contact, and required functional accessibility labels. No invented claims/badges. IAB desktop1536/mobile390: menu/anchors/case modal/Escape/focus return/more works/material details/editor entry passed; no horizontal overflow or broken images. Editor: live draft save/restore, legacy preservation, image drag/undo/redo, shape bounds, official finishes, E3-page/F2-page PDF and actual3D verified.23tests pass; build succeeds. Three is lazy and its578KB chunk is intentional.
+

@@ -1,0 +1,173 @@
+[
+  {
+    "id": "ase",
+    "brand": "日月光 ASE",
+    "project": "最佳供應獎盃",
+    "year": "2026",
+    "relationship": "官網明載客戶為日月光，專料訂製案例",
+    "safe_caption": "日月光 ASE｜最佳供應獎盃",
+    "source_url": "https://www.re-o.co/pages/ase-outstanding-supplier-trophy",
+    "materials": [
+      "廠內回收二氧化矽粉末",
+      "大理石粉末",
+      "壓克力"
+    ],
+    "story": "將日月光廠內回收的二氧化矽與石粉配比，透過四塊立體結構和透明中央面，回應品牌的放射光芒。",
+    "photo": "/assets/case-ase.webp",
+    "originalPhoto": "research/assets/69eae857e665a388984cd1b2.webp",
+    "logo": "/assets/client-ase.webp"
+  },
+  {
+    "id": "pinkoi",
+    "brand": "Pinkoi",
+    "project": "Pinkoi Design Awards 設計獎獎盃",
+    "year": "2023–2025",
+    "relationship": "官網明載客戶為Pinkoi，專案訂製案例",
+    "safe_caption": "Pinkoi｜Design Awards 設計獎",
+    "source_url": "https://www.re-o.co/pages/pinkoi-trophy",
+    "materials": [
+      "再生大理石",
+      "金銀銅色銘版"
+    ],
+    "story": "由三角支點向上延伸至品牌標誌，結合專屬藍色與再生大理石紋理，將設計獎的三個評選面向化成立體語彙。",
+    "photo": "/assets/case-pinkoi.webp",
+    "originalPhoto": "research/assets/692d2bcc2289fd0e1ee95c19.jpg",
+    "logo": "/assets/client-pinkoi.webp"
+  },
+  {
+    "id": "pwc",
+    "brand": "資誠 PwC Taiwan",
+    "project": "永續影響力獎盃",
+    "year": "2021–2025",
+    "relationship": "官網明載客戶為資誠會計，專案訂製案例",
+    "safe_caption": "資誠｜永續影響力獎",
+    "source_url": "https://www.re-o.co/pages/pwc-taiwan-trophy",
+    "materials": [
+      "再生大理石"
+    ],
+    "story": "莫比烏斯環的立體結構，從正面轉化為無限記號，用再生材料承載循環與跨域連結。",
+    "photo": "/assets/case-pwc.webp",
+    "originalPhoto": "research/assets/692d2e6d756632a94245273b.jpg",
+    "logo": "/assets/client-pwc.webp"
+  },
+  {
+    "id": "delta",
+    "brand": "台達 Delta",
+    "project": "50週年模範獎座",
+    "year": "2021",
+    "relationship": "官網明載客戶為台達，專案訂製案例",
+    "safe_caption": "台達｜50週年模範獎座",
+    "source_url": "https://www.re-o.co/pages/delta-energy-award-plaque",
+    "materials": [
+      "水庫淤泥",
+      "金色鋁材銘版"
+    ],
+    "story": "以數字50的高低差和前後層次組合紀念里程碑，將水庫淤泥轉化為可長久留存的器物。",
+    "photo": "/assets/case-delta.webp",
+    "originalPhoto": "research/assets/692d34300f03089d9617cb1e.jpg",
+    "logo": "/assets/client-delta.webp"
+  },
+  {
+    "id": "disney-hola",
+    "brand": "Disney × HOLA",
+    "project": "米奇再生大理石桌鐘",
+    "year": "2021",
+    "relationship": "直接客戶HOLA和樂家具；官網寫明Disney官方授權、HOLA合作設計製作",
+    "safe_caption": "HOLA × Disney｜米奇再生大理石桌鐘",
+    "source_url": "https://www.re-o.co/pages/mickey-desk-clock",
+    "materials": [
+      "再生大理石",
+      "官方授權米奇雕塑",
+      "台灣製靜音機芯"
+    ],
+    "story": "幾何窗框與自然石紋，為經典角色建立可融入生活的展示方式。",
+    "photo": "/assets/case-disney-hola.webp",
+    "originalPhoto": "research/assets/6971fbd3072edada44c669b2.jpg",
+    "logo": "/assets/client-disney-hola.webp"
+  },
+  {
+    "id": "marvel-hola",
+    "brand": "Marvel × HOLA",
+    "project": "鋼鐵人水庫淤泥桌鐘",
+    "year": "2021",
+    "relationship": "直接客戶HOLA和樂家具；官網寫明Disney Marvel官方授權、HOLA合作設計製作",
+    "safe_caption": "HOLA × Marvel｜鋼鐵人水庫淤泥桌鐘",
+    "source_url": "https://www.re-o.co/pages/iron-man-desk-clock",
+    "materials": [
+      "水庫淤泥",
+      "台灣製靜音機芯"
+    ],
+    "story": "以反應爐作為時計造型，讓水庫淤泥的礦物質地與角色的科技語彙形成對話。",
+    "photo": "/assets/case-marvel-hola.webp",
+    "originalPhoto": "research/assets/692814d2214ad63272e35404.jpg",
+    "logo": "/assets/client-marvel-hola.webp"
+  },
+  {
+    "id": "golden-horse",
+    "brand": "台北金馬影展 × Pinkoi",
+    "project": "金馬造型擴香紙鎮／Pinkoi 驫向金馬禮盒",
+    "year": "2025",
+    "relationship": "官網記載台北金馬影展客戶，Pinkoi與金馬影展攜手匠子CHANZ STUDIO及麒麟山告解室本家；應呈現具名禮盒案例",
+    "safe_caption": "台北金馬影展 × Pinkoi｜金馬造型擴香紙鎮",
+    "source_url": "https://www.re-o.co/pages/golden-horse-diffuser",
+    "materials": [
+      "黑石膏",
+      "珠光金粉"
+    ],
+    "story": "把影展標誌化為立體輪廓，以手工雕刻、金粉混色和打磨留下各不相同的紋理。",
+    "photo": "/assets/case-golden-horse.webp",
+    "originalPhoto": "research/assets/69574294c212319fc6320c99.jpg",
+    "logo": "/assets/client-golden-horse.webp"
+  },
+  {
+    "id": "uber-eats",
+    "brand": "Uber Eats／快點行銷 Agility",
+    "project": "Uber Eats 商家合作夥伴獎盃",
+    "year": "2025",
+    "relationship": "直接客戶快點行銷Agility，專案訂製；Uber Eats為獎項品牌",
+    "safe_caption": "Uber Eats 商家合作夥伴獎｜快點行銷委製",
+    "source_url": "https://www.re-o.co/pages/uber-eats-trophy",
+    "materials": [
+      "北美黃檜木拼板",
+      "石粉",
+      "壓克力"
+    ],
+    "story": "將熟悉的手機介面轉化成立體品牌標誌，結合回收黃檜木拼板夾層與專屬包裝。",
+    "photo": "/assets/case-uber-eats.webp",
+    "originalPhoto": "research/assets/69f2f4ff9ebc63344af28b35.webp",
+    "logo": "/assets/client-uber-eats.webp"
+  },
+  {
+    "id": "national-sdgs",
+    "brand": "行政院國家永續發展委員會",
+    "project": "國家永續發展獎獎盃",
+    "year": "2024–2025",
+    "relationship": "官網明載客戶為行政院國家永續發展委員會，專案訂製案例；不是re.O獲得國家永續發展獎",
+    "safe_caption": "行政院國家永續發展委員會｜國家永續發展獎獎盃",
+    "source_url": "https://www.re-o.co/pages/national-sustainability-award",
+    "materials": [
+      "白色再生大理石"
+    ],
+    "story": "十八邊形底座旋轉漸變為圓形，配合手工凹刻上色，把台灣SDGs目標轉化為造型。",
+    "photo": "/assets/case-national-sdgs.webp",
+    "originalPhoto": "research/assets/693157b77afcea001040ecfb.jpg",
+    "logo": "/assets/client-national-sdgs.webp"
+  },
+  {
+    "id": "tmall",
+    "brand": "天貓 Tmall",
+    "project": "超級ONE再生大理石獎盃",
+    "year": "2020",
+    "relationship": "官網明載客戶為天貓，專案訂製案例",
+    "safe_caption": "天貓｜超級ONE獎盃",
+    "source_url": "https://www.re-o.co/pages/tmall-super-one-trophy",
+    "materials": [
+      "再生大理石",
+      "3D列印電鍍零件"
+    ],
+    "story": "線條化品牌標誌與分件電鍍組裝，呈現材料、數位製作及精密工藝的整合。",
+    "photo": "/assets/case-tmall.webp",
+    "originalPhoto": "research/assets/69281915468acb00123e948a.jpg",
+    "logo": "/assets/client-tmall.webp"
+  }
+]

@@ -18,11 +18,23 @@ export function invert(m) {
   if(Math.abs(det)<1e-12)throw new Error('Invalid projection');
   return out.map(v=>v/det);
 }
+export const fontFamilies={sans:'"Microsoft JhengHei", "Noto Sans TC", sans-serif',serif:'"PMingLiU", "Noto Serif TC", serif',kai:'"DFKai-SB", "KaiTi", serif',arial:'Arial, "Microsoft JhengHei", sans-serif',georgia:'Georgia, "PMingLiU", serif',mono:'"Courier New", "Microsoft JhengHei", monospace'};
+export function textLayout(o,ctx){
+  ctx.font=`${o.italic?'italic ':''}${o.bold?600:400} ${o.fontSize}px ${fontFamilies[o.font]||fontFamilies.sans}`;
+  const spacing=o.letterSpacing||0,measure=t=>ctx.measureText(t).width+Math.max(0,Array.from(t).length-1)*spacing;
+  const vertical=o.writingMode==='vertical';
+  const limit=Math.max(o.fontSize,o.boxWidth||1000),lines=[];
+  for(const paragraph of o.text.split('\n')){
+    if(vertical){lines.push(paragraph);continue;}
+    let line='';for(const char of Array.from(paragraph)){if(line&&measure(line+char)>limit){lines.push(line);line=char}else line+=char;}lines.push(line);
+  }
+  const step=o.fontSize*(o.lineHeight||1.35),length=Math.max(1,...lines.map(x=>Array.from(x).length));
+  return {lines,measure,step,width:vertical?Math.max(1,lines.length)*step:Math.max(12,...lines.map(measure)),height:vertical?length*o.fontSize+Math.max(0,length-1)*spacing:Math.max(1,lines.length)*step};
+}
 export function objectBounds(o,ctx) {
   if(o.type==='image')return {width:o.width,height:o.height};
-  ctx.font=`${o.bold?600:400} ${o.fontSize}px ${o.font==='serif'?'"Noto Serif TC", "PMingLiU", serif':'"Microsoft JhengHei", "Noto Sans TC", sans-serif'}`;
-  const lines=o.text.split('\n');
-  return {width:Math.max(20,...lines.map(t=>ctx.measureText(t).width)),height:Math.max(1,lines.length)*o.fontSize*1.35};
+  const b=textLayout(o,ctx),pad=o.italic?o.fontSize*.22:0;
+  return {width:b.width+pad*2,height:b.height};
 }
 export function hitObject(o,x,y,ctx) {
   const {width,height}=objectBounds(o,ctx),a=-o.rotation*Math.PI/180;
@@ -32,7 +44,7 @@ export function hitObject(o,x,y,ctx) {
 }
 export function defaultObjects(surface) {
   const w=surface.width,h=surface.height;
-  const base={type:'text',color:surface.ink||(surface.fill==='#4b4b49'?'#f5f3ed':'#252d28'),font:'sans',bold:false,rotation:0,align:'center'};
+  const base={type:'text',color:surface.ink||(surface.fill==='#4b4b49'?'#f5f3ed':'#252d28'),font:'sans',bold:false,italic:false,underline:false,letterSpacing:0,lineHeight:1.35,boxWidth:w*.8,writingMode:'horizontal',rotation:0,align:'center'};
   const font=Math.min(w/6.8,h/4.4);
   return [
     {...base,id:'year',text:'2026',x:w*.5,y:h*.24,fontSize:font*.55},

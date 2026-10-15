@@ -1,0 +1,26 @@
+User request: editor first, then a new professional portfolio home. Prior v2 home
+is rejected except its actual official circular logo. Keep all editor capabilities.
+
+Editor concept editor-v3.png: built-in ImageGen. Prompt: warm-white/graphite/olive
+existing editor; official circle logo; left A–F rail; simultaneous overall + detail;
+orthographic/3D selector; richer typography; correct shared plaque geometry;
+official product variants; right inspector; code-native labels, no card clutter.
+Native concept 1536x1024. Header 86px, rail 190–210px, inspector 280px, center
+open two-column canvas. Preserve #f5f3ed/#252d28/#53614d and existing serif headings.
+Actual flat/3D product models replace generated B illustration as required by user.
+Body widths/heights and plaque positions come from audited official diagrams.
+No concept-generated subtitles/ornaments, eye/lock controls unless implemented.
+
+All modes share canonical-models.json surface polygon + product placement and the
+same renderSurface output. A upper=wood, D lower=stone, F=acrylic. Front is native
+Canvas geometry; 3D is Three.js extrusion and CanvasTexture, lazy loaded. Geometry
+is a public-diagram visual reconstruction, never a machining/CAD file. Default
+product mode front to make shape agreement immediately inspectable.
+Typography: six family choices including Kai and three Latin families, numeric
+size, bold/italic/underline, paragraph alignment, line/letter spacing, horizontal
+or vertical writing, rotation, position and fit. Objects stay inside actual polygon.
+Official variants only; E black/gold and white/silver, D and F white/black/green
+with gold/silver/copper, A six wood/stone, B/C white/black stone and fixed gold.
+Draft schema v3 retained separately from original v1 to avoid corrupting old layouts.
+
+Functional additions: original v1 drafts remain untouched; a reversible legacy restore control is available when a backup exists. Save/PDF capture the latest history ref, including an unpainted final keystroke, to avoid stale data. Transparent acrylic uses a clearly labeled gray inspection backing for legibility; its metal colors apply to the metal layer.
