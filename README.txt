@@ -37,3 +37,5 @@ pnpm build
 
 Windows 隨附執行環境無全域 npm 時，可直接執行 bundled pnpm.mjs。
 依賴安裝的 esbuild 執行權限已明確列於 pnpm-workspace.yaml。
+
+2026-10-16 視覺改版：首頁採 Panasonic Archi Design 參考的冷灰、輕黑體、留白與大幅實拍照片。正式 logo 為官網原圖。新版規格與概念位於 design/DESIGN-V2.txt 及 *-v2.png。編輯器維持既有設計；核心保留要求已記錄於 AGENTS.md。修正復原/重做的快照擷取時機，避免重做遺失圖層。

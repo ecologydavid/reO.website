@@ -1,0 +1,7 @@
+2026-10-16 — user-approved protected core
+The current plaque editor's functionality and visual layout must survive changing
+the website template. The explicit project instruction is recorded in ../AGENTS.md
+at the prototype root and also in the parent workspace's AGENTS.md.
+Preserve A–F, accurate plaque geometry, F shapes, text/image layout, live preview,
+draft save, undo/redo, mobile editing and PDF download.
+For home-only restyling, leave editor code, data, photos/masks and CSS untouched.

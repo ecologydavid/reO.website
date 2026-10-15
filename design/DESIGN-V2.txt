@@ -1,0 +1,45 @@
+re.O — Architectural editorial direction, 2026-10-16
+
+References: Panasonic Archi Design about page, inspected in browser. Adopt its
+cool neutral space, quiet sans type, asymmetry and photographic storytelling.
+Avoid copying its brand, electrical products, claims or scroll locking.
+Built-in ImageGen concepts: hero-v2.png, collection-v2.png, materials-v2.png.
+Prompt set: calm Japanese architectural editorial, #f3f4f5, graphite, light sans,
+official re.O circular logo, actual E photo, A–F catalogue, powder/material story,
+three process rows and restrained CTA/contact. No gradients, cards, badges or ESG
+numbers. Sections generated independently with hero-v2 as shared style reference.
+
+Design system before implementation
+- Canvas cool almost-white #f3f4f5; ink #303332; muted #777b7c; fine rules #b9bcbf.
+- No tint/overlay on photographs. Official original product/material photos.
+- Actual official circular logo PNG, displayed with multiply to blend white pixels.
+- Sans Microsoft JhengHei / Noto Sans TC; H1 68–72/1.4 weight 300; H2 44–48/1.4;
+  body 16–18/1.9; navigation 14; captions 11–12; controls 14, explicit typography.
+- Header ~128px; 4.5% desktop gutters; hero 38/62 asymmetry and 4:3 media;
+  breathing space 64/96/120; catalogue 3 columns, no card containers.
+- Arrow motif is code-native outline SVG 1.2px, long shaft; underlined links.
+- Material photo 50% / text 50%; process rows; pale gray CTA; small logo footer.
+- Motion only reveal on natural scroll + image hover; reduced-motion respected.
+- Mobile <=700px: logo/navigation button; copy then photo; 1-column catalogue,
+  material image then text, stacked company/footer. No horizontal scroll trap.
+
+Allowed opening copy (order)
+Navigation: 公版獎盃 / 循環材料 / 關於 re.O / 排版預覽
+Hero: 讓材料新生， / 讓榮耀永續。
+Body: 從再生材料出發， / 為每一份成就，留下獨特印記。
+Actions: 探索公版獎盃 / 開始排版
+Captions: re.O 循環設計 / The way to PEAK — 再生大理石 × 金屬鋁片
+
+Required intentional differences
+- Generated catalogue product approximations are replaced with exact real A–F
+  photographs and verified material names/prices; use 4:3 to retain entire objects.
+- A price is official range NT$2,500–2,800; F remains round medal, C desk award.
+- Remove generated catalogue duplicate header/footer captions when stitching.
+- Material/process copy stays factual; no generated claims about long life or CO2.
+- Extra material overview accessible via a real disclosure; contact email opens mail.
+- Keep current editor design/code/styles completely unchanged, including fonts,
+  photos, plaque projection, F masks, local drafts and PDF. Home CSS is isolated.
+- Normal page scrolling replaces reference's lengthy full-screen scroll sequence
+  so products and editing remain immediately accessible on mouse/mobile/keyboard.
+
+Observed regression repaired: useHistory captured mutable current.current inside queued undo/redo/checkpoint updaters. Capture immutable snapshots before queuing; preserve editor UI and all geometry. Browser verify undo removes uploaded image and redo restores the same layer.
