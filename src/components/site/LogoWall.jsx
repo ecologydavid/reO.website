@@ -5,6 +5,9 @@ import BrandMark from './BrandMark.jsx';
 import './brand-wall.css';
 const priority=['ase','delta','pwc','pinkoi','fubon','hola','disney','tmall','taipower','iii'];
 const ordered=[...logos].sort((a,b)=>{const x=priority.indexOf(a.id),y=priority.indexOf(b.id);return (x<0?99:x)-(y<0?99:y)});
+const glassTones=['ivory','jade','ivory','smoke','ivory','jade','smoke','ivory','jade','ivory','smoke','ivory'];
+const aggregate='/assets/brand-aggregate.svg';
+const mineral='/assets/brand-slab-ivory.png';
 // Tangent strips close the rounded perimeter between the two glass faces.
 const corners=[['right','bottom',0],['left','bottom',90],['left','top',180],['right','top',270]].flatMap(([x,y,start])=>Array.from({length:6},(_,i)=>{
  const angle=start+(i+.5)*15,radians=angle*Math.PI/180;
@@ -12,7 +15,7 @@ const corners=[['right','bottom',0],['left','bottom',90],['left','top',180],['ri
  return {left:`calc(${x==='right'?'100% - var(--slab-radius)':'var(--slab-radius)'} + var(--slab-radius) * ${cx})`,top:`calc(${y==='bottom'?'100% - var(--slab-radius)':'var(--slab-radius)'} + var(--slab-radius) * ${cy})`,transform:`translate(-50%,-50%) rotateZ(${angle}deg) rotateY(90deg)`,'--edge-light':`${Math.round(65-20*Math.cos(radians-1))}%`};
 }));
 
-function BrandSlab({logo}){
+function BrandSlab({logo,index}){
  const [opening,setOpening]=useState(false),timer=useRef(null);
  useEffect(()=>()=>clearTimeout(timer.current),[]);
  const Tag=logo.href?'a':'button';
@@ -27,14 +30,15 @@ function BrandSlab({logo}){
   event.preventDefault();if(opening)return;
   setOpening(true);timer.current=setTimeout(()=>{window.location.hash=logo.href.slice(1)},800);
  }
- return <article className={`site-logo-cell slab-glass${['muke','dcc'].includes(logo.id)?' slab-smoke':''}`}>
+ const tone=logo.id==='muke'?'bottle':logo.id==='dcc'?'contrast':glassTones[index%glassTones.length];
+ return <article className={`site-logo-cell slab-glass slab-${tone}`} style={{'--aggregate-x':`${index*73%230}px`,'--aggregate-y':`${index*119%230}px`}}>
   <Tag className={`slab-link${opening?' is-opening':''}`} href={logo.href||undefined}
    aria-label={logo.href?`閱讀 ${logo.name} 合作案例`:`查看 ${logo.name} 合作資訊`}
    aria-expanded={!logo.href?opening:undefined} title={logo.project||logo.name}
    onClick={activate}>
    <span className="slab-surface" aria-hidden="true"><span className="slab-rotor">
-    <span className="slab-face slab-front"><span className="slab-logo"><BrandMark image={logo.image} name={logo.name}/></span></span>
-    <span className="slab-face slab-back"><span className="slab-back-logo"><BrandMark image={logo.image} name={logo.name}/></span><span className="slab-project">{projectTail?<>{projectTail[1]}<span className="project-tail">{projectTail[2]}</span></>:project}</span></span>
+    <span className="slab-face slab-front"><span className="slab-granules"/><span className="slab-logo"><BrandMark image={logo.image} name={logo.name}/></span></span>
+    <span className="slab-face slab-back"><span className="slab-granules"/><span className="slab-back-logo"><BrandMark image={logo.image} name={logo.name}/></span><span className="slab-project">{projectTail?<>{projectTail[1]}<span className="project-tail">{projectTail[2]}</span></>:project}</span></span>
     <span className="slab-edge slab-edge-left"/><span className="slab-edge slab-edge-right"/><span className="slab-edge slab-edge-top"/><span className="slab-edge slab-edge-bottom"/>
     {corners.map((style,i)=><span className="slab-edge slab-corner" key={i} style={style}/>)}
    </span></span>
@@ -43,9 +47,9 @@ function BrandSlab({logo}){
 }
 
 export default function LogoWall({standalone=false}){
- return <section className={`site-brand-wall material-wall folio-gutter ${standalone?'standalone':''}`} id="brands">
+ return <section className={`site-brand-wall material-wall folio-gutter ${standalone?'standalone':''}`} id="brands" style={{'--aggregate-texture':`url("${aggregate}")`,'--mineral-texture':`url("${mineral}")`}}>
   <div className="folio-section-heading"><h2>與不同品牌，<br/>共同完成值得<span style={{whiteSpace:'nowrap'}}>留下的作品。</span></h2><p>企業委製、品牌合作與授權設計案例。</p></div>
-  <div className="site-logo-grid">{ordered.map(logo=><BrandSlab logo={logo} key={logo.id}/>)}</div>
+  <div className="site-logo-grid">{ordered.map((logo,index)=><BrandSlab logo={logo} index={index} key={logo.id}/>)}</div>
   <div className="site-brand-bottom"><p>依各專案的委製與合作關係展示；HOLA 授權設計、代理委製等資訊詳見案例說明。</p><a className="folio-link" href="#/explore/cases">探索全部合作案例<SiteArrow/></a></div>
  </section>
 }
