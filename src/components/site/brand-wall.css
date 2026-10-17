@@ -2,66 +2,56 @@
 .folio-home .material-wall{background:#f7f5ef;padding-top:66px;padding-bottom:68px;overflow:visible}
 .folio-home .material-wall.standalone{padding-top:50px}
 .folio-home .material-wall .folio-section-heading{margin-bottom:36px}
-.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:24px 16px;border:0;background:transparent}
+.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:28px 24px;border:0;background:transparent}
 .folio-home .material-wall .site-logo-cell{border:0;min-width:0;position:relative}
 .folio-home .material-wall .site-logo-cell>.slab-link{display:block;height:auto;min-height:0;padding:0;width:100%;color:var(--folio-ink);text-decoration:none;background:transparent;border:0;text-align:left;border-radius:2px;-webkit-tap-highlight-color:transparent}
 .folio-home .material-wall .slab-link:focus-visible{outline:2px solid #526550;outline-offset:8px}
-.material-wall .slab-surface{display:block;position:relative;aspect-ratio:1.25;perspective:1000px;isolation:isolate;transition:transform .5s cubic-bezier(.2,.65,.25,1);z-index:1}
-.material-wall .slab-surface::after{content:"";position:absolute;inset:7px 0 0;border-radius:2px;box-shadow:3px 8px 9px #635c4933,1px 3px 3px #534b3429;pointer-events:none;transition:box-shadow .5s}
-.material-wall .slab-rotor{position:absolute;inset:0;display:block;transform-style:preserve-3d;transition:transform .68s cubic-bezier(.22,.67,.2,1);transform:rotateY(0deg)}
-.material-wall .slab-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:2px;background:#eae6db;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;box-shadow:inset 0 1px 1px #ffffffdc,inset -1px -1px 1px #847a6245;border:1px solid #dad4c5}
+.material-wall .slab-surface{--slab-depth:30px;--slab-half:calc(var(--slab-depth)/2);--slab-rest:rotateX(9deg) rotateY(-12deg);--slab-turned:rotateX(9deg) rotateY(-192deg);display:block;position:relative;aspect-ratio:1;perspective:1100px;perspective-origin:50% 40%;isolation:isolate;transition:transform .5s cubic-bezier(.2,.65,.25,1);z-index:1}
+.material-wall .slab-surface::after{content:"";position:absolute;inset:auto 6px -5px 9px;height:10px;border-radius:50%;background:#5a503738;filter:blur(6px);z-index:-1;pointer-events:none;transition:opacity .5s,transform .5s}
+.material-wall .slab-rotor{position:absolute;inset:0;display:block;transform-style:preserve-3d;transition:transform .78s cubic-bezier(.22,.67,.2,1);transform:var(--slab-rest)}
+.material-wall .slab-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:2px;background:#eae6db;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;box-shadow:inset 0 1px 1px #ffffffdc,inset -1px -1px 1px #847a6245,2px 4px 5px #635c4921;border:1px solid #dad4c5}
 .material-wall .slab-face::before{content:"";position:absolute;inset:0;background-image:var(--slab-texture);background-size:360px;background-position:var(--grain-x) var(--grain-y);opacity:.9;pointer-events:none}
-.material-wall .slab-front{transform:translateZ(4px)}
-.material-wall .slab-back{transform:rotateY(180deg) translateZ(4px);flex-direction:column;gap:12px;padding:15px 14px}
+.material-wall .slab-front{transform:translateZ(var(--slab-half))}
+.material-wall .slab-back{transform:rotateY(180deg) translateZ(var(--slab-half));flex-direction:column;gap:16px;padding:20px 16px}
 .material-wall .slab-face::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 2px 2px 2px #fffffff0,inset -2px -2px 2px #92877442;pointer-events:none}
 .material-wall .slab-mineral .slab-face::before{filter:grayscale(1) brightness(.96);background-size:250px}
 .material-wall .slab-glass .slab-face{background:#e5e9e2c9;border-color:#d4dbd0;box-shadow:inset 0 0 15px #ffffffb8}
 .material-wall .slab-glass .slab-face::before{opacity:.28;filter:blur(.3px) saturate(.5)}
 .material-wall .slab-glass .slab-face::after{inset:6px;border:1px solid #ffffffd9;border-radius:1px;box-shadow:0 0 0 3px #ffffff2b,inset 1px 1px 2px #ffffffd6,inset -1px -1px 3px #9ba8985c;background:linear-gradient(115deg,#ffffff20,transparent 46%,#ffffff33)}
-.material-wall .slab-edge{position:absolute;display:block;background:#c8c1b1;backface-visibility:visible;pointer-events:none}
-.material-wall .slab-edge-left,.material-wall .slab-edge-right{top:0;bottom:0;width:8px;transform:rotateY(90deg)}
-.material-wall .slab-edge-left{left:-4px;background:#ddd7c9}.material-wall .slab-edge-right{right:-4px;background:#b7b0a1}
-.material-wall .slab-edge-top,.material-wall .slab-edge-bottom{left:0;right:0;height:8px;transform:rotateX(90deg)}
-.material-wall .slab-edge-top{top:-4px;background:#f2efe7}.material-wall .slab-edge-bottom{bottom:-4px;background:#bdb5a5}
-.material-wall .slab-glass .slab-edge{background:#c4cdc1c4}
+.material-wall .slab-edge{position:absolute;display:block;background-color:#c8c1b1;background-image:linear-gradient(#9b907d33,#9b907d33),var(--slab-texture);background-size:auto,180px;background-position:center,var(--grain-x) var(--grain-y);background-blend-mode:multiply;backface-visibility:visible;box-shadow:inset 0 0 1px #776b5055;pointer-events:none}
+.material-wall .slab-edge-left,.material-wall .slab-edge-right{top:0;bottom:0;width:var(--slab-depth);transform:rotateY(90deg)}
+.material-wall .slab-edge-left{left:calc(-1*var(--slab-half));background-color:#ddd7c9}.material-wall .slab-edge-right{right:calc(-1*var(--slab-half));background-color:#aaa18c}
+.material-wall .slab-edge-top,.material-wall .slab-edge-bottom{left:0;right:0;height:var(--slab-depth);transform:rotateX(90deg)}
+.material-wall .slab-edge-top{top:calc(-1*var(--slab-half));background-color:#f2efe7}.material-wall .slab-edge-bottom{bottom:calc(-1*var(--slab-half));background-color:#b5aa94}
+.material-wall .slab-glass .slab-edge{background-color:#b7c4b3;background-image:linear-gradient(90deg,#eef5e6a8,#a1b19e55 45%,#dbe6d3b3);box-shadow:inset 0 0 0 1px #dfe8d7bd,inset 3px 0 4px #ffffff8c,inset -3px 0 4px #82977e70}
 .folio-home .material-wall .slab-logo{position:relative;z-index:1;display:block;width:100%;padding:18px 16px;mix-blend-mode:multiply}
 .folio-home .material-wall .slab-logo canvas{display:block;width:100%;height:88px;object-fit:contain}
 .folio-home .material-wall .slab-back-logo{display:block;position:relative;z-index:1;width:100%;mix-blend-mode:multiply}
-.folio-home .material-wall .slab-back-logo canvas{width:100%;height:36px;object-fit:contain}
+.folio-home .material-wall .slab-back-logo canvas{width:100%;height:42px;object-fit:contain}
 .folio-home .material-wall .slab-project{position:relative;z-index:1;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;font-size:13px;line-height:1.55;letter-spacing:.01em;color:#30382e;text-align:center;font-weight:500;text-wrap:balance}
 .folio-home .material-wall .slab-project .project-tail{font:inherit;color:inherit;white-space:nowrap}
-.folio-home .material-wall .slab-read{position:relative;z-index:1;display:flex;align-items:center;gap:9px;font-size:11px;line-height:1.5;color:#4b5748;margin-top:auto}
-.folio-home .material-wall .slab-read svg{width:22px;height:14px}
-.folio-home .material-wall .site-brand-caption{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;min-height:60px;background:#ece9e1;border:1px solid #dcd6c8;border-top:1px solid #ffffffca;border-radius:0 0 2px 2px;box-shadow:2px 4px 5px #635c491d;color:#30382e;text-align:left}
-.folio-home .material-wall .brand-caption-name{font-size:14px;font-weight:500;line-height:1.55;letter-spacing:0;text-align:left;color:inherit;overflow-wrap:anywhere}
-.folio-home .material-wall .brand-caption-name>span{font:inherit;color:inherit;white-space:nowrap}
-.folio-home .material-wall .site-brand-caption svg{width:24px;height:16px;flex:none;transition:transform .3s}
-.material-wall .slab-link.is-opening .slab-rotor,.material-wall .slab-link:focus-visible .slab-rotor{transform:rotateY(-180deg)}
+.material-wall .slab-link.is-opening .slab-rotor,.material-wall .slab-link:focus-visible .slab-rotor{transform:var(--slab-turned)}
 .material-wall .slab-link.is-opening .slab-surface,.material-wall .slab-link:focus-visible .slab-surface{transform:translateY(-5px)}
 @media(hover:hover){
- .material-wall .slab-link:hover .slab-rotor{transform:rotateY(-180deg)}
+ .material-wall .slab-link:hover .slab-rotor{transform:var(--slab-turned)}
  .material-wall .slab-link:hover .slab-surface{transform:translateY(-5px)}
- .material-wall .slab-link:hover .slab-surface::after{box-shadow:5px 13px 17px #635c4938,1px 4px 4px #534b341a}
- .material-wall .slab-link:hover .site-brand-caption svg{transform:translateX(3px)}
+ .material-wall .slab-link:hover .slab-surface::after{opacity:.65;transform:translateY(5px) scaleX(.94)}
 }
 @media(max-width:1200px){.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:800px){.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:600px){
  .folio-home .material-wall,.folio-home .material-wall.standalone{padding-top:42px;padding-bottom:45px}
- .folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 13px}
+ .folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 18px}
+ .material-wall .slab-surface{--slab-depth:24px}
  .folio-home .material-wall .folio-section-heading{margin-bottom:30px}
  .folio-home .material-wall .slab-logo{padding:12px}
  .folio-home .material-wall .slab-logo canvas{height:68px}
- .folio-home .material-wall .site-brand-caption{padding:10px;gap:6px;min-height:82px}
- .folio-home .material-wall .brand-caption-name{font-size:13px;line-height:1.55}
- .folio-home .material-wall .site-brand-caption svg{width:18px;height:13px}
- .material-wall .slab-back{padding:10px;gap:6px}
- .folio-home .material-wall .slab-back-logo canvas{height:25px}
+ .material-wall .slab-back{padding:14px;gap:10px}
+ .folio-home .material-wall .slab-back-logo canvas{height:30px}
  .folio-home .material-wall .slab-project{font-size:11px;line-height:1.5;-webkit-line-clamp:3}
- .folio-home .material-wall .slab-read{font-size:10px;gap:5px}
- .folio-home .material-wall .slab-read svg{width:18px}
 }
 @media(prefers-reduced-motion:reduce){
- .folio-home .material-wall .slab-rotor,.folio-home .material-wall .slab-surface,.folio-home .material-wall .site-brand-caption svg{transition:none!important;transform:none!important}
+ .folio-home .material-wall .slab-rotor{transition:none!important;transform:var(--slab-rest)!important}
+ .folio-home .material-wall .slab-surface{transition:none!important;transform:none!important}
  .material-wall .slab-link:focus-visible .slab-front{outline:2px solid #667762;outline-offset:-5px}
 }

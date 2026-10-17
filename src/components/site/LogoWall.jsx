@@ -21,7 +21,7 @@ function BrandSlab({logo,index}){
   if(event.button!==0||event.metaKey||event.ctrlKey||event.altKey||event.shiftKey)return;
   if(!matchMedia('(hover: none)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   event.preventDefault();if(opening)return;
-  setOpening(true);timer.current=setTimeout(()=>{window.location.hash=logo.href.slice(1)},680);
+  setOpening(true);timer.current=setTimeout(()=>{window.location.hash=logo.href.slice(1)},800);
  }
  return <article className={`site-logo-cell slab-${finishes[index%finishes.length]}`}>
   <Tag className={`slab-link${opening?' is-opening':''}`} href={logo.href||undefined}
@@ -30,10 +30,9 @@ function BrandSlab({logo,index}){
    onClick={activate} style={{'--grain-x':`${index*47%100}%`,'--grain-y':`${index*31%100}%`}}>
    <span className="slab-surface" aria-hidden="true"><span className="slab-rotor">
     <span className="slab-face slab-front"><span className="slab-logo"><BrandMark image={logo.image} name={logo.name}/></span></span>
-    <span className="slab-face slab-back"><span className="slab-back-logo"><BrandMark image={logo.image} name={logo.name}/></span><span className="slab-project">{projectTail?<>{projectTail[1]}<span className="project-tail">{projectTail[2]}</span></>:project}</span><span className="slab-read">閱讀合作案例<SiteArrow/></span></span>
+    <span className="slab-face slab-back"><span className="slab-back-logo"><BrandMark image={logo.image} name={logo.name}/></span><span className="slab-project">{projectTail?<>{projectTail[1]}<span className="project-tail">{projectTail[2]}</span></>:project}</span></span>
     <span className="slab-edge slab-edge-left"/><span className="slab-edge slab-edge-right"/><span className="slab-edge slab-edge-top"/><span className="slab-edge slab-edge-bottom"/>
    </span></span>
-   <span className="site-brand-caption"><span className="brand-caption-name">{logo.name.split(/([A-Za-z0-9][A-Za-z0-9.&-]*)/g).map((part,i)=>/^[A-Za-z0-9]/.test(part)?<span key={i}>{part}</span>:part)}</span><SiteArrow/></span>
   </Tag>
  </article>
 }
