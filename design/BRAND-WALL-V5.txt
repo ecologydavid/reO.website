@@ -1,0 +1,82 @@
+re.O material brand wall — 2026-10-17
+
+User scope: redesign only the40 clickable partner cells with stone block / glass /
+flipping slab character; keep original marks and company text clearly identifiable.
+Preserve all editor code, geometry, styling, front/detail/3D/PDF and local export.
+
+ImageGen built-in concept: brand-wall-v5.png,1536x1024, full requested section.
+Generated seamless material: public/assets/brand-slab-ivory.png. Only this decorative
+surface is generated; all logos, project facts and relationships remain original.
+
+Design system before implementation:
+Existing warm ivory #f4f1e9, ink #242923, fine warm gray edges. Six columns at1536,
+16px horizontal /24px vertical gutters, individual material slabs rather than a table.
+Pale stone / fine gray stone / frosted glass finishes alternate with a repeatable rhythm.
+Slab top about180px at221px width, tiny2px corner radius,8px apparent side thickness,
+thin top highlight, shaded side and soft downward shadow. Real generated mineral scan
+is the shared material; glass uses a lower texture opacity, translucent glaze and
+inset rim. No neon, no decorative badges, no excessive gradients or dark logo fields.
+Original marks are framed on canvas and blended over the pale slab. Preserve their
+color and aspect ratio. Measure alpha margins for transparent original artwork.
+Caption stays flat beneath the rotating face,14px/1.55, dark ink, with a thin SVG arrow.
+Long official names wrap naturally; no text clipping or ellipsis in captions.
+Backface: small original mark, real project title, and 閱讀合作案例 plus SVG arrow.
+Back project title may use three lines, full project remains in accessible label/title.
+No invented material labels from generated illustrative text.
+
+Motion: real CSS3D Y-axis180deg flip, about680ms easing. The fixed caption remains
+legible during rotation. Desktop hover and keyboard focus flip; Enter/click navigates
+to the same internal article. Touch plays a single flip then navigates with one tap.
+Respect reduced motion: no rotation/delay, focus and click still work. No pointermove
+render loops. Keep modifier/middle click and open-in-new-tab normal anchor behavior.
+Responsive:4 columns medium,3 tablet,2 phone;14/13px readable names, complete captions.
+
+Allowed copy: existing heading 與不同品牌， / 共同完成值得留下的作品。;
+descriptor 企業委製、品牌合作與授權設計案例。; original40 brand names and project
+titles from logo-wall.json; CTA 閱讀合作案例; unchanged original relationship footnote
+and 探索全部合作案例. Existing shared header/footer and all other homepage copy retained.
+
+Concept corrections recorded before coding: actual original logos replace generated
+facsimiles; verified source project names replace the generated example material line.
+Shared header remains on standalone page; fidelity capture scrolls to section start
+to compare the section-only concept at its native1536x1024 dimensions.
+
+QA: hover front->back->front, caption remains upright, click->local case,40 real marks;
+keyboard focus/Enter; touch one-tap flip/navigation; reduced motion; mobile wrapping;
+local standalone HTML offline, studio access, original34 tests and production build.
+
+Final fidelity ledger / 2026-10-17:
+1. Material: concept has cream stone, gray mineral and clear frosted glass. Render
+uses generated ivory scan, desaturated mineral variant and inset glass rim, original
+color marks. Fixed a flat offline surface: the2.8MB scan's data URL exceeded CSS
+custom-property limits. Offline adapter now caches local Blob URLs for large images;
+normal hosted files and all original artwork remain unchanged.
+2. Layout: concept is six separate sample slabs with16px gutters, stable caption
+strip and thickness/shadow. Render six columns at1536x1024,4/3/2 at smaller widths,
+8px physical CSS3D side faces, pale caption strip and soft contact shadow. Caption
+font increased to14px desktop/13px phone for source-name readability. C-LAB and
+other Latin words are kept together; all40 mobile captions fit without clipping.
+3. Copy: original heading/descriptor/40 company names/footer retained. Added backface
+CTA 閱讀合作案例 from concept. Backface uses verified source project titles instead
+of the concept's illustrative material descriptor. No invented claims or labels.
+4. Typography: established v3 Ming headline scale retained rather than the generated
+concept's exaggerated heading; original sans captions are larger than v4. Existing
+site header and every other section stay intact. This is an intentional integration
+choice. Actual original logo proportions replace generated facsimiles; HOLA alpha
+margin measurement fixed so its logo is as identifiable as the others.
+5. Motion: hover/focus Y180deg flip, stationary readable name/arrow. Native screenshot
+brand-wall-v5-turning.png captures the real CSS transition paused at250ms, matching
+the concept's partly turned sample. Finished backface and resting state separately
+captured. Touch plays one flip then navigates from one tap. Reduced motion skips it.
+6. Palette/spacing/icons: warm ivory/ink, consistent original thin SVG arrows, no
+new badge/hero copy. Glass glaze/highlights are confined to requested material faces.
+7. Browser: IAB cannot validate local file URLs; used bundled Playwright with Edge,
+fully offline,1536x1024 and390x844 touch.13 new wall checks passed;17 full standalone
+checks passed, including graphic upload, local draft reload,3D and3-page PDF. Original
+34 geometry/content tests passed. No external requests or browser runtime errors.
+
+Concept and latest rendered native screenshots inspected with view_image in one pass;
+copy/layout/typography/materials/motion/captions/mobile compared. Faithfully verified
+against the material wall design, with the above recorded source-copy and typography
+integration differences. No unresolved material mismatch. Editor source/styles and
+geometry are unchanged. Original sources and verified relationships remain intact.

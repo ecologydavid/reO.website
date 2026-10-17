@@ -35,6 +35,15 @@ pnpm dev
 pnpm test
 pnpm build
 
+直接雙擊的本機 HTML 預覽（2026-10-17）
+專案上層的 reO-本機預覽.html 為完整單檔離線版本，可用 Chrome 或 Edge 開啟。
+程式、樣式、全部圖片與144筆內容均已內嵌，無需 Node、Vite 或網路連線。
+保留站內導覽、搜尋、品牌牆、A–F 編輯、3D、圖案上傳、草稿及 PDF 匯出。
+檔案約135 MB，草稿只存於開啟這個檔案的瀏覽器，與 localhost 草稿分開。
+此檔為匯出時的快照；網站修改後執行 pnpm build:offline 重新產生。
+匯出器為 scripts/build-offline-preview.mjs；只調整匯出版本的路徑與資料載入，
+不修改正式網站的編輯器、幾何、樣式或資料，也不影響線上部署。
+
 Windows 隨附執行環境無全域 npm 時，可直接執行 bundled pnpm.mjs。
 依賴安裝的 esbuild 執行權限已明確列於 pnpm-workspace.yaml。
 
