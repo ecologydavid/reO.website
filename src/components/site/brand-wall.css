@@ -1,5 +1,5 @@
 /* Liquid glass study, scoped to brand tiles and separate from the editor. */
-.folio-home .material-wall{background:#f7f5ef;padding-top:66px;padding-bottom:68px;overflow:visible}
+.folio-home .material-wall{background:#fff;padding-top:66px;padding-bottom:68px;overflow:visible}
 .folio-home .material-wall.standalone{padding-top:50px}
 .folio-home .material-wall .folio-section-heading{margin-bottom:36px}
 .folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:28px 24px;border:0;background:transparent}

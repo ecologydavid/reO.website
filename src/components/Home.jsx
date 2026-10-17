@@ -4,12 +4,14 @@ import cases from '../data/brand-cases.json';
 import SiteHeader from './site/SiteHeader.jsx';
 import SiteFooter from './site/SiteFooter.jsx';
 import LogoWall from './site/LogoWall.jsx';
+import MaterialHero from './site/MaterialHero.jsx';
 import {contentHref} from './site/navigation.js';
 import './home.css';
 
 export function Arrow(){return <svg viewBox="0 0 40 20" fill="none" aria-hidden="true"><path d="M1 10h36m-7-7 7 7-7 7" stroke="currentColor" strokeWidth="1.2"/></svg>}
 function Brand(){return <img src="/assets/reo-logo.png" alt="re.O" width="84" height="84"/>}
 const byId=Object.fromEntries(cases.map(c=>[c.id,c]));
+const craftMarble='/assets/material-refs/69a54ca0a6d270369e13d530.webp';
 const materialLabels={A:'退役木橫擔／北美黃檜 × 再生大理石',B:'北美黃檜 × 再生大理石',C:'北美黃檜 × 再生大理石',D:'再生大理石 × ABS 銘版',E:'再生大理石 × 金屬鋁片',F:'再生大理石 × 壓克力 × 層疊結構'};
 const materials=['再生大理石','回收玻璃','咖啡渣','退役木橫擔','煤灰','水庫淤泥','木屑','木頭拼板','焚化再生粒料'];
 const services=[['材料研發','從剩餘材料的粉碎、配比到成型試驗，評估質地、色澤與應用可能。'],['產品設計','以品牌故事和使用情境為起點，整合造型、立體建模與材料選擇。'],['製造組裝','從模具、澆注到手工打磨與組裝，逐步把設計變成可觸摸的作品。']];
@@ -21,11 +23,11 @@ export default function Home({onPreview}){
   const root=useRef(null);
   function openCase(c){window.location.hash=contentHref(c.source_url).slice(1)}
   useEffect(()=>{const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.04});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
-  return <div className="folio-home" ref={root}>
+  return <div className="folio-home" ref={root} style={{'--craft-marble':`url("${craftMarble}")`}}>
     <a className="folio-skip" href="#collection">跳至公版系列</a>
     <SiteHeader/>
     <main>
-      <section className="folio-hero folio-gutter"><div className="folio-hero-intro"><h1>重新看見，<br/>材料的可能。</h1><div className="folio-hero-copy"><p>從循環材料研發、產品設計，到職人手作。<br/>讓品牌心意，化為可珍藏的作品。</p><div className="folio-hero-actions"><a className="folio-link" href="#collection">探索公版獎盃<Arrow/></a><button className="folio-link" onClick={()=>onPreview('B')}>進入排版工作室<Arrow/></button></div></div></div><button className="folio-hero-image" onClick={e=>openCase(byId.delta,e.currentTarget)} aria-label="閱讀作品：台達50週年模範獎座"><img src={byId.delta.photo} alt="以水庫淤泥與金色鋁材銘版製作的台達50週年模範獎座" width="2400" height="1602" fetchPriority="high"/></button><div className="folio-hero-caption"><button onClick={e=>openCase(byId.delta,e.currentTarget)}>台達｜50週年模範獎座<Arrow/></button><p>水庫淤泥 × 金色鋁材銘版</p></div></section>
+      <MaterialHero onPreview={onPreview}/>
       <section className="folio-collection folio-gutter" id="collection"><div className="folio-catalogue-heading" data-reveal><p className="folio-section-label">公版系列</p><h2>為每份榮耀，<br/>找到合適的形狀。</h2><p>六款設計，從選材到銘版，<br/>留下你的專屬心意。</p></div><div className="folio-products">{models.map(m=><article className="folio-product" key={m.id}><button className="folio-product-image" onClick={()=>onPreview(m.id)} aria-label={`預覽 ${m.id} 款 ${m.name}`}><img src={`/assets/catalogue-${m.id}.webp`} alt={`${m.id} 款 ${m.name}實品`} loading="lazy" width="1200" height="900"/></button><div className="folio-product-info"><span className="folio-product-letter">{m.id}</span><div><h3>{m.name}</h3><p>NT$ {m.price}</p></div><button className="folio-link" onClick={()=>onPreview(m.id)}>開始排版<Arrow/></button></div><p className="folio-product-material">{materialLabels[m.id]}</p><a className="folio-product-detail-link" href={contentHref(m.source_url)}>查看商品詳情<Arrow/></a></article>)}</div><p className="folio-smallprint">官網參考價格，實際報價依款式、數量與客製需求確認。</p></section>
       <section className="folio-works folio-gutter" id="works"><div className="folio-section-heading" data-reveal><h2>品牌的故事，<br/>由細節成形。</h2><p>從企業回收材料，到專屬品牌造型。<br/>每件作品，都有它的出發點。</p></div><div className="folio-work-pair"><Work id="ase" onOpen={openCase}/><Work id="pinkoi" onOpen={openCase}/></div><div className="folio-secondary-works"><div><h3>更多企業合作，<br/>讓材料創造新的意義。</h3><p>以品牌識別、材料來源和製作細節，<br/>回應每個專案的不同需求。</p></div><Work id="pwc" onOpen={openCase}/><Work id="national-sdgs" onOpen={openCase}/></div><button className="folio-link folio-more" aria-expanded={more} aria-controls="additional-works" onClick={()=>setMore(!more)}>{more?'收起更多作品':'更多企業作品'}<Arrow/></button>{more&&<div className="folio-additional-works" id="additional-works">{['delta','uber-eats','tmall'].map(id=><Work key={id} id={id} onOpen={openCase}/>)}</div>}</section>
       <LogoWall/><section className="folio-ip folio-gutter"><div className="folio-section-heading" data-reveal><h2>讓經典角色，<br/>走進日常。</h2><p>由 HOLA 合作委製的官方授權設計，<br/>讓循環材料與熟悉的角色相遇。</p></div><div className="folio-ip-pair"><Work id="disney-hola" onOpen={openCase} ip/><Work id="marvel-hola" onOpen={openCase} ip/></div><div className="folio-golden-horse"><p>台北金馬影展 × Pinkoi｜金馬造型擴香紙鎮</p><button className="folio-link" onClick={e=>openCase(byId['golden-horse'],e.currentTarget)}>閱讀作品<Arrow/></button></div></section>

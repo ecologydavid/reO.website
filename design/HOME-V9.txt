@@ -1,0 +1,35 @@
+2026-10-17 — material craft + B/D/E hero, pure white site canvas
+
+User scope: make the first section clearly explain recycled marble and resin casting,
+promote official standard trophies B,D,E, use white background and more black-gold /
+white-silver faux-marble details. Keep the approved glass wall and core editor.
+
+Concept: home-v9-concept.png (1536x1024), built-in ImageGen. Layout concept only;
+all production product/craft photos and logo are unchanged official site files.
+System: pure #fff page, #242923 ink, fine #d3d5cf rules, established Ming/Song heads;
+64px desktop content gutters, photographic triptych bleeds32px,14px image gaps.
+Header keeps official circle mark and all six dropdown groups. Intro title88px max,
+body19px max,14px underline actions. Three equal photos with complete trophies,
+large Georgia model letters and original product names; direct detail / editor links.
+Compact process strip: offcuts -> real material mixing/casting molds -> polished
+black-gold and white-silver finish samples. Mobile stacks B above paired D/E; all
+products stay visible in the normal page flow, with no carousel.
+
+Allowed hero copy: 回收石材， / 灌注新的榮耀。; 大理石邊料研磨成粉，與樹脂調配、
+澆注、打磨。 / 讓循環材料，成為值得珍藏的公版獎盃。; 探索公版獎盃; 認識再生工藝;
+official B/D/E names; 開始排版; 從邊料開始， / 讓榮耀成形。; 了解再生大理石;
+01 回收研磨;02 調配澆注;03 打磨成器; 黑金;白銀.
+
+Sources: cached original material-recycled-marble and 實驗再生材質 pages describe
+offcuts -> grinding -> resin proportioning -> mold casting. Catalogue B/D/E photos
+retain original product geometry and sample artwork. Process photos are originals
+4c8f7e6331677eaa2e.webp and002e36c018ceece1c4.webp. Finish sample windows crop actual
+E black/gold and white/silver photographs using CSS; no synthetic product imagery.
+
+Intentional integration choices: original shared dropdown arrows replace the concept
+header's decorative slash separators. Original offcut / workshop photos replace the
+concept's approximated scenes. New page paper is white; the craft band remains dark
+with a real black-gold material image so white text stays legible. Glass tile geometry,
+tones, logos and behavior stay as approved; only its surrounding canvas becomes white.
+No ESG statistics, certification or manufacturing-accuracy claims are introduced.
+src/editor/**, geometry, masks/photos, editor styling and PDF remain untouched.
