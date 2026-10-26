@@ -1,4 +1,5 @@
 import index from '../data/content-index.json' with {type:'json'};
+import cardBanners from '../data/card-images.json' with {type:'json'};
 export const pages=index.pages;
 const urls=index.aliases;
 const decodePath=path=>{try{return decodeURIComponent(path)}catch{return path}};
@@ -16,4 +17,12 @@ export function collectionPages(category){
  if(category==='materials'){const order=['marble','glass','coffee','wooden','silt','chips','ash','veneer','aggergates'];result.sort((a,b)=>order.findIndex(x=>a.path.includes(x))-order.findIndex(x=>b.path.includes(x)))}return result;
 }
 const cache=new Map();
-export function loadPage(id){if(!cache.has(id))cache.set(id,fetch('/content/pages/'+id+'.json').then(r=>{if(!r.ok)throw Error('讀取失敗');return r.json()}).catch(e=>{cache.delete(id);throw e}));return cache.get(id)}
+// Page JSON is fetched as-is from public/, so its image paths are rebased here for sub-path hosting
+// (GitHub Pages); with the default base '/' this changes nothing. See vite.config.js.
+const base=import.meta.env?.BASE_URL||'/';
+const rebase=value=>typeof value==='string'?(base!=='/'&&/^\/(assets|content)\//.test(value)?base+value.slice(1):value):Array.isArray(value)?value.map(rebase):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([k,v])=>[k,rebase(v)])):value;
+export function loadPage(id){if(!cache.has(id))cache.set(id,fetch('/content/pages/'+id+'.json').then(r=>{if(!r.ok)throw Error('讀取失敗');return r.json()}).then(rebase).catch(e=>{cache.delete(id);throw e}));return cache.get(id)}
+// Cards show the old-site 2:1 banner for each case, which carries the client name; rewritten case
+// pages keep their product photo as the hero, so their banner is looked up here instead.
+export const isBanner=im=>Boolean(im)&&Math.abs(im.width/im.height-2)<.03;
+export function cardImage(p){return cardBanners[p.path]||p.hero}

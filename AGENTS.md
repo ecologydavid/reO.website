@@ -54,3 +54,123 @@ Retain six navigation groups, searchable/filterable libraries, full articles and
 prominent40-logo wall with verified relationships. Original empty policy templates
 must not be published as company policies. Follow design/V4.txt and V4-QA.txt.
 
+
+## Image-led homepage (v10, 2026-10-26)
+User direction: white base, quality, recycling; images carry the message, a short Ming headline
+names it, minimal small text. Follow design/HOME-V10.txt (以材為像). Homepage styles live in
+src/components/home-v10.css scoped to .rv-home; shared Arrow/RoundArrow/SectionHead/Frame in
+src/components/site/ui.jsx. The approved glass LogoWall component is reused unchanged.
+Library cards hide summaries (still searchable). Editor, geometry, masks and PDF untouched.
+
+## Consolidated navigation and refined controls (v11, 2026-10-26)
+User request supersedes the v4 "six navigation groups" rule: the header shows FOUR direct
+links (公版獎盃 / 合作案例 / 循環材料 / 關於 re.O) plus 排版工作室 and 選單 pills. 選單 opens a
+one-page full-screen overview of every destination; deeper filters stay on library pages.
+All destinations must remain valid (tests/content-migration checks groups + support links).
+Controls: arrows always sit in a round chip; buttons are pills (dark/ghost/light/glass) from
+src/components/site/ui.jsx + ui.css. No thin underline + long-arrow links. Layout language
+follows the sunye_web.studio reference: full-bleed photo hero with overlaid headline, large
+Latin display titles with counts, numbered photo cards, dark footer with large wordmark.
+UI UX Pro Max skill is installed at ../.claude/skills/ui-ux-pro-max (v2.15.0, MIT).
+
+## Brand mark and image frames (v12, 2026-10-26)
+- The company's animated logo (public/assets/reo-logo-motion.gif, 300px, 1.8s draw cycle) is the
+  re.O mark everywhere: header, menu, footer, about block, editor header, loading screen. Use
+  BrandLogo from src/components/site/ui.jsx; never a static <img> of the old PNG. It draws once on
+  entering view and on hover, then rests on reo-logo-still.png (the GIF's final frame); `loop`
+  only for loading screens; reduced motion shows the still. PDF/favicon stay static PNG.
+- Never letterbox photos (object-fit: contain + colored box). Frames take each photo's own ratio:
+  article galleries use justified rows (src/content/justify.js, tested), portrait lead images get
+  a narrower column. Uniform gutters; every row spans the measure.
+- Offline exporter only rewrites plain src="…" asset attributes; write other asset attributes as
+  JS expressions (srcSet={path}) so build:offline keeps working.
+
+## Standard vs custom, image-led articles, designed About (v13, 2026-10-26)
+- 公版獎盃 and 客製化獎盃 are separate: five header links (公版獎盃 / 客製化獎盃 / 合作案例 /
+  循環材料 / 關於 re.O), separate homepage sections (#collection, #custom), and #/read/pages/custom
+  renders the designed CustomPage (src/content/CustomPage.jsx). Tests pin this split.
+- Article pages never stack long text: src/content/arrange.js (tested) turns each section into a
+  photo + text chapter (alternating sides), maps old-site short captions to their detail photos,
+  drops the 詳細資訊 block when metadata exists, and turns material/service pages whose sections
+  mirror their links into a works index led by each linked case's photo. Text-only pages (FAQ,
+  policies) keep the TOC layout.
+- About / awards / contact render AboutPage: contact details (email, phone, hours, address, UBN)
+  are the first thing on the page. Partner-logo images are not repeated there (the homepage and
+  brand wall carry them). Art photos: drifting studio reel, origami pairs that lift in a slow wave
+  on a black band matched to the photos (#0a0a0a). All motion stops under reduced motion.
+
+## Landing pages, hero and footer (v14, 2026-10-26)
+- 公版獎盃 / 合作案例 / 循環材料 (and the other libraries) use the About language via
+  ContentLibrary + src/content/landings.jsx: Latin display + h1, a key-facts card (verified product
+  facts, or group counts that act as filters), full-bleed photo, one feature band (dark studio
+  steps, dark IP gallery, drifting material reel), numbered index grid, closing row.
+- Homepage hero: frosted left column (kicker, headline with line reveal, site figures from
+  src/components/site/stats.js — tested against the content index) and an A–F pick bar that opens
+  the editor. Phones stack the panel under the photo.
+- Footer: the animated mark signs the company info row; no standalone logo row.
+- Press thumbnails stay in full colour.
+
+## Featured D/E hero, banner cards, eight-step process (v15, 2026-10-26)
+- Hero: headline column + separate stage, so trophies are never under text. D and E alternate on
+  the stage (tabs with progress; pause on hover; no autoplay under reduced motion). Object
+  positions are tuned so every trophy is whole at 1100–1900px and on phones (tabs get their own
+  strip there). D shows its three-colour photo only from 1280px. D and E lead the collection.
+- Images that show a client name must be shown whole: case cards use the old-site 2:1 banner
+  (src/data/card-images.json + cardImage(), tested) in 2:1 frames, never cropped.
+- Process is eight steps sourced from the marble page chart and the journal articles
+  (重新定義「廢料」, 實驗再生材質, 強化材質脫氣升級, 工廠步驟把關); keep it sourced.
+
+## Header interaction and hero loop (v16, 2026-10-26)
+- Header is sticky: condenses (72px, frosted ::before layer — never put backdrop-filter/transform
+  on the header itself while the menu is open, it would trap the fixed menu), hides on scroll down
+  past 320px and returns on scroll up. Links sit in a stone capsule with a sliding white pill
+  (rests on the current section, follows hover/focus), rolling labels and a dot for the current page.
+- Hero loops endlessly, 12s per slide (the progress bar's animationend advances it; a timer under
+  reduced motion). A pause/play button is required (WCAG 2.2.2). Gold sand (src/components/
+  GoldDust.jsx, canvas) drifts while playing, gusts on each slide change, fades over the headline
+  column, stops when paused, off screen or in a hidden tab, and is not drawn under reduced motion.
+
+## Process, materials and brand wall sizing (v17, 2026-10-26)
+- Process track stays inside the page margins and always shows whole, equal cards (4/3/1 per view).
+- Home material swatches carry their names on the photo (large bold serif, white, bottom shade).
+- Brand wall tiles: 8 per row, 5:4, so the 40 logos fit in five rows on desktop.
+- Display titles carry no bracketed item counts (user decision 2026-10-27).
+
+## Load weight and icon centring (v18, 2026-10-27)
+- Round icon buttons centre their icon on both axes (the hero pause toggle needed place-content).
+- Keep the first screen light: brand-wall logos load only as the wall approaches (BrandMark
+  IntersectionObserver); the slab texture is a 640px WebP (the 2.7 MB PNG is no longer used);
+  the first hero slide and its haze copy both carry fetchPriority="high".
+- GoldDust stamps pre-rendered glow sprites; never use a live shadowBlur per grain per frame.
+
+## Process at a glance, custom modes (v19, 2026-10-27)
+- Home process is film (user idea 2026-10-27): strips of four frames (two on phones) read left to
+  right, 01–04 then 05–08, joined by a ribbon of film looping from the end of one strip to the start
+  of the next (FilmTurn: true arcs at the real pixel width, outer edges flush with the strips,
+  filleted inner corners; strips have rounded outer corners and square joined corners). Frames wipe
+  in left to right, then the ribbon draws into the next strip. Phase legend 回收 → 再生 → 成形 → 再利用 above; each frame shows
+  its number, phase, step name and line on the photo. Never stack a phase's steps in one column. Steps 07–08 use model B (木客微光 × 匠子) photos.
+- 客製化獎盃 has two modes only (專案訂製, 專料訂製); 公版 A–F lives on its own page.
+
+## Film depth, phase brackets, Pinkoi retail window (v23, 2026-10-27)
+- The film has thickness: a darker edge under strips and ribbon, a light upper edge, soft shadow,
+  and lighter far ends on each turn. Desktop phase titles stand on brackets spanning exactly their
+  two frames (回收・再生 above the first strip, 成形・再利用 below the last); phones keep the legend
+  and the gold phase tag inside each frame.
+- Retail: the studio's official Pinkoi store https://www.pinkoi.com/store/chanzstudio (匠子 CHANZ
+  STUDIO). ShopWindow (src/components/site/ShopWindow.jsx) sits on the homepage after 授權與聯名 and
+  as the 生活設計商品 landing band; the menu foot and footer carry「Pinkoi 線上選購 ↗」. Every Pinkoi
+  link opens a new tab and says so to screen readers. Copy follows the 匠子 page; no store ratings.
+
+## Collection labels (v24, 2026-10-27)
+- Each A–F card: the model letter in a white tab cut into the photo's bottom-left corner (Ming serif,
+  turns ink on hover), then the name in serif and one spec line from models.json (type・height or
+  diameter・NT$ price). Small cards show only the round start arrow (label kept for screen readers);
+  on phones that arrow sits in the photo's bottom-right corner and the spec stacks.
+
+## GitHub Pages deployment (2026-10-27)
+- .github/workflows/deploy-pages.yml builds on every push to main (pnpm install, tests, build) and
+  publishes dist to GitHub Pages. One-time: Settings → Pages → Source "GitHub Actions".
+- Pages serves under /<repo>/. Source keeps root paths ('/assets/…', '/content/…'); vite.config.js
+  prefixes them at build time when BASE_PATH is set, and catalogue.js rebases fetched page JSON.
+  Keep new public-file references as plain '/assets/…' or '/content/…' string literals.

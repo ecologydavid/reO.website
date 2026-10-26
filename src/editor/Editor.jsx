@@ -1,6 +1,7 @@
 import React,{useMemo,useState,useRef,useCallback,useEffect} from 'react';
 import models from '../data/models.json';
 import {contentHref} from '../components/site/navigation.js';
+import {BrandLogo} from '../components/site/ui.jsx';
 import {getLayout} from '../data/geometry.js';
 import {getModelScene,defaultFinish,shapeChoices,stoneColors,metalColors} from '../data/canonical.js';
 import {defaultObjects} from './geometry.mjs';
@@ -76,7 +77,7 @@ export default function Editor({modelId,onModelChange,onHome}){
   function save(){try{const snap=currentSnapshot(),d={...snap.state,version:3,modelId:model.id,shape,documents:{...snap.state.documents,...Object.fromEntries(snap.scene.surfaces.map(s=>[keyFor(model.id,shape,s.id),snap.documents[s.id]]))}};localStorage.setItem(STORAGE,JSON.stringify(d));notify('草稿已儲存在此瀏覽器。')}catch{notify('草稿空間不足，請減少圖案大小後再儲存。')}}
   async function download(){setBusy(true);try{const snap=currentSnapshot();if(snap.scene.surfaces.some(s=>snap.documents[s.id].some(o=>!objectFits(o,s,measureRef.current))))throw Error('請先將內容調整到客製輪廓內。');const {exportPdf}=await import('./PdfExport.js');const pages=await exportPdf(model,snap.scene,snap.documents);notify(`已下載 ${pages} 頁排版預覽 PDF。`)}catch(e){notify(e.message||'PDF 匯出失敗，請稍後重試。')}finally{setBusy(false)}}
   return <div className="editor-page editor-v3">
-    <header className="editor-header"><button className="editor-brand" onClick={onHome} aria-label="re.O 回到首頁"><img src="/assets/reo-logo.png" alt="re.O"/></button><h1>銘版排版工作室</h1><div className="editor-header-actions"><button className="text-control return-home" onClick={onHome}><Icon name="back"/>返回官網</button><button className="outline compact save-button" onClick={save}><Icon name="save"/>儲存草稿</button><button className="primary download-button" onClick={download} disabled={busy||overflow}><Icon name="download"/>{busy?'匯出中…':'下載 PDF'}</button></div></header>
+    <header className="editor-header"><button className="editor-brand" onClick={onHome} aria-label="re.O 回到首頁"><BrandLogo style={{display:'contents'}}/></button><h1>銘版排版工作室</h1><div className="editor-header-actions"><button className="text-control return-home" onClick={onHome}><Icon name="back"/>返回官網</button><button className="outline compact save-button" onClick={save}><Icon name="save"/>儲存草稿</button><button className="primary download-button" onClick={download} disabled={busy||overflow}><Icon name="download"/>{busy?'匯出中…':'下載 PDF'}</button></div></header>
     <div className="editor-layout">
       <aside className="model-rail"><h2>選擇款式</h2><div className="model-options">{models.map(m=><button key={m.id} aria-label={`選擇 ${m.id} 款`} aria-pressed={model.id===m.id} className={`model-option ${model.id===m.id?'selected':''}`} onClick={()=>changeModel(m.id)}><img src={`/assets/product-thumb-${m.id}.webp`} alt={`${m.id} 款 ${m.name}`} loading="lazy"/><span>{m.id}</span></button>)}</div>
         {model.id==='F'?<div className="variant-choice"><h2>獎牌款式</h2><div className="shape-options">{shapeChoices.map(v=><button key={v.id} aria-pressed={shape===v.id} className={shape===v.id?'selected':''} onClick={()=>{setShape(v.id);setSelectedId('title')}}>{v.name}</button>)}</div></div>:null}

@@ -1,0 +1,42 @@
+/* V11 shared controls for the public site. Scoped to .folio-home so the editor chrome is untouched. */
+.folio-home{--ui-ink:#1f2320;--ui-paper:#fff;--ui-stone:#f4f3ef;--ui-line:rgba(31,35,32,.16);--ui-muted:#80847d;--ui-ease:cubic-bezier(.2,.7,.2,1);--ui-display:"Helvetica Neue","Segoe UI",Arial,sans-serif}
+
+/* Arrow chip: the only arrow treatment on the site. */
+.folio-home .rv-chip{display:inline-grid;place-items:center;flex:none;width:34px;height:34px;border-radius:50%;border:1px solid var(--ui-line);color:inherit;transition:background .25s,border-color .25s,color .25s}
+.folio-home .rv-icon,.folio-home .rv-chip svg{width:14px;height:14px;transition:transform .3s var(--ui-ease)}
+.folio-home a:hover>.rv-chip,.folio-home button:hover>.rv-chip,.folio-home a:focus-visible>.rv-chip{background:var(--ui-ink);border-color:var(--ui-ink);color:#fff}
+.folio-home a:hover>.rv-chip .rv-icon,.folio-home button:hover>.rv-chip .rv-icon{transform:translateX(2px)}
+
+/* Pill buttons */
+.folio-home .rv-btn{display:inline-flex;align-items:center;gap:16px;min-height:50px;padding:7px 7px 7px 24px;border-radius:999px;border:0;font-size:14px;font-weight:600;letter-spacing:.08em;line-height:1;white-space:nowrap;cursor:pointer;transition:background .25s,color .25s,box-shadow .25s,transform .2s}
+.folio-home .rv-btn .rv-chip{width:36px;height:36px;border:0}
+.folio-home .rv-btn:active{transform:translateY(1px)}
+.folio-home .rv-btn:focus-visible{outline:2px solid var(--ui-ink);outline-offset:3px}
+.folio-home .rv-btn-dark{background:var(--ui-ink);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 10px 24px -14px rgba(31,35,32,.7)}
+.folio-home .rv-btn-dark .rv-chip,.folio-home .rv-btn-dark:hover .rv-chip{background:#fff;color:var(--ui-ink)}
+.folio-home .rv-btn-dark:hover{background:#000}
+.folio-home .rv-btn-ghost{background:#fff;color:var(--ui-ink);box-shadow:inset 0 0 0 1px var(--ui-line)}
+.folio-home .rv-btn-ghost .rv-chip{background:var(--ui-stone)}
+.folio-home .rv-btn-ghost:hover{box-shadow:inset 0 0 0 1px var(--ui-ink)}
+.folio-home .rv-btn-light{background:#fff;color:var(--ui-ink)}
+.folio-home .rv-btn-light .rv-chip,.folio-home .rv-btn-light:hover .rv-chip{background:var(--ui-ink);color:#fff}
+.folio-home .rv-btn-glass{background:rgba(255,255,255,.14);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.folio-home .rv-btn-glass .rv-chip,.folio-home .rv-btn-glass:hover .rv-chip{background:#fff;color:var(--ui-ink)}
+.folio-home .rv-btn-glass:hover{background:rgba(255,255,255,.26)}
+
+/* Text link with chip, used in cards and section heads (replaces the underline + long arrow). */
+.folio-home .rv-link,.folio-home .folio-link{display:inline-flex;align-items:center;justify-content:flex-start;gap:14px;min-height:44px;padding:0;border:0!important;font-size:15px;font-weight:600;letter-spacing:.06em;white-space:nowrap;color:inherit;background:none}
+.folio-home .rv-link>span:first-child{background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;background-position:0 100%;background-repeat:no-repeat;padding-bottom:3px;transition:background-size .35s var(--ui-ease)}
+.folio-home .rv-link:hover>span:first-child{background-size:100% 1px}
+
+/* Round arrow button for works and products */
+.folio-home .rv-round{flex:none;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;border:0;box-shadow:inset 0 0 0 1px var(--ui-line);color:var(--ui-ink);background:#fff;transition:background .25s,color .25s,box-shadow .25s}
+.folio-home .rv-round .rv-icon{width:16px;height:16px}
+.folio-home .rv-round:hover,.folio-home .rv-work-photo:hover+.rv-caption .rv-round{background:var(--ui-ink);color:#fff;box-shadow:none}
+.folio-home .rv-round:hover .rv-icon,.folio-home .rv-work-photo:hover+.rv-caption .rv-round .rv-icon{transform:translateX(2px)}
+
+@media(prefers-reduced-motion:reduce){.folio-home .rv-chip,.folio-home .rv-icon,.folio-home .rv-btn,.folio-home .rv-round{transition:none}}
+
+/* Animated brand mark (transparent GIF); the picture element swaps in the still PNG for reduced motion. */
+.folio-home .rv-logo{display:block;width:100%;height:100%;aspect-ratio:1}
+.folio-home .rv-logo>img{width:100%;height:100%;object-fit:contain;mix-blend-mode:normal}

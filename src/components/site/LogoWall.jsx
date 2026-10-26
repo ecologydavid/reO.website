@@ -7,7 +7,8 @@ const priority=['ase','delta','pwc','pinkoi','fubon','hola','disney','tmall','ta
 const ordered=[...logos].sort((a,b)=>{const x=priority.indexOf(a.id),y=priority.indexOf(b.id);return (x<0?99:x)-(y<0?99:y)});
 const glassTones=['ivory','jade','ivory','smoke','ivory','jade','smoke','ivory','jade','ivory','smoke','ivory'];
 const aggregate='/assets/brand-aggregate.svg';
-const mineral='/assets/brand-slab-ivory.png';
+// 640px WebP: the texture tiles at 310px and 16% opacity, so this is sharp at 2x (the 1254px PNG was 2.7 MB).
+const mineral='/assets/brand-slab-ivory.webp';
 // Tangent strips close the rounded perimeter between the two glass faces.
 const corners=[['right','bottom',0],['left','bottom',90],['left','top',180],['right','top',270]].flatMap(([x,y,start])=>Array.from({length:6},(_,i)=>{
  const angle=start+(i+.5)*15,radians=angle*Math.PI/180;

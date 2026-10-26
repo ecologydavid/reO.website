@@ -1,38 +1,209 @@
-import React,{useEffect,useRef,useState} from 'react';
+import React,{useCallback,useEffect,useId,useRef,useState} from 'react';
 import models from '../data/models.json';
 import cases from '../data/brand-cases.json';
 import SiteHeader from './site/SiteHeader.jsx';
 import SiteFooter from './site/SiteFooter.jsx';
 import LogoWall from './site/LogoWall.jsx';
-import MaterialHero from './site/MaterialHero.jsx';
+import ShopWindow from './site/ShopWindow.jsx';
 import {contentHref} from './site/navigation.js';
+import {siteStats} from './site/stats.js';
+import GoldDust from './GoldDust.jsx';
+import {Arrow,BrandLogo,Button,RoundArrow,SectionHead,Frame} from './site/ui.jsx';
 import './home.css';
+import './home-v10.css';
 
-export function Arrow(){return <svg viewBox="0 0 40 20" fill="none" aria-hidden="true"><path d="M1 10h36m-7-7 7 7-7 7" stroke="currentColor" strokeWidth="1.2"/></svg>}
-function Brand(){return <img src="/assets/reo-logo.png" alt="re.O" width="84" height="84"/>}
 const byId=Object.fromEntries(cases.map(c=>[c.id,c]));
-const craftMarble='/assets/material-refs/69a54ca0a6d270369e13d530.webp';
-const materialLabels={A:'退役木橫擔／北美黃檜 × 再生大理石',B:'北美黃檜 × 再生大理石',C:'北美黃檜 × 再生大理石',D:'再生大理石 × ABS 銘版',E:'再生大理石 × 金屬鋁片',F:'再生大理石 × 壓克力 × 層疊結構'};
-const materials=['再生大理石','回收玻璃','咖啡渣','退役木橫擔','煤灰','水庫淤泥','木屑','木頭拼板','焚化再生粒料'];
-const services=[['材料研發','從剩餘材料的粉碎、配比到成型試驗，評估質地、色澤與應用可能。'],['產品設計','以品牌故事和使用情境為起點，整合造型、立體建模與材料選擇。'],['製造組裝','從模具、澆注到手工打磨與組裝，逐步把設計變成可觸摸的作品。']];
-function Work({id,className='',onOpen,ip=false}){
-  const c=byId[id];return <article className={`folio-work ${className}`}><button className="folio-work-photo" onClick={e=>onOpen(c,e.currentTarget)} aria-label={`閱讀作品：${c.safe_caption}`}><img src={c.photo} alt={c.safe_caption} loading="lazy" width="1600" height={id==='ase'?'1600':'1200'}/><span className="folio-photo-action">閱讀作品<Arrow/></span></button><div className="folio-work-caption"><div>{ip?<><p className="folio-ip-brand">{id==='disney-hola'?'HOLA × Disney':'HOLA × Marvel'}</p><h3>{c.project}</h3></>:<h3>{c.safe_caption}</h3>}<p>{c.materials.filter(x=>!x.includes('官方授權')).slice(0,2).join(' × ')}</p></div><button className="folio-round-arrow" onClick={e=>onOpen(c,e.currentTarget)} aria-label={`閱讀作品詳情：${c.safe_caption}`}><Arrow/></button></div></article>
+// Recycled-marble process in eight steps. The material page charts three stages (廢棄回收・研磨成粉・
+// 比例澆注); the journal articles 重新定義「廢料」, 實驗再生材質, 強化材質脫氣升級 and 工廠步驟把關
+// describe the steps in between. Photos come from those same pages.
+const sequence=[
+ {label:'石材切割',line:'大理石原塊切割後，留下破碎邊角料。',src:'/content/images/28a451782e04bc72f1.webp',alt:'切割機正在切割大理石原塊',width:1440,height:960},
+ {label:'廢棄回收',line:'回收邊角料，重新成為材料來源。',src:'/content/images/4c8f7e6331677eaa2e.webp',alt:'回收的大理石加工邊角料',width:810,height:1440},
+ {label:'破碎研磨',line:'破碎、乾燥、過篩，讓碎塊統一成粉。',src:'/content/images/f7cf2451cb151f0457.webp',alt:'破碎後的大理石邊料',width:1440,height:1440},
+ {label:'比例調配',line:'經材質實驗與比例優化，與樹脂調和。',src:'/content/images/002e36c018ceece1c4.webp',alt:'re.O 工作室的材料調配容器',width:1440,height:1080},
+ {label:'振動脫氣',line:'高頻振動與真空腔，去除材質中的氣泡。',src:'/content/images/70c8dcab73d64c4d81.webp',alt:'re.O 工作室的真空脫氣設備',width:1440,height:1080},
+ {label:'倒模成型',line:'以設計模具灌注、固化成形。',src:'/content/images/0b9cc353f2982e96ef.webp',alt:'成排的灌注模具',width:1440,height:1440},
+ {label:'品質檢驗',line:'逐一挑出毛刺、白點、指痕與灰塵。',src:'/content/images/eaa0be28bf809c8400.webp',alt:'B 款獎盃再生大理石構件與木質盃身的表面細節',width:1317,height:988},
+ {label:'打磨組裝',line:'回到工作室研磨、組裝，完成作品。',src:'/content/images/e8b500fc458fa120e4.webp',alt:'B 款獎盃 木客微光 × 匠子 完成品',width:1440,height:1080,top:true}
+];
+// Four phases carry the idea at a glance (scrap becomes a trophy); each holds two consecutive steps.
+const phases=[
+ {en:'Reclaim',name:'回收',note:'邊角料成為原料'},
+ {en:'Regenerate',name:'再生',note:'研磨成粉，重新調配'},
+ {en:'Reform',name:'成形',note:'灌注成新的石材'},
+ {en:'Reuse',name:'再利用',note:'檢驗打磨，成為獎盃'}
+];
+const pad=n=>String(n).padStart(2,'0');
+// D and E lead the hero. Positions keep every trophy outside the headline column at any width;
+// D swaps to its three-colour photo only when the stage is wide enough to show all three.
+const slideMs=12000;
+const heroSlides=[
+ {id:'E',name:'The way to PEAK',src:'/assets/hero-wide.jpg',width:2400,height:1800,position:'37% 60%',alt:'E 款 The way to PEAK 黑金與白銀再生大理石公版獎盃'},
+ {id:'D',name:'再生大理石・白／黑／綠',src:'/content/images/8485826e9190eb7057.webp',wide:'/content/images/0ec85ee98fb1103204.webp',width:1440,height:1080,position:'50% 58%',widePosition:'41% 58%',alt:'D 款再生大理石公版獎盃'}
+];
+function Hero({onPreview}){
+ const [active,setActive]=useState(0),[paused,setPaused]=useState(false),[wide,setWide]=useState(()=>matchMedia('(min-width: 1280px)').matches);
+ useEffect(()=>{const query=matchMedia('(min-width: 1280px)'),change=()=>setWide(query.matches);query.addEventListener('change',change);return()=>query.removeEventListener('change',change)},[]);
+ // Endless loop, 12s per slide. With motion the progress bar drives the change (so pausing freezes
+ // it exactly); under reduced motion a plain timer does. The pause button satisfies WCAG 2.2.2.
+ const next=useCallback(()=>setActive(a=>(a+1)%heroSlides.length),[]),still=useRef(matchMedia('(prefers-reduced-motion: reduce)').matches);
+ useEffect(()=>{if(paused||!still.current)return;const timer=setTimeout(next,slideMs);return()=>clearTimeout(timer)},[active,paused,next]);
+ const slide=heroSlides[active],srcOf=s=>wide&&s.wide?s.wide:s.src;
+ return <section className={`rv-hero${paused?' is-paused':''}`} aria-labelledby="rv-hero-title" aria-roledescription="輪播">
+  <GoldDust gust={active} running={!paused}/>
+  {/* A frosted column carries the headline; the featured trophy stays clear beside it. */}
+  <div className="rv-hero-panel">
+   {heroSlides.map((s,i)=><img key={s.id} className={`rv-hero-haze${i===active?' is-active':''}`} src={srcOf(s)} alt="" aria-hidden="true" fetchPriority={i?undefined:'high'}/>)}
+   <p className="rv-hero-kicker"><span>re.O</span>循環設計</p>
+   <div className="rv-hero-copy">
+    <h1 id="rv-hero-title"><span><span>回收石材，</span></span><span><span>灌注新的榮耀。</span></span></h1>
+    <p>大理石邊料研磨成粉，與樹脂調配、澆注、打磨。</p>
+    <div className="rv-hero-actions"><Button href="#collection" variant="light">探索公版獎盃</Button><Button onClick={()=>onPreview(slide.id)} variant="glass">開始 {slide.id} 款排版</Button></div>
+    <div className="rv-hero-picks"><p><span>A–F</span>選一款開始排版</p><ul>{models.map(m=><li key={m.id}><button onClick={()=>onPreview(m.id)} aria-label={`開始 ${m.id} 款 ${m.name} 排版`}><img src={`/assets/product-thumb-${m.id}.webp`} alt="" width="360" height="270"/><span>{m.id}</span></button></li>)}</ul></div>
+   </div>
+   <ul className="rv-hero-stats">{siteStats.map(([n,label,href])=><li key={label}><a href={href}><strong>{n}</strong><span>{label}</span></a></li>)}</ul>
+  </div>
+  <div className="rv-hero-stage">
+   {heroSlides.map((s,i)=><img key={s.id} className={`rv-hero-photo${i===active?' is-active':''}`} src={srcOf(s)} alt={i===active?s.alt:''} aria-hidden={i!==active||undefined} width={s.width} height={s.height} style={{objectPosition:wide&&s.wide?s.widePosition:s.position}} fetchPriority={i?undefined:'high'}/>)}
+   <div className="rv-hero-tabs" role="group" aria-label="主推公版獎盃">{heroSlides.map((s,i)=><button key={s.id} aria-pressed={i===active} onClick={()=>setActive(i)}><span className="rv-hero-bar">{i===active&&<i key={active} onAnimationEnd={next}/>}</span><strong>{s.id}</strong><span>{s.name}</span></button>)}<button className="rv-hero-toggle" onClick={()=>setPaused(p=>!p)} aria-label={paused?'播放輪播':'暫停輪播'}><svg viewBox="0 0 16 16" aria-hidden="true"><path d={paused?'M5 3.5v9l7.5-4.5z':'M5 3.5v9M11 3.5v9'} fill={paused?'currentColor':'none'} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg></button></div>
+  </div>
+ </section>;
+}
+// The film turning from the end of one strip to the start of the next: two true quarter-circle turns
+// drawn at the real pixel width, so the curve stays round at any size. The ribbon's outer edges run
+// straight on from the strips' outer edges and small fillets round the inner corners. The film has
+// thickness: a darker edge shows under the ribbon (and under each strip), the upper edge catches light.
+function FilmTurn({compact}){
+ const box=useRef(null),[w,setW]=useState(0),shade=useId().replace(/:/g,'');
+ useEffect(()=>{const sizes=new ResizeObserver(([entry])=>setW(entry.contentRect.width));sizes.observe(box.current);return()=>sizes.disconnect()},[]);
+ const H=compact?64:96,band=compact?30:44,hole=compact?8:13,f=compact?8:12,t=compact?4:6,R=H/2,xr=w-band/2,xl=band/2;
+ // o shifts the centre line sideways (perforations run at ±hole); the first turn is a right turn, the second a left.
+ const line=o=>`M${xr+o} 0A${R+o} ${R+o} 0 0 1 ${xr-R} ${R+o}L${xl+R} ${R+o}A${R-o} ${R-o} 0 0 0 ${xl+o} ${H}`;
+ return <svg className="rv-film-turn" ref={box} viewBox={`0 0 ${w||1} ${H}`} height={H} aria-hidden="true" data-reveal>{w>0&&<>
+  {/* The far side of each turn catches a little light, as a curved surface would. */}
+  <defs><linearGradient id={shade} gradientUnits="userSpaceOnUse" x1="0" x2={w} y1="0" y2="0"><stop offset="0" stopColor="#3a3b36"/><stop offset={(band+R)/w} stopColor="#151615"/><stop offset={1-(band+R)/w} stopColor="#151615"/><stop offset="1" stopColor="#3a3b36"/></linearGradient></defs>
+  <path className="rv-film-fillet" d={`M${w-band+1} ${f}A${f} ${f} 0 0 0 ${w-band+1-f} 0L${w-band+1} 0ZM${band-1} ${H-f}A${f} ${f} 0 0 0 ${band-1+f} ${H}L${band-1} ${H}Z`}/>
+  <path className="rv-film-ribbon rv-film-edge" d={line(0)} pathLength="1" style={{strokeWidth:band}} transform={`translate(0 ${t})`}/>
+  <path className="rv-film-ribbon" d={line(0)} pathLength="1" style={{strokeWidth:band,stroke:`url(#${shade})`}}/>
+  <path className="rv-film-holes" d={line(-hole)}/><path className="rv-film-holes" d={line(hole)}/>
+  <path className="rv-film-light" d={line(1.5-band/2)}/>
+ </>}</svg>;
+}
+// Phase titles sit on brackets spanning exactly their two frames: above the first strip, below the last,
+// so the four ideas frame the film and read in its order.
+function PhaseMarks({list,side}){return <div className={`rv-film-phases is-${side}`} data-reveal>{list.map(p=><p key={p.en}><strong>{p.name}</strong><span>{p.en}</span><em>{p.note}</em></p>)}</div>}
+function Process(){
+ // The steps run as film: strips of four frames (two on phones), each read left to right, and a
+ // ribbon of film loops from the end of one strip back to the start of the next.
+ const [compact,setCompact]=useState(()=>matchMedia('(max-width: 760px)').matches);
+ useEffect(()=>{const query=matchMedia('(max-width: 760px)'),change=()=>setCompact(query.matches);query.addEventListener('change',change);return()=>query.removeEventListener('change',change)},[]);
+ const per=compact?2:4,strips=[],film=useRef(null);
+ for(let i=0;i<sequence.length;i+=per)strips.push(sequence.slice(i,i+per).map((s,k)=>({...s,n:i+k})));
+ // Strips are rebuilt when the layout switches between four and two frames, so reveal them here too.
+ useEffect(()=>{const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.15});film.current.querySelectorAll('[data-reveal]:not(.is-visible)').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[per]);
+ return <section className="rv-section rv-process" id="process" aria-labelledby="rv-process-title">
+  <div className="rv-gutter"><SectionHead index="00" label="再生工藝" en="Process" id="rv-process-title" title={<>從邊料開始，<br/>讓榮耀成形。</>} link={['了解再生大理石','#/read/pages/material-recycled-marble']}/></div>
+  <div className="rv-gutter">
+   {compact&&<ol className="rv-film-legend" aria-label="四個階段">{phases.map(p=><li key={p.en}><strong>{p.name}</strong><span>{p.en}</span></li>)}</ol>}
+   <div className="rv-film" aria-label="再生大理石製程" role="group" ref={film}>{strips.map((strip,r)=><React.Fragment key={`${per}-${r}`}>
+    {r>0&&<FilmTurn compact={compact}/>}
+    {!compact&&r===0&&<PhaseMarks list={phases.slice(0,2)} side="top"/>}
+    <ol className={`rv-film-strip${r?' is-joined-top':''}${r<strips.length-1?' is-joined-bottom':''}`} start={strip[0].n+1} data-reveal style={{'--n':per}}>{strip.map((s,k)=>{const p=phases[s.n>>1];return <li key={s.label} style={{'--k':k}}>
+     <Frame src={s.src} alt={s.alt} width={s.width} height={s.height} className={s.top?'is-top':''}/>
+     <span className="rv-film-no" aria-hidden="true">{pad(s.n+1)}</span>
+     <p className="rv-film-cap"><em>{p.name}・{p.en}</em><strong>{s.label}</strong><span>{s.line}</span></p>
+    </li>})}</ol>
+    {!compact&&r===strips.length-1&&<PhaseMarks list={phases.slice(2)} side="bottom"/>}
+   </React.Fragment>)}</div>
+   <p className="rv-process-source">依 re.O 材料頁與<a href="#/read/blog/posts/實驗再生材質">工作室文章</a>整理</p>
+  </div>
+ </section>;
+}
+const materials=[
+ ['再生大理石','material-recycled-marble','/assets/material-powder.jpg'],
+ ['回收玻璃','glass','/assets/material-glass.jpg'],
+ ['退役木橫擔','wooden-beam','/assets/material-wood.jpg'],
+ ['咖啡渣','coffee-waste','/content/images/16b62643e8869dd106.webp'],
+ ['水庫淤泥','reservoir-silt','/content/images/b22b4e7305e255f890.webp'],
+ ['煤灰','fly-ash','/content/images/790b5fdc0f89df0d7f.webp'],
+ ['木屑','wood-chips','/content/images/95bd8644e4a1dcf166.webp'],
+ ['木頭拼板','wood-veneer-panel','/content/images/a602a0b334820cff7d.webp'],
+ ['焚化再生粒料','incineration-aggergates','/content/images/e862a0c81a178eedc0.webp']
+];
+// Custom trophies are their own block, apart from the A–F catalogue. Copy follows the 訂製 CUSTOM page.
+const customModes=[
+ {n:'01',title:'專案訂製',line:'以品牌語彙，設計獨有的外觀。',src:'/content/images/ccf5762abffbaf5ef7.webp',alt:'Oni Bus Coffee 品牌咖啡托盤，專案訂製案例'},
+ {n:'02',title:'專料訂製',line:'以品牌的可再利用廢料，製作專屬材質。',src:'/content/images/61b1b99657d3baca5c.webp',alt:'總統盃黑客松獎盃，以焚化再生粒料製作的專料訂製案例'},
+ {n:'03',title:'訂製包裝',line:'外盒、內襯到品牌標識，一併訂製。',src:'/content/images/a39bc07b4f4aa850e6.webp',alt:'黑色訂製外盒與內襯，裝載客製獎座',className:'is-left'}
+];
+// D and E are the models the studio promotes; they lead the collection at a larger size.
+const featured=['E','D'];
+// One spec line per model from models.json: type, height (or diameter) and price. Each item keeps
+// together when the line wraps.
+const specOf=m=>{const d=m.dimensions_mm,size=Array.isArray(d)?`高 ${d[2]} mm`:`直徑 ${d.diameter} mm`;return [m.kind,size,`NT$${m.price.replace('～','–')}`]};
+const awards=[['2018','金點設計獎','積木收納'],['2019','金點設計獎','摺紙花器'],['2024','台北亮點企業','潛力企業獎']];
+function Work({id,brand,title,className=''}){
+ const c=byId[id],href=contentHref(c.source_url);
+ return <article className={`rv-work ${className}`} data-reveal><a className="rv-work-photo" href={href} aria-label={`閱讀作品：${c.safe_caption}`}><Frame src={c.photo} alt={c.safe_caption} width="1600" height={id==='ase'?'1600':'1200'}/></a><div className="rv-caption">{brand&&<p>{brand}</p>}<h3>{title||c.safe_caption}</h3><RoundArrow href={href} label={`閱讀作品詳情：${c.safe_caption}`}/></div></article>;
 }
 export default function Home({onPreview}){
-  const [more,setMore]=useState(false),[service,setService]=useState(null);
-  const root=useRef(null);
-  function openCase(c){window.location.hash=contentHref(c.source_url).slice(1)}
-  useEffect(()=>{const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.04});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
-  return <div className="folio-home" ref={root} style={{'--craft-marble':`url("${craftMarble}")`}}>
-    <a className="folio-skip" href="#collection">跳至公版系列</a>
-    <SiteHeader/>
-    <main>
-      <MaterialHero onPreview={onPreview}/>
-      <section className="folio-collection folio-gutter" id="collection"><div className="folio-catalogue-heading" data-reveal><p className="folio-section-label">公版系列</p><h2>為每份榮耀，<br/>找到合適的形狀。</h2><p>六款設計，從選材到銘版，<br/>留下你的專屬心意。</p></div><div className="folio-products">{models.map(m=><article className="folio-product" key={m.id}><button className="folio-product-image" onClick={()=>onPreview(m.id)} aria-label={`預覽 ${m.id} 款 ${m.name}`}><img src={`/assets/catalogue-${m.id}.webp`} alt={`${m.id} 款 ${m.name}實品`} loading="lazy" width="1200" height="900"/></button><div className="folio-product-info"><span className="folio-product-letter">{m.id}</span><div><h3>{m.name}</h3><p>NT$ {m.price}</p></div><button className="folio-link" onClick={()=>onPreview(m.id)}>開始排版<Arrow/></button></div><p className="folio-product-material">{materialLabels[m.id]}</p><a className="folio-product-detail-link" href={contentHref(m.source_url)}>查看商品詳情<Arrow/></a></article>)}</div><p className="folio-smallprint">官網參考價格，實際報價依款式、數量與客製需求確認。</p></section>
-      <section className="folio-works folio-gutter" id="works"><div className="folio-section-heading" data-reveal><h2>品牌的故事，<br/>由細節成形。</h2><p>從企業回收材料，到專屬品牌造型。<br/>每件作品，都有它的出發點。</p></div><div className="folio-work-pair"><Work id="ase" onOpen={openCase}/><Work id="pinkoi" onOpen={openCase}/></div><div className="folio-secondary-works"><div><h3>更多企業合作，<br/>讓材料創造新的意義。</h3><p>以品牌識別、材料來源和製作細節，<br/>回應每個專案的不同需求。</p></div><Work id="pwc" onOpen={openCase}/><Work id="national-sdgs" onOpen={openCase}/></div><button className="folio-link folio-more" aria-expanded={more} aria-controls="additional-works" onClick={()=>setMore(!more)}>{more?'收起更多作品':'更多企業作品'}<Arrow/></button>{more&&<div className="folio-additional-works" id="additional-works">{['delta','uber-eats','tmall'].map(id=><Work key={id} id={id} onOpen={openCase}/>)}</div>}</section>
-      <LogoWall/><section className="folio-ip folio-gutter"><div className="folio-section-heading" data-reveal><h2>讓經典角色，<br/>走進日常。</h2><p>由 HOLA 合作委製的官方授權設計，<br/>讓循環材料與熟悉的角色相遇。</p></div><div className="folio-ip-pair"><Work id="disney-hola" onOpen={openCase} ip/><Work id="marvel-hola" onOpen={openCase} ip/></div><div className="folio-golden-horse"><p>台北金馬影展 × Pinkoi｜金馬造型擴香紙鎮</p><button className="folio-link" onClick={e=>openCase(byId['golden-horse'],e.currentTarget)}>閱讀作品<Arrow/></button></div></section>
-      <section className="folio-craft" id="materials"><div className="folio-section-heading folio-gutter" data-reveal><h2>設計的起點，<br/>是材料的下一站。</h2><p>保留材料的紋理，也留下手作的溫度。<br/>從配方試驗、成型、打磨，到最後一道組裝。</p></div><div className="folio-craft-body"><img className="folio-hands" src="/assets/craft-hands.webp" alt="職人手中灑落的材料粉末與自然紋理" loading="lazy" width="1200" height="630"/><div className="folio-material-copy"><ul className="folio-materials">{materials.map(m=><li key={m}>{m}</li>)}</ul><div className="folio-services">{services.map(([name],i)=><button key={name} aria-expanded={service===i} aria-controls="service-detail" onClick={()=>setService(service===i?null:i)}>{name}<span>{service===i?'−':'+'}</span></button>)}</div><p className="folio-service-detail" id="service-detail">{service!==null?services[service][1]:'依材料特性與專案需求，評估適合的配方及製程。'}</p><a className="folio-material-source" href="#/explore/materials">閱讀材料應用<Arrow/></a></div></div></section>
-      <section className="folio-about folio-gutter" id="about"><div><h2>以設計，<br/>延續材料的生命。</h2><p>re.O 致力於讓被忽略的材料重新進入生活，<br/>透過設計與製造，開啟循環的更多可能。</p><p>從產業剩餘材料到企業專屬作品，<br/>我們把對環境的關注，落實在每一道細節。</p></div><dl className="folio-awards"><div><dt>2018</dt><dd>金點設計獎<span>積木收納</span></dd></div><div><dt>2019</dt><dd>金點設計獎<span>摺紙花器</span></dd></div><div><dt>2024</dt><dd>台北亮點企業<span>潛力企業獎</span></dd></div><a className="folio-link" href="#/read/pages/about">認識 re.O<Arrow/></a></dl><div className="folio-about-contact"><Brand/><h3>讓下一件作品，從這裡開始。</h3><a href="mailto:service@re-o.co">service@re-o.co</a><a href="tel:+886289665369">+886-2-8966-5369</a><button className="folio-link" onClick={()=>onPreview('B')}>開始銘版排版<Arrow/></button></div></section>
-    </main><SiteFooter/>
-  </div>
+ const root=useRef(null);
+ useEffect(()=>{const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.04});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
+ return <div className="folio-home rv-home" ref={root}>
+  <a className="folio-skip" href="#collection">跳至公版系列</a>
+  <SiteHeader/>
+  <main>
+   <Hero onPreview={onPreview}/>
+   <Process/>
+
+   <section className="rv-section rv-gutter" id="collection" aria-labelledby="rv-collection-title">
+    <SectionHead index="01" label="公版獎盃" en="Collection" id="rv-collection-title" title={<>為每份榮耀，<br/>找到合適的形狀。</>} link={['商品詳情與規格','#/explore/standard']}/>
+    <div className="rv-products">{[...models].sort((a,b)=>featured.indexOf(b.id)-featured.indexOf(a.id)).map(m=><article className={`rv-product${featured.includes(m.id)?' is-feature':''}`} key={m.id} data-reveal>
+     <button className="rv-product-photo" onClick={()=>onPreview(m.id)} aria-label={`開始 ${m.id} 款 ${m.name} 銘版排版`}><Frame src={`/assets/catalogue-${m.id}.webp`} alt={`${m.id} 款 ${m.name}實品`} width="1200" height="900"/><span className="rv-tab" aria-hidden="true">{m.id}</span></button>
+     <div className="rv-spec"><div><h3><span className="sr-only">{m.id} 款 </span>{m.name}</h3><p>{specOf(m).map(t=><span key={t}>{t}</span>)}</p></div><button className="rv-start" onClick={()=>onPreview(m.id)} aria-label={`開始 ${m.id} 款排版`}><span className="rv-start-text">開始排版</span><Arrow/></button></div>
+    </article>)}</div>
+   </section>
+
+   <section className="rv-section rv-gutter" id="custom" aria-labelledby="rv-custom-title">
+    <SectionHead index="02" label="客製化獎盃" en="Custom" id="rv-custom-title" title={<>為品牌，<br/>訂製專屬的榮耀。</>} link={['訂製方式與流程','#/read/pages/custom']}/>
+    <ol className="rv-modes">{customModes.map(m=><li key={m.n} data-reveal><a href="#/read/pages/custom"><Frame src={m.src} alt={m.alt} width="1440" height="1440" className={m.className}/><span className="rv-mode-label"><em>{m.n}</em><strong>{m.title}</strong><Arrow/></span><span className="rv-mode-line">{m.line}</span></a></li>)}</ol>
+    <p className="rv-subhead" data-reveal><span>Selected Works</span><a className="rv-link" href="#/explore/cases?filter=企業獎盃"><span>全部企業獎盃</span><Arrow/></a></p>
+    <div className="rv-works"><div><Work id="ase" className="is-square"/><Work id="pwc" className="is-tall"/></div><div><Work id="pinkoi" className="is-tall"/><Work id="national-sdgs" className="is-tall"/></div></div>
+   </section>
+
+   <section className="rv-section rv-materials" id="materials" aria-labelledby="rv-materials-title">
+    <div className="rv-gutter">
+     <SectionHead index="03" label="循環材料" en="Materials" id="rv-materials-title" title={<>材料的下一站。</>} link={['全部循環材料','#/explore/materials']}/>
+     <ul className="rv-swatches">{materials.map(([name,slug,src],i)=><li key={slug} data-reveal><a href={`#/read/pages/${slug}`}><Frame src={src} alt={`${name}原材料`}/><span className="rv-swatch-name"><em>{String(i+1).padStart(2,'0')}</em><strong>{name}</strong><Arrow/></span></a></li>)}</ul>
+    </div>
+   </section>
+
+   <LogoWall/>
+
+   <section className="rv-section rv-gutter" id="ip" aria-labelledby="rv-ip-title">
+    <SectionHead index="04" label="授權與聯名" en="Collaborations" id="rv-ip-title" title={<>讓經典角色，<br/>走進日常。</>}/>
+    <div className="rv-ip"><Work id="disney-hola" brand="HOLA × Disney" title={byId['disney-hola'].project}/><Work id="marvel-hola" brand="HOLA × Marvel" title={byId['marvel-hola'].project}/><Work id="golden-horse" brand="台北金馬影展 × Pinkoi" title="金馬造型擴香紙鎮"/></div>
+   </section>
+
+   <ShopWindow/>
+
+   <section className="rv-craft" id="craft" aria-labelledby="rv-craft-title">
+    <img src="/content/images/8adb10dc0ad1b38e8f.webp" alt="職人手中灑落的再生材料粉末" width="1440" height="960" loading="lazy"/>
+    <div className="rv-craft-copy rv-gutter" data-reveal><p className="rv-display" aria-hidden="true">Craft</p><h2 id="rv-craft-title">設計的起點，<br/>是材料的下一站。</h2><ul><li>材料研發</li><li>產品設計</li><li>製造組裝</li></ul><Button href="#/explore/journal" variant="glass">走進工作室</Button></div>
+   </section>
+
+   <section className="rv-section rv-about rv-gutter" id="about" aria-labelledby="rv-about-title">
+    <p className="rv-display" aria-hidden="true">Studio</p>
+    <div className="rv-about-label"><BrandLogo alt="" size={300}/><span>About re.O</span></div>
+    <div className="rv-about-body" data-reveal>
+     <Frame src="/content/images/8a959cd06cce7ed889.webp" alt="re.O 工作室分類保存的回收材料" width="1440" height="1080"/>
+     <h2 id="rv-about-title">以設計，延續材料的生命。</h2>
+     <p>讓被忽略的材料，重新進入生活。</p>
+     <dl className="rv-awards">{awards.map(([y,name,work])=><div key={y+work}><dt>{y}</dt><dd>{name}<span>{work}</span></dd></div>)}</dl>
+     <Button href="#/read/pages/about" variant="dark">認識 re.O</Button>
+    </div>
+   </section>
+  </main>
+  <SiteFooter/>
+ </div>;
 }

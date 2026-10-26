@@ -79,3 +79,13 @@
  .folio-home .material-wall .slab-face::before{animation:none!important}
  .material-wall .slab-link:focus-visible .slab-front{outline:2px solid #667762;outline-offset:-5px}
 }
+
+/* V17 smaller tiles: eight per row and slightly landscape, so the 40 logos take far less height. */
+.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:18px 16px}
+.material-wall .slab-surface{aspect-ratio:5/4;--slab-depth:22px}
+.folio-home .material-wall .slab-logo{padding:12px}
+.folio-home .material-wall .slab-logo canvas{height:62px}
+@media(max-width:1200px){.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(max-width:800px){.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:600px){.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 10px}.material-wall .slab-surface{aspect-ratio:1;--slab-depth:16px}.folio-home .material-wall .slab-logo{padding:8px}.folio-home .material-wall .slab-logo canvas{height:44px}}
+.folio-home .material-wall .slab-back-logo canvas{height:32px}.folio-home .material-wall .slab-project{font-size:12px}

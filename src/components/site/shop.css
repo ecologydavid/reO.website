@@ -1,0 +1,36 @@
+/* Pinkoi retail window: a stone panel with one dark feature photo and the six product families.
+   Same vocabulary as the rest of the site — Ming headline, pill button, chip arrow (tilted: leaves the site). */
+.shop-window{padding-top:clamp(56px,7vw,112px);padding-bottom:clamp(56px,7vw,112px)}
+.shop-panel{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);background:#f4f3ef}
+.folio-home .shop-feature{position:relative;display:block;overflow:hidden;min-height:100%}
+.folio-home .shop-feature img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.folio-home .shop-panel:hover .shop-feature img{transform:scale(1.03)}
+.shop-body{display:flex;flex-direction:column;gap:22px;padding:clamp(32px,4vw,64px)}
+.shop-kicker{display:flex;align-items:center;gap:14px;font-size:12px;letter-spacing:.14em;color:#5d6259}
+.shop-kicker>span{font:600 13px/1 var(--ui-display);letter-spacing:.16em;text-transform:uppercase;color:var(--ui-ink);padding-right:14px;border-right:1px solid var(--ui-line)}
+.folio-home .shop-body h2{font-family:var(--folio-serif);font-size:clamp(30px,3vw,48px);font-weight:600;line-height:1.3;letter-spacing:.08em;color:var(--ui-ink)}
+.shop-lead{font-size:15px;line-height:1.9;letter-spacing:.05em;color:#4d524a}
+.shop-items{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;list-style:none;margin:6px 0 0;padding:0}
+.folio-home .shop-items a{display:flex;flex-direction:column;gap:4px}
+.folio-home .shop-thumb{display:block;aspect-ratio:1;overflow:hidden;background:#fff;margin-bottom:6px}
+.folio-home .shop-thumb img{transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.folio-home .shop-items a:hover .shop-thumb img,.folio-home .shop-items a:focus-visible .shop-thumb img{transform:scale(1.06)}
+.shop-items strong{font-size:14px;font-weight:600;letter-spacing:.08em;color:var(--ui-ink)}
+.shop-items em{font:500 10px/1.2 var(--ui-display);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:#7a7f75}
+.folio-home .shop-items a:focus-visible{outline:2px solid var(--ui-ink);outline-offset:4px}
+.shop-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
+.shop-actions>p{font-size:12px;letter-spacing:.1em;color:#7a7f75}
+/* The chip arrow tilts up-right: the link opens Pinkoi in a new tab. */
+.folio-home .shop-go .rv-chip .rv-icon,.folio-home .shop-go:hover .rv-chip .rv-icon{transform:rotate(-45deg)}
+@media(max-width:1100px){
+ .shop-panel{grid-template-columns:1fr}
+ .folio-home .shop-feature{aspect-ratio:16/9;min-height:0}
+ .shop-items{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ .folio-home .shop-feature{aspect-ratio:4/3}
+ .shop-body{gap:18px;padding:28px 22px 32px}
+ .shop-kicker{flex-direction:column;align-items:flex-start;gap:8px;font-size:11px}
+ .shop-kicker>span{padding-right:0;border-right:0}
+ .shop-items{gap:10px}
+}
