@@ -170,7 +170,8 @@ UI UX Pro Max skill is installed at ../.claude/skills/ui-ux-pro-max (v2.15.0, MI
 
 ## GitHub Pages deployment (2026-10-27)
 - .github/workflows/deploy-pages.yml builds on every push to main (pnpm install, tests, build) and
-  publishes dist to GitHub Pages. One-time: Settings → Pages → Source "GitHub Actions".
+  force-pushes dist to the gh-pages branch; Pages serves that branch at
+  https://ecologydavid.github.io/reO.website/ (Pages was enabled by the first gh-pages push).
 - Pages serves under /<repo>/. Source keeps root paths ('/assets/…', '/content/…'); vite.config.js
   prefixes them at build time when BASE_PATH is set, and catalogue.js rebases fetched page JSON.
   Keep new public-file references as plain '/assets/…' or '/content/…' string literals.
