@@ -174,3 +174,8 @@ UI UX Pro Max skill is installed at ../.claude/skills/ui-ux-pro-max (v2.15.0, MI
 - Pages serves under /<repo>/. Source keeps root paths ('/assets/…', '/content/…'); vite.config.js
   prefixes them at build time when BASE_PATH is set, and catalogue.js rebases fetched page JSON.
   Keep new public-file references as plain '/assets/…' or '/content/…' string literals.
+
+## Header rhythm (v26, 2026-10-28)
+- 8px grid, one 48px control height: capsule (4 + 40 + 4), 排版工作室 and 選單 buttons all 48px on one
+  centre line; header 96px (72px condensed, 76px phones). Links 20px padding with 4px gaps (24px from
+  1600px, 14px at 1320px and below); actions 12px apart. Media steps sit after the base rules.
