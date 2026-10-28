@@ -1,91 +1,37 @@
-/* Liquid glass study, scoped to brand tiles and separate from the editor. */
-.folio-home .material-wall{background:#fff;padding-top:66px;padding-bottom:68px;overflow:visible}
-.folio-home .material-wall.standalone{padding-top:50px}
-.folio-home .material-wall .folio-section-heading{margin-bottom:36px}
-.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:28px 24px;border:0;background:transparent}
-.folio-home .material-wall .site-logo-cell{border:0;min-width:0;position:relative}
-.material-wall .slab-ivory{--glass-top:#f1f1e8;--glass-body:#dce3d7;--glass-bottom:#bccbbb;--glass-core:#f7f7ede8;--glass-edge:#b1c6b1;--aggregate-opacity:.62}
-.material-wall .slab-jade{--glass-top:#afc3b4;--glass-body:#829e8c;--glass-bottom:#577767;--glass-core:#edf3e7e6;--glass-edge:#759b84;--aggregate-opacity:.72}
-.material-wall .slab-smoke{--glass-top:#c5ccc3;--glass-body:#a3afa3;--glass-bottom:#7d8f81;--glass-core:#f1f3e8eb;--glass-edge:#8da18d;--aggregate-opacity:.68}
-.material-wall .slab-bottle{--glass-top:#7f9b89;--glass-body:#405f4e;--glass-bottom:#2c4a3c;--glass-core:#516e5dbd;--glass-edge:#60816b;--aggregate-opacity:.72}
-.material-wall .slab-contrast{--glass-top:#97ac9a;--glass-body:#6e8675;--glass-bottom:#536b5b;--glass-core:#819887ad;--glass-edge:#7d9c83;--aggregate-opacity:.64}
-.folio-home .material-wall .site-logo-cell>.slab-link{display:block;height:auto;min-height:0;padding:0;width:100%;color:var(--folio-ink);text-decoration:none;background:transparent;border:0;text-align:left;border-radius:10px;-webkit-tap-highlight-color:transparent}
-.folio-home .material-wall .slab-link:focus-visible{outline:2px solid #526550;outline-offset:8px}
-.material-wall .slab-surface{
- --slab-depth:30px;--slab-half:calc(var(--slab-depth)/2);--slab-radius:10px;
- --slab-rest:rotateY(0deg);--slab-turned:rotateY(-180deg);
- display:block;position:relative;aspect-ratio:1;perspective:1100px;perspective-origin:50% 50%;isolation:isolate;
- transition:transform .5s cubic-bezier(.2,.65,.25,1);z-index:1;
-}
-.material-wall .slab-surface::after{content:"";position:absolute;inset:auto 6px -6px 6px;height:12px;border-radius:50%;background:#63756a36;filter:blur(7px);z-index:-1;pointer-events:none;transition:opacity .5s,transform .5s}
-.material-wall .slab-rotor{position:absolute;inset:0;display:block;transform-style:preserve-3d;transition:transform .78s cubic-bezier(.22,.67,.2,1);transform:var(--slab-rest)}
-.material-wall .slab-face{
- position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
- border-radius:var(--slab-radius);border:1px solid #ffffffed;overflow:hidden;
- backface-visibility:hidden;-webkit-backface-visibility:hidden;
- background:radial-gradient(ellipse 86% 52% at 50% 49%,var(--glass-core) 24%,transparent 100%),radial-gradient(ellipse at 10% 0%,#ffffffa3,transparent 54%),linear-gradient(145deg,var(--glass-top),var(--glass-body) 54%,var(--glass-bottom));
- backdrop-filter:blur(7px) saturate(1.15);-webkit-backdrop-filter:blur(7px) saturate(1.15);
- box-shadow:inset 0 3px 3px #fffffffa,inset 0 -5px 8px #526f685c,inset -4px 0 7px #7b97856b,0 2px 3px #536b5b38,0 8px 16px #66726925;
-}
-.material-wall .slab-face::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(118deg,transparent 20%,#ffffffbd 36%,#ffffff12 48%,transparent 57%);background-size:200% 100%;background-position:100% 0;opacity:.86;pointer-events:none}
-.material-wall .slab-face::after{content:"";position:absolute;inset:5px;z-index:2;border:1px solid #fffffff0;border-radius:calc(var(--slab-radius) - 4px);box-shadow:0 0 0 2px #91ac9847,0 0 0 4px #ffffff57,inset 2px 2px 4px #ffffffeb,inset -2px -3px 5px #52755d73;pointer-events:none}
-.material-wall .slab-granules{position:absolute;inset:0;pointer-events:none;background-image:var(--aggregate-texture);background-size:230px 230px;background-position:var(--aggregate-x) var(--aggregate-y);opacity:var(--aggregate-opacity);mask-image:radial-gradient(ellipse 76% 37% at 50% 50%,transparent 35%,#000 92%);-webkit-mask-image:radial-gradient(ellipse 76% 37% at 50% 50%,transparent 35%,#000 92%)}
-.material-wall .slab-granules::before{content:"";position:absolute;inset:0;background-image:var(--mineral-texture);background-size:310px;background-position:var(--aggregate-y) var(--aggregate-x);mix-blend-mode:multiply;opacity:.16}
-.material-wall .slab-front{transform:translateZ(var(--slab-half))}
-.material-wall .slab-back{transform:rotateY(180deg) translateZ(var(--slab-half));flex-direction:column;gap:16px;padding:20px 16px}
-.material-wall .slab-edge{
- position:absolute;display:block;backface-visibility:visible;pointer-events:none;
- background:linear-gradient(90deg,#f2fff6ef 0%,var(--glass-edge) 15%,#e3f4e9c9 28%,var(--glass-bottom) 52%,#d9efe0d9 78%,#ffffffed 100%);
- box-shadow:inset 1px 0 1px #ffffffbf,inset -1px 0 1px #638d7759;
-}
-.material-wall .slab-edge-left,.material-wall .slab-edge-right{top:var(--slab-radius);bottom:var(--slab-radius);width:var(--slab-depth);transform:rotateY(90deg)}
-.material-wall .slab-edge-left{left:calc(-1*var(--slab-half))}.material-wall .slab-edge-right{right:calc(-1*var(--slab-half))}
-.material-wall .slab-edge-top,.material-wall .slab-edge-bottom{left:var(--slab-radius);right:var(--slab-radius);height:var(--slab-depth);transform:rotateX(90deg);background:linear-gradient(#f2fff6ef,var(--glass-edge) 15%,#e3f4e9c9 28%,var(--glass-bottom) 52%,#d9efe0d9 78%,#ffffffed)}
-.material-wall .slab-edge-top{top:calc(-1*var(--slab-half))}.material-wall .slab-edge-bottom{bottom:calc(-1*var(--slab-half))}
-.material-wall .slab-corner{width:var(--slab-depth);height:calc(var(--slab-radius)*.26331);background-color:color-mix(in srgb,var(--glass-body),#fff var(--edge-light));box-shadow:none}
-.folio-home .material-wall .slab-bottle .slab-project,.folio-home .material-wall .slab-contrast .slab-project{color:#fff}
-.folio-home .material-wall .slab-logo{position:relative;z-index:3;display:block;width:100%;padding:18px 16px}
-.folio-home .material-wall .slab-logo canvas{display:block;width:100%;height:88px;object-fit:contain}
-.folio-home .material-wall .slab-back-logo{display:block;position:relative;z-index:3;width:100%}
-.folio-home .material-wall .slab-back-logo canvas{width:100%;height:42px;object-fit:contain}
-.folio-home .material-wall .slab-project{position:relative;z-index:3;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;font-size:13px;line-height:1.55;letter-spacing:.01em;color:#30382e;text-align:center;font-weight:500;text-wrap:balance}
-.folio-home .material-wall .slab-project .project-tail{font:inherit;color:inherit;white-space:nowrap}
-.material-wall .slab-link.is-opening .slab-rotor,.material-wall .slab-link:focus-visible .slab-rotor{transform:var(--slab-turned)}
-.material-wall .slab-link.is-opening .slab-surface,.material-wall .slab-link:focus-visible .slab-surface{transform:translateY(-5px)}
-.material-wall .slab-link.is-opening .slab-face::before,.material-wall .slab-link:focus-visible .slab-face::before{animation:glass-light .8s ease-out both}
-@keyframes glass-light{from{background-position:100% 0;opacity:.45}50%{opacity:1}to{background-position:0% 0;opacity:.65}}
-@media(hover:hover){
- .material-wall .slab-link:hover .slab-rotor{transform:var(--slab-turned)}
- .material-wall .slab-link:hover .slab-surface{transform:translateY(-5px)}
- .material-wall .slab-link:hover .slab-surface::after{opacity:.65;transform:translateY(5px) scaleX(.94)}
- .material-wall .slab-link:hover .slab-face::before{animation:glass-light .8s ease-out both}
-}
-@media(max-width:1200px){.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:800px){.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:600px){
- .folio-home .material-wall,.folio-home .material-wall.standalone{padding-top:42px;padding-bottom:45px}
- .folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 18px}
- .material-wall .slab-surface{--slab-depth:24px;--slab-radius:8px}
- .folio-home .material-wall .folio-section-heading{margin-bottom:30px}
- .folio-home .material-wall .slab-logo{padding:12px}
- .folio-home .material-wall .slab-logo canvas{height:68px}
- .material-wall .slab-back{padding:14px;gap:10px}
- .folio-home .material-wall .slab-back-logo canvas{height:30px}
- .folio-home .material-wall .slab-project{font-size:11px;line-height:1.5;-webkit-line-clamp:3}
-}
-@media(prefers-reduced-motion:reduce){
- .folio-home .material-wall .slab-rotor{transition:none!important;transform:var(--slab-rest)!important}
- .folio-home .material-wall .slab-surface{transition:none!important;transform:none!important}
- .folio-home .material-wall .slab-face::before{animation:none!important}
- .material-wall .slab-link:focus-visible .slab-front{outline:2px solid #667762;outline-offset:-5px}
-}
+/* V29 brand index, scoped to the logo wall and separate from the editor. Partner marks keep their own
+   colours on white tiles over a warm ground. Pointing at a mark brings it forward while the others step
+   back, and a small print of the work (photo, project, partner) follows the cursor. Replaces the
+   recycled-glass slabs (v12–v27) and the grey flip ledger (v28). */
+.folio-home .brand-ledger{background:#f4f2ec;padding-top:clamp(56px,6vw,96px);padding-bottom:clamp(56px,6vw,96px);border-top:0}
+.folio-home .brand-ledger.standalone{padding-top:50px}
+.folio-home .brand-ledger .folio-section-heading{margin-bottom:40px}
+.folio-home .brand-ledger .site-logo-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;border:0;background:none}
+.folio-home .brand-ledger .site-logo-cell{aspect-ratio:5/4;border:0;background:#fff;transition:opacity .45s ease,background .45s ease}
+.folio-home .brand-ledger .site-logo-cell.is-dark{background:var(--folio-ink)}
+.folio-home .brand-ledger .site-logo-cell>.brand-card-link{display:flex;align-items:center;justify-content:center;width:100%;height:100%;min-height:0;padding:0 16%;border:0;background:none;color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.folio-home .brand-ledger .brand-card-link:focus-visible{outline:2px solid var(--folio-ink);outline-offset:3px}
+.folio-home .brand-ledger .site-logo-cell canvas{display:block;width:100%;height:56px;object-fit:contain;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.folio-home .brand-ledger .is-silhouette canvas{filter:brightness(0);opacity:.78}
+.folio-home .brand-ledger .site-logo-cell.is-active canvas{transform:scale(1.08)}
+/* Only the mark under the pointer stays at full strength. */
+@media(hover:hover){.folio-home .brand-ledger .site-logo-grid:has(.is-active) .site-logo-cell:not(.is-active){opacity:.32}}
 
-/* V17 smaller tiles: eight per row and slightly landscape, so the 40 logos take far less height. */
-.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:18px 16px}
-.material-wall .slab-surface{aspect-ratio:5/4;--slab-depth:22px}
-.folio-home .material-wall .slab-logo{padding:12px}
-.folio-home .material-wall .slab-logo canvas{height:62px}
-@media(max-width:1200px){.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
-@media(max-width:800px){.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:600px){.folio-home .material-wall .site-logo-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 10px}.material-wall .slab-surface{aspect-ratio:1;--slab-depth:16px}.folio-home .material-wall .slab-logo{padding:8px}.folio-home .material-wall .slab-logo canvas{height:44px}}
-.folio-home .material-wall .slab-back-logo canvas{height:32px}.folio-home .material-wall .slab-project{font-size:12px}
+/* The print: placed by LogoWall with transform; it fades and settles in with `scale`. */
+.brand-preview{position:fixed;left:0;top:0;z-index:40;width:clamp(220px,17vw,300px);margin:0;background:#fff;box-shadow:0 1px 2px rgba(31,35,32,.08),0 28px 56px -28px rgba(31,35,32,.5);pointer-events:none;opacity:0;scale:.94;transition:opacity .28s ease,scale .45s cubic-bezier(.2,.7,.2,1);will-change:transform}
+.brand-preview.is-on{opacity:1;scale:1}
+.brand-preview img{display:block;width:100%;height:auto;max-height:clamp(220px,22vw,340px);object-fit:cover;background:#ecebe6}
+.brand-preview figcaption{display:flex;flex-direction:column;gap:6px;padding:14px 16px 16px}
+.brand-preview em{font:500 11px/1.3 "Helvetica Neue","Segoe UI",Arial,sans-serif;font-style:normal;letter-spacing:.12em;color:#80847d}
+.brand-preview strong{font:600 15px/1.5 var(--folio-serif);letter-spacing:.04em;color:var(--folio-ink);text-wrap:balance}
+@media(hover:none){.brand-preview{display:none}}
+
+@media(max-width:1200px){.folio-home .brand-ledger .site-logo-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(max-width:800px){.folio-home .brand-ledger .site-logo-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:600px){
+ .folio-home .brand-ledger,.folio-home .brand-ledger.standalone{padding-top:44px;padding-bottom:48px}
+ .folio-home .brand-ledger .folio-section-heading{margin-bottom:28px}
+ .folio-home .brand-ledger .site-logo-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ .folio-home .brand-ledger .site-logo-cell>.brand-card-link{padding:0 12%}
+ .folio-home .brand-ledger .site-logo-cell canvas{height:40px}
+}
+@media(prefers-reduced-motion:reduce){.brand-preview,.folio-home .brand-ledger .site-logo-cell,.folio-home .brand-ledger .site-logo-cell canvas{transition:none}}

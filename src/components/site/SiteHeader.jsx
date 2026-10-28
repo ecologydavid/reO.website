@@ -63,6 +63,8 @@ export default function SiteHeader(){
    {navigation.map(n=><a key={n.id} href={n.href} aria-current={current===n.id?'page':undefined} onMouseEnter={e=>place(e.currentTarget)} onFocus={e=>place(e.currentTarget)}><span>{n.short}</span></a>)}
   </nav>
   <div className="site-actions">
+   {/* Retail has its own button: the studio's Pinkoi store, in a new tab (arrow tilted to say so). */}
+   <Button href={shopLink[1]} target="_blank" rel="noopener noreferrer" variant="ghost" className="site-shop" icon={<ArrowIcon/>} aria-label="Pinkoi 選購（另開新視窗）"><span className="site-shop-brand">Pinkoi</span><span className="site-shop-label"> 選購</span></Button>
    <Button href="#/preview/B" className="site-studio">排版工作室</Button>
    <Button variant="ghost" className="site-menu-button" ref={trigger} aria-expanded={open} aria-controls="site-menu" onClick={()=>setOpen(true)} icon={<MenuIcon/>}>選單</Button>
   </div>

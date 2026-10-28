@@ -32,7 +32,7 @@ function MaterialReel(){
  const swatches=[['再生大理石','/assets/material-powder.jpg'],['回收玻璃','/assets/material-glass.jpg'],['退役木橫擔','/assets/material-wood.jpg'],['咖啡渣','/content/images/16b62643e8869dd106.webp'],['水庫淤泥','/content/images/b22b4e7305e255f890.webp'],['煤灰','/content/images/790b5fdc0f89df0d7f.webp'],['木屑','/content/images/95bd8644e4a1dcf166.webp'],['木頭拼板','/content/images/a602a0b334820cff7d.webp'],['焚化再生粒料','/content/images/e862a0c81a178eedc0.webp']];
  return <section className="pg-studio" aria-labelledby="pg-band-title">
   <div className="pg-split folio-gutter" data-reveal><p className="pg-kicker"><span>01</span>Textures</p><div><h2 id="pg-band-title">材料的下一站。</h2><p>從回收原材的特性出發，探索設計與製造的可能。</p></div></div>
-  <div className="pg-reel" aria-label="循環材料質地"><ul>{[...swatches,...swatches].map(([name,src],i)=><li key={i} className={i%swatches.length%2?'is-low':undefined} aria-hidden={i>=swatches.length||undefined}><img src={src} alt={i<swatches.length?`${name}原材料質地`:''} loading="lazy"/><span className="pg-reel-name">{name}</span></li>)}</ul></div>
+  <div className="pg-reel" aria-label="循環材料質地"><ul>{[...swatches,...swatches].map(([name,src],i)=><li key={i} className={i%swatches.length%2?'is-low':undefined} aria-hidden={i>=swatches.length||undefined}><img src={src} alt={i<swatches.length?`${name}原材料質地`:''} loading="lazy"/><span className="pg-reel-name"><em>{String(i%swatches.length+1).padStart(2,'0')}</em>{name}</span></li>)}</ul></div>
  </section>;
 }
 
@@ -46,7 +46,7 @@ export const landings={
  cases:{en:'Works',title:'企業與IP案例',card:'groups',unit:'件作品',
   actions:[['聯絡合作','mailto:service@re-o.co'],['合作品牌牆','#/brands','ghost']],
   hero:{src:'/assets/case-ase.webp',alt:'日月光 ASE 最佳供應獎盃',width:2400,height:2400,position:'50% 42%'},
-  band:CollaborationBand,indexEn:'Works',indexTitle:'全部合作案例',grid:'is-banners',
+  band:CollaborationBand,indexEn:'Works',indexTitle:'全部合作案例',grid:'is-works',
   closing:['合作領域涵蓋電子金控、政府單位與商業品牌。',['合作品牌牆','#/brands'],['客製化獎盃','#/read/pages/custom']]},
  materials:{en:'Materials',title:'循環材料',card:'groups',
   actions:[['專料訂製','#/read/pages/custom'],['寄信洽詢','mailto:service@re-o.co','ghost']],

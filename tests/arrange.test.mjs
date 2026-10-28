@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {pages,findPage} from '../src/content/catalogue.js';
+import {pages,findPage,cardImage} from '../src/content/catalogue.js';
 import {arrangeArticle} from '../src/content/arrange.js';
 const root=new URL('../',import.meta.url);
 const load=path=>JSON.parse(readFileSync(new URL('public/content/pages/'+findPage(path).id+'.json',root),'utf8'));
@@ -9,7 +9,7 @@ const load=path=>JSON.parse(readFileSync(new URL('public/content/pages/'+findPag
 test('material pages become a works index led by each linked case photo',()=>{
  const page=load('#/read/pages/material-recycled-marble'),a=arrangeArticle(page,findPage);
  assert.equal(a.works.length,21);
- assert.deepEqual(a.works[0],{title:'富邦 長春公開賽 高爾夫球獎盃',year:'2022–2025',line:'造型取自揮桿時球桿軌跡劃出的弧形，延伸成完整圓形構，代表目標、專注與循環不止的訓練精神',href:'#/read/pages/the-senior-pga-of-taiwan',hero:findPage('#/read/pages/the-senior-pga-of-taiwan').hero});
+ assert.deepEqual(a.works[0],{title:'富邦 長春公開賽 高爾夫球獎盃',year:'2022–2025',line:'造型取自揮桿時球桿軌跡劃出的弧形，延伸成完整圓形構，代表目標、專注與循環不止的訓練精神',href:'#/read/pages/the-senior-pga-of-taiwan',hero:cardImage(findPage('#/read/pages/the-senior-pga-of-taiwan'))});
  assert.equal(a.chapters.length,0);
  assert(a.photos.every(im=>!/點擊/.test(im.alt)),'link banners are not repeated in the gallery');
 });

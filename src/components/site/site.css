@@ -119,3 +119,14 @@
 .folio-home .site-actions .rv-btn .rv-chip{width:36px;height:36px}
 @media(min-width:1600px){.site-links>a{padding:0 24px}}
 @media(max-width:1320px){.site-links>a{padding:0 14px;font-size:14px;letter-spacing:.06em}.folio-home .site-actions .rv-btn{padding-left:18px;gap:12px}}
+
+/* V29 shop button: Pinkoi retail gets its own pill beside 排版工作室, same 48px height, ivory fill so
+   it reads apart from 選單; the chip arrow is tilted for an external link. Below 1320px the word 選購
+   drops; on phones the pill sits before 選單. */
+.folio-home .site-actions .site-shop{background:#f2f0ea;box-shadow:none}
+.folio-home .site-actions .site-shop:hover{background:#e9e6dd}
+.folio-home .site-actions .site-shop .rv-chip{background:#fff}
+.folio-home .site-actions .site-shop .rv-chip .rv-icon,.folio-home .site-actions .site-shop:hover .rv-chip .rv-icon{transform:rotate(-45deg)}
+.site-shop-brand{font-weight:600;letter-spacing:.04em}
+@media(max-width:1320px) and (min-width:1101px){.site-shop-label{display:none}}
+@media(max-width:760px){.folio-home .site-actions .site-shop{padding-left:16px}.site-shop-label{display:none}}

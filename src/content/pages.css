@@ -212,3 +212,53 @@
  .pg-band-works>li{flex:0 0 72%;scroll-snap-align:start}
  .pg-band-works>li:nth-child(2){margin-top:0}
 }
+
+/* V27 spec sheet: the landing/About fact card drops its grey box. It reads as part of the page —
+   an ink rule on top, facts in two columns with hairlines, labels small, values in the Ming serif.
+   Group cards (cases, materials) lead with a large numeral. */
+.pg-contact{padding:0;border-radius:0;background:none;border-top:1px solid var(--folio-ink)}
+.pg-contact dl{gap:0 clamp(24px,3vw,48px);margin:0 0 32px}
+.pg-contact dl>div{padding:20px 0 22px;border-bottom:1px solid rgba(31,35,32,.14)}
+.pg-contact dt{font-size:12px;letter-spacing:.1em}
+.pg-contact dt>span{font-size:11px;letter-spacing:.16em}
+.folio-home .pg-contact dd{margin-top:12px;font-family:var(--folio-serif);font-size:clamp(19px,1.6vw,24px);font-weight:600;line-height:1.45;letter-spacing:.06em}
+.pg-contact dd small{font-family:inherit}
+.pg-contact.is-groups dl>div{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:baseline;column-gap:18px;padding:22px 0}
+.pg-contact.is-groups dt{display:contents}
+.pg-contact.is-groups dt>span{grid-row:1/3;font:300 clamp(40px,3.6vw,56px)/1 var(--pg-latin);letter-spacing:-.02em;text-transform:none}
+.folio-home .pg-contact.is-groups dd{grid-column:2;grid-row:1;margin:0}
+.pg-contact.is-groups dt::after{content:attr(data-unit);grid-column:2;grid-row:2;font-size:12px;letter-spacing:.1em;color:var(--pg-muted)}
+.pg-contact .pg-actions{margin-top:0}
+@media(max-width:760px){
+ .pg-contact{padding:0}
+ .pg-contact dl{margin-bottom:24px}
+ .folio-home .pg-contact dd{font-size:18px}
+ .pg-contact.is-groups dt>span{font-size:40px}
+}
+
+/* V27 material reel: names sit in a white tab cut into each photo's bottom-left corner (Ming, bold),
+   the same device as the A–F letters, instead of floating pills. */
+.pg-reel-name{left:0;bottom:0;display:flex;align-items:baseline;gap:10px;padding:14px 20px 12px 16px;border-radius:0;background:#fff;font:700 clamp(18px,1.5vw,24px)/1.2 var(--folio-serif);letter-spacing:.08em;color:var(--folio-ink)}
+.pg-reel-name>em{font:500 11px/1 var(--pg-latin);font-style:normal;letter-spacing:.08em;color:var(--pg-muted)}
+@media(max-width:760px){.pg-reel-name{padding:10px 14px 8px 12px;font-size:17px}}
+.pg-contact.is-groups dt>span:first-child{min-width:1.25em;font-variant-numeric:tabular-nums}
+
+/* V29 standard models: all six in one row on desktop (4:5 frames, photo height capped by the window),
+   so the whole line-up and every name read in one screen; three per row below 1100px. */
+@media(min-width:1101px){
+ .folio-home .content-works-grid.is-models{grid-template-columns:repeat(6,minmax(0,1fr));gap:40px 20px}
+ .folio-home .content-works-grid.is-models .content-works-photo{aspect-ratio:4/5;max-height:calc(100svh - 300px)}
+ .folio-home .content-works-grid.is-models .content-works-title strong{font-size:16px}
+}
+@media(max-width:1100px) and (min-width:761px){.folio-home .content-works-grid.is-models{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* V30 group summary reads as a phrase: the group name, then its count, e.g. 「企業獎盃 36 件作品」. The
+   name (Ming) leads on the left; the count (light Latin, tabular) and its unit sit on the right of
+   the same baseline, so the two columns line up into a ledger. */
+.pg-contact.is-groups dl>div{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:22px 0 20px}
+.pg-contact.is-groups dt{display:block;font:600 clamp(19px,1.6vw,24px)/1.35 var(--folio-serif);letter-spacing:.06em;color:var(--folio-ink)}
+.pg-contact.is-groups dt::after{content:none}
+.folio-home .pg-contact.is-groups dd{display:flex;align-items:baseline;gap:8px;margin:0;font:inherit;white-space:nowrap}
+.pg-contact.is-groups dd>strong{font:300 clamp(36px,3.2vw,50px)/1 var(--pg-latin);letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--folio-ink)}
+.pg-contact.is-groups dd>span{font-size:13px;font-weight:500;letter-spacing:.12em;color:var(--pg-muted)}
+@media(max-width:760px){.pg-contact.is-groups dd>strong{font-size:36px}}

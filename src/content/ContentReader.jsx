@@ -1,5 +1,5 @@
 import React,{useEffect,useRef,useState} from 'react';
-import {findPage,loadPage,pages,resolveHref,editorFor,isIndexPage} from './catalogue.js';
+import {findPage,loadPage,pages,resolveHref,editorFor,isIndexPage,isBanner} from './catalogue.js';
 import {categoryInfo} from '../components/site/navigation.js';
 import {SiteArrow} from '../components/site/SiteHeader.jsx';
 import {ContentCard} from './ContentLibrary.jsx';
@@ -35,8 +35,8 @@ function Details({details,title,onOpen}){
 function Works({works}){
  return <section className="content-works" aria-labelledby="content-works-title">
   <header className="content-works-head"><p className="content-display" aria-hidden="true">Works</p><h2 id="content-works-title">應用作品</h2></header>
-  <ol className="content-works-grid is-banners">{works.map((w,i)=><li key={w.href} data-reveal><a href={w.href}>
-   <span className="content-works-photo"><img src={w.hero.src} alt={w.hero.alt||w.title} width={w.hero.width} height={w.hero.height} loading="lazy"/></span>
+  <ol className="content-works-grid is-works">{works.map((w,i)=><li key={w.href} data-reveal><a href={w.href}>
+   <span className="content-works-photo" style={isBanner(w.hero)?{aspectRatio:'2/1'}:undefined}><img src={w.hero.src} alt={w.hero.alt||w.title} width={w.hero.width} height={w.hero.height} loading="lazy"/></span>
    <span className="content-works-meta"><em>{pad(i+1)}</em>{w.year&&<span>{w.year}</span>}</span>
    <span className="content-works-title"><strong>{w.title}</strong><SiteArrow/></span>
    {w.line&&<span className="content-works-line">{w.line}</span>}

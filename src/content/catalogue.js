@@ -1,5 +1,7 @@
 import index from '../data/content-index.json' with {type:'json'};
 import cardBanners from '../data/card-images.json' with {type:'json'};
+import casePhotos from '../data/case-photos.json' with {type:'json'};
+import caseDetails from '../data/case-details.json' with {type:'json'};
 export const pages=index.pages;
 const urls=index.aliases;
 const decodePath=path=>{try{return decodeURIComponent(path)}catch{return path}};
@@ -22,7 +24,18 @@ const cache=new Map();
 const base=import.meta.env?.BASE_URL||'/';
 const rebase=value=>typeof value==='string'?(base!=='/'&&/^\/(assets|content)\//.test(value)?base+value.slice(1):value):Array.isArray(value)?value.map(rebase):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([k,v])=>[k,rebase(v)])):value;
 export function loadPage(id){if(!cache.has(id))cache.set(id,fetch('/content/pages/'+id+'.json').then(r=>{if(!r.ok)throw Error('讀取失敗');return r.json()}).then(rebase).catch(e=>{cache.delete(id);throw e}));return cache.get(id)}
-// Cards show the old-site 2:1 banner for each case, which carries the client name; rewritten case
-// pages keep their product photo as the hero, so their banner is looked up here instead.
+// The old-site 2:1 banners print the client's name across the photo, so case cards show a clean
+// product photo from the same page (case-photos.json, picked by hand) and name the client only on
+// hover. Other pages keep their banner or hero.
 export const isBanner=im=>Boolean(im)&&Math.abs(im.width/im.height-2)<.03;
-export function cardImage(p){return cardBanners[p.path]||p.hero}
+export function cardImage(p){return casePhotos[p.path]||cardBanners[p.path]||p.hero}
+// Two hand-checked detail shots per case (480px, case-details.json) and how many more photos the page has.
+export const detailsFor=p=>caseDetails[p.path]||{details:[],more:0};
+// Case titles name the client on either side of ｜: "作品｜T.B. Design x re.O", "作品｜快點行銷委製"
+// or "台達｜作品". Returns the work and the client without the "x re.O" credit.
+export function splitCase(title){
+ const [a,...rest]=title.split('｜'),b=rest.join('｜');
+ if(!b)return {work:a,client:''};
+ const [work,client]=/re\.?[OＯ]\s*$|委製$/i.test(b)?[a,b]:[b,a];
+ return {work,client:client.replace(/\s*x\s*re\.?[OＯ]\s*$|委製$/i,'').replace(/\s+x\s+/gi,' × ').trim()};
+}

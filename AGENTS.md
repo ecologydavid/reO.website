@@ -180,3 +180,45 @@ UI UX Pro Max skill is installed at ../.claude/skills/ui-ux-pro-max (v2.15.0, MI
 - 8px grid, one 48px control height: capsule (4 + 40 + 4), 排版工作室 and 選單 buttons all 48px on one
   centre line; header 96px (72px condensed, 76px phones). Links 20px padding with 4px gaps (24px from
   1600px, 14px at 1320px and below); actions 12px apart. Media steps sit after the base rules.
+
+## Spec sheets and material tabs (v27, 2026-10-28)
+- Landing and About fact cards (.pg-contact) have no grey box: an ink rule on top, two columns of
+  facts with hairlines, values in the Ming serif; group cards (cases, materials) lead with large
+  tabular numerals. Material reel names sit in a white tab cut into each photo's bottom-left corner
+  (index + bold Ming name), matching the A–F letter tabs. No floating pill labels on photos.
+
+## Hero performance, even custom grid, brand ledger, clean case photos (v28, 2026-10-29)
+- Hero: the panel haze uses pre-blurred 160px images (public/assets/hero-haze-*.webp), never a live
+  blur filter; the E photo is hero-wide.webp, preloaded from index.html on the home route only.
+  GoldDust starts after load + idle, bakes its edge fade into grain alpha (no CSS mask), draws at 1x
+  (1.5x on capable devices), caps at 60 fps, runs fewer grains at 30 fps on phones/modest devices and
+  steps down (finally stops) if frames keep running late. Zoom and progress bar pause off screen.
+- Home Custom: no stagger on desktop. Three modes in one even row (3:4), selected works in an even
+  row of four (4:5).
+- Brand wall: hairline ledger under an ink rule, grey marks, flat cards that turn over to an ink face
+  with the project name. No glass, gradients, granule texture, thickness or shadows.
+- Case cards show a clean product photo (src/data/case-photos.json, hand-picked; not the old 2:1
+  banners that print the client name). The client appears only on hover/focus as a white tab rising
+  from the photo's lower-left corner (splitCase in catalogue.js).
+
+## Brand index, shop button, one view per set (v29, 2026-10-29)
+- Brand wall (supersedes the v28 grey flip ledger): marks in their own colours on white tiles over a
+  warm ground (#f4f2ec). Pointing at a mark dims the others and a print of the work (520px WebP in
+  public/assets/brand-previews, `preview` in logo-wall.json) follows the cursor with project and
+  partner; keyboard focus shows it beside the tile; touch goes straight to the case. 木客 sits on an
+  ink tile; DCC prints as a silhouette.
+- Header: a Pinkoi pill (ivory, tilted arrow, new tab) beside 排版工作室; "選購" drops 1101–1320px
+  and on phones.
+- A set of photos and their facts must read in one screen. Home collection (desktop): E and D two
+  columns wide and two rows tall, the other four as a 2×2; row height = min(window-based, the height
+  that keeps E/D at least 4:5 so no trophy is cut). Home materials: 3×3, row height from the window.
+  Standard page: all six models in one row of 4:5 frames.
+
+## Case peek and group ledger (v30, 2026-10-29)
+- Case cards: the client tab keeps even inner margins (16px left, 14px top, 13px bottom). On hover the
+  photo narrows to its own shape where possible (--main 0.56–0.72, so the whole piece stays in view)
+  and two hand-checked detail shots (public/assets/case-details, 480px; case-details.json, no event
+  photos or name banners) slide in on the right; the lower one shows "+N" photos left on the page.
+  Details mount on first hover only. Used on the cases index and the custom page works list.
+- Cases/materials summary reads as a phrase: group name (Ming) left, count (light, tabular) and unit
+  right on one baseline, e.g. 企業獎盃 … 36 件作品; the name filters the index.

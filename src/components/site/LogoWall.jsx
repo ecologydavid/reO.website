@@ -1,57 +1,61 @@
-import React,{useEffect,useRef,useState} from 'react';
+import React,{useCallback,useEffect,useRef,useState} from 'react';
 import logos from '../../data/logo-wall.json';
 import {SiteArrow} from './SiteHeader.jsx';
 import BrandMark from './BrandMark.jsx';
 import './brand-wall.css';
 const priority=['ase','delta','pwc','pinkoi','fubon','hola','disney','tmall','taipower','iii'];
 const ordered=[...logos].sort((a,b)=>{const x=priority.indexOf(a.id),y=priority.indexOf(b.id);return (x<0?99:x)-(y<0?99:y)});
-const glassTones=['ivory','jade','ivory','smoke','ivory','jade','smoke','ivory','jade','ivory','smoke','ivory'];
-const aggregate='/assets/brand-aggregate.svg';
-// 640px WebP: the texture tiles at 310px and 16% opacity, so this is sharp at 2x (the 1254px PNG was 2.7 MB).
-const mineral='/assets/brand-slab-ivory.webp';
-// Tangent strips close the rounded perimeter between the two glass faces.
-const corners=[['right','bottom',0],['left','bottom',90],['left','top',180],['right','top',270]].flatMap(([x,y,start])=>Array.from({length:6},(_,i)=>{
- const angle=start+(i+.5)*15,radians=angle*Math.PI/180;
- const cx=Math.cos(radians).toFixed(6),cy=Math.sin(radians).toFixed(6);
- return {left:`calc(${x==='right'?'100% - var(--slab-radius)':'var(--slab-radius)'} + var(--slab-radius) * ${cx})`,top:`calc(${y==='bottom'?'100% - var(--slab-radius)':'var(--slab-radius)'} + var(--slab-radius) * ${cy})`,transform:`translate(-50%,-50%) rotateZ(${angle}deg) rotateY(90deg)`,'--edge-light':`${Math.round(65-20*Math.cos(radians-1))}%`};
-}));
+// Marks drawn in white for dark grounds: 木客 keeps its white mark on an ink tile; DCC's black and
+// white inks print as one dark silhouette.
+const tone={muke:'is-dark',dcc:'is-silhouette'};
 
-function BrandSlab({logo,index}){
- const [opening,setOpening]=useState(false),timer=useRef(null);
- useEffect(()=>()=>clearTimeout(timer.current),[]);
- const Tag=logo.href?'a':'button';
- const project=logo.project?.split('｜')[0]||logo.name;
- const projectTail=project.match(/^(.*?)([\u3400-\u9fff]{2,8})$/u);
- function activate(event){
-  if(!logo.href){setOpening(value=>!value);return}
-  // Touch plays one short flip before following the same local article link.
-  // Modifier clicks and reduced-motion navigation retain native anchor behavior.
-  if(event.button!==0||event.metaKey||event.ctrlKey||event.altKey||event.shiftKey)return;
-  if(!matchMedia('(hover: none)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  event.preventDefault();if(opening)return;
-  setOpening(true);timer.current=setTimeout(()=>{window.location.hash=logo.href.slice(1)},800);
- }
- const tone=logo.id==='muke'?'bottle':logo.id==='dcc'?'contrast':glassTones[index%glassTones.length];
- return <article className={`site-logo-cell slab-glass slab-${tone}`} style={{'--aggregate-x':`${index*73%230}px`,'--aggregate-y':`${index*119%230}px`}}>
-  <Tag className={`slab-link${opening?' is-opening':''}`} href={logo.href||undefined}
-   aria-label={logo.href?`閱讀 ${logo.name} 合作案例`:`查看 ${logo.name} 合作資訊`}
-   aria-expanded={!logo.href?opening:undefined} title={logo.project||logo.name}
-   onClick={activate}>
-   <span className="slab-surface" aria-hidden="true"><span className="slab-rotor">
-    <span className="slab-face slab-front"><span className="slab-granules"/><span className="slab-logo"><BrandMark image={logo.image} name={logo.name}/></span></span>
-    <span className="slab-face slab-back"><span className="slab-granules"/><span className="slab-back-logo"><BrandMark image={logo.image} name={logo.name}/></span><span className="slab-project">{projectTail?<>{projectTail[1]}<span className="project-tail">{projectTail[2]}</span></>:project}</span></span>
-    <span className="slab-edge slab-edge-left"/><span className="slab-edge slab-edge-right"/><span className="slab-edge slab-edge-top"/><span className="slab-edge slab-edge-bottom"/>
-    {corners.map((style,i)=><span className="slab-edge slab-corner" key={i} style={style}/>)}
-   </span></span>
-  </Tag>
- </article>
-}
-
+// Partner marks in their own colours on white tiles over a warm ground. Pointing at a mark brings it
+// forward (the others step back) and a small print of the work follows the cursor: the photo, the
+// project and the partner. Keyboard focus shows the same print beside the tile; touch goes straight
+// to the case.
 export default function LogoWall({standalone=false}){
- return <section className={`site-brand-wall material-wall folio-gutter ${standalone?'standalone':''}`} id="brands" style={{'--aggregate-texture':`url("${aggregate}")`,'--mineral-texture':`url("${mineral}")`}}>
+ const card=useRef(null),motion=useRef({x:0,y:0,tx:0,ty:0,r:0,frame:0,on:false,still:false,loaded:false});
+ const [active,setActive]=useState(null),[shown,setShown]=useState(null);
+ useEffect(()=>{const m=motion.current;m.still=matchMedia('(prefers-reduced-motion: reduce)').matches;return()=>cancelAnimationFrame(m.frame)},[]);
+ // The print eases towards the pointer and leans a little with its speed.
+ const loop=useCallback(()=>{
+  const m=motion.current,el=card.current;if(!el){m.frame=0;return}
+  const k=m.still?1:.2,dx=(m.tx-m.x)*k,dy=(m.ty-m.y)*k;m.x+=dx;m.y+=dy;
+  m.r+=(Math.max(-5,Math.min(5,dx*.4))-m.r)*.2;if(m.still)m.r=0;
+  el.style.transform=`translate3d(${m.x.toFixed(1)}px,${m.y.toFixed(1)}px,0) rotate(${m.r.toFixed(2)}deg)`;
+  m.frame=m.on||Math.abs(dx)+Math.abs(dy)+Math.abs(m.r)>.2?requestAnimationFrame(loop):0;
+ },[]);
+ // Beside the point (right of it, or left near the screen edge), kept inside the window.
+ const aim=useCallback((x,y,jump)=>{
+  const m=motion.current,el=card.current;if(!el)return;
+  const w=el.offsetWidth,h=el.offsetHeight,gap=28;
+  m.tx=x+gap+w>innerWidth-16?x-gap-w:x+gap;m.ty=Math.max(16,Math.min(innerHeight-h-16,y-h*.4));
+  if(jump){m.x=m.tx;m.y=m.ty;m.r=0}
+  if(!m.frame)m.frame=requestAnimationFrame(loop);
+ },[loop]);
+ const show=useCallback((logo,x,y)=>{
+  const m=motion.current,first=!m.on;m.on=true;setActive(logo.id);setShown(logo);
+  // Prints are small (520px WebP); fetch them all once the wall is first pointed at.
+  if(!m.loaded){m.loaded=true;logos.forEach(l=>{if(l.preview)new Image().src=l.preview.src})}
+  requestAnimationFrame(()=>aim(x,y,first));
+ },[aim]);
+ const hide=useCallback(()=>{motion.current.on=false;setActive(null)},[]);
+ const mouse=e=>e.pointerType==='mouse';
+ return <section className={`site-brand-wall brand-ledger folio-gutter ${standalone?'standalone':''}`} id="brands">
   <div className="folio-section-heading"><h2>與不同品牌，<br/>共同完成值得<span style={{whiteSpace:'nowrap'}}>留下的作品。</span></h2><p>企業委製、品牌合作與授權設計案例。</p></div>
-  <div className="site-logo-grid">{ordered.map((logo,index)=><BrandSlab logo={logo} index={index} key={logo.id}/>)}</div>
+  <div className="site-logo-grid" onPointerMove={e=>{if(mouse(e)&&motion.current.on)aim(e.clientX,e.clientY)}} onPointerLeave={e=>{if(mouse(e))hide()}}>
+   {ordered.map(logo=><article className={`site-logo-cell brand-card ${tone[logo.id]||''}${active===logo.id?' is-active':''}`} key={logo.id}>
+    <a className="brand-card-link" href={logo.href} aria-label={`閱讀 ${logo.name} 合作案例：${logo.project?.split('｜')[0]||logo.name}`}
+     onPointerEnter={e=>{if(mouse(e))show(logo,e.clientX,e.clientY)}}
+     onFocus={e=>{if(!e.currentTarget.matches(':focus-visible'))return;const b=e.currentTarget.getBoundingClientRect();show(logo,b.right-12,b.top+b.height/2)}}
+     onBlur={hide}>
+     <BrandMark image={logo.image} name={logo.name}/>
+    </a>
+   </article>)}
+  </div>
+  <figure className={`brand-preview${active?' is-on':''}`} ref={card} aria-hidden="true">
+   {shown&&<>{shown.preview&&<img src={shown.preview.src} alt="" width={shown.preview.width} height={shown.preview.height}/>}<figcaption><em>{shown.name}</em><strong>{shown.project?.split('｜')[0]||shown.name}</strong></figcaption></>}
+  </figure>
   <div className="site-brand-bottom"><p>依各專案的委製與合作關係展示；HOLA 授權設計、代理委製等資訊詳見案例說明。</p><a className="folio-link" href="#/explore/cases">探索全部合作案例<SiteArrow/></a></div>
  </section>
 }
-

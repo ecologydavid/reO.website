@@ -442,3 +442,48 @@
  .rv-product:not(.is-feature) .rv-spec .rv-start{position:absolute;right:8px;top:-46px;margin:0}
  .rv-home .rv-product:not(.is-feature) .rv-spec .rv-chip{width:34px;height:34px;background:#fff;border-color:#fff;box-shadow:0 4px 12px -6px rgba(0,0,0,.35)}
 }
+
+/* V28 custom: no stagger on desktop. The three ways to order sit in one even row (3:4 frames) and the selected
+   works in an even row of four below, both edge to edge on the page grid. */
+.rv-modes>li:nth-child(n){margin-top:0}
+.rv-works.is-even .rv-work:nth-child(n){width:auto}
+.rv-mode-label{margin-top:20px;padding-top:16px;border-top:1px solid var(--ui-line)}
+.rv-works.is-even{grid-template-columns:repeat(4,minmax(0,1fr));gap:48px 24px}
+.rv-works.is-even .rv-frame{aspect-ratio:4/5}
+.rv-works.is-even .rv-caption{align-items:flex-start;flex-wrap:nowrap}
+.rv-works.is-even .rv-round{flex:none;width:40px;height:40px}
+.rv-home .rv-works.is-even .rv-caption>h3{font-size:16px;line-height:1.6}
+@media(max-width:1100px){.rv-works.is-even{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+ .rv-mode-label{margin-top:16px;padding-top:12px}
+ .rv-works.is-even{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 12px}
+ .rv-home .rv-works.is-even .rv-caption>h3{font-size:14px}
+ .rv-works.is-even .rv-caption .rv-round{display:none}
+}
+
+/* V28 hero performance: the haze is a pre-blurred 160px image (no live blur filter); the sand fades in
+   once the page is idle and bakes its own edge fade, so the canvas carries no CSS mask; the zoom and
+   progress bar pause while the hero is off screen. */
+.rv-home .rv-hero-haze{filter:none;max-width:none}
+.rv-hero-dust,.rv-hero-dust.is-on{-webkit-mask-image:none;mask-image:none;opacity:0;transition:opacity 1.6s ease}
+.rv-hero:not(.is-paused) .rv-hero-dust.is-on{opacity:1}
+.rv-hero.is-away .rv-hero-photo.is-active,.rv-hero.is-away .rv-hero-bar>i{animation-play-state:paused}
+@media(max-width:760px){.rv-hero-dust{-webkit-mask-image:none;mask-image:none}}
+
+/* V29 one view per set: a set of photos and their facts should read in one screen, never split by the
+   fold. Collection (desktop): E and D tall on the left, A–F's other four as a 2×2 on the right, row
+   height taken from the window height so all six (photos, names, prices) fit at once. Materials:
+   all nine in a 3×3 whose row height also follows the window. */
+@media(min-width:1101px){
+ /* Row height follows the window height, but never so tall that E and D (two columns wide) crop
+    narrower than 4:5, which would cut the outer trophies of each group shot. */
+ .rv-products{--rv-row:clamp(250px,min(calc((100svh - 230px)/2),calc((91.66vw - 120px)/4.8 + 43px)),380px);grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(2,var(--rv-row));gap:24px}
+ .rv-product,.rv-product.is-feature{grid-column:span 1;display:flex;flex-direction:column;min-height:0}
+ .rv-product.is-feature{grid-column:span 2;grid-row:span 2}
+ .rv-product-photo{flex:1;min-height:0}
+ .rv-products .rv-product-photo .rv-frame{height:100%;aspect-ratio:auto}
+ .rv-product:not(.is-feature) .rv-tab{width:52px;height:52px;font-size:28px}
+ .rv-product:not(.is-feature) .rv-spec{padding-top:12px}
+ .rv-home .rv-product:not(.is-feature) .rv-spec h3{font-size:16px}
+ .rv-swatches .rv-frame{aspect-ratio:auto;height:clamp(180px,calc((100svh - 190px)/3),300px)}
+}

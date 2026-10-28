@@ -1,6 +1,7 @@
 import React,{useEffect,useRef} from 'react';
-import {pages,cardImage} from './catalogue.js';
+import {pages,cardImage,splitCase} from './catalogue.js';
 import {SiteArrow} from '../components/site/SiteHeader.jsx';
+import {CasePhoto} from './ContentLibrary.jsx';
 import {Button,ArrowLink} from '../components/site/ui.jsx';
 import './pages.css';
 // The 客製化獎盃 landing page. The A–F standard catalogue has its own page, so 公版訂製 is not a mode here. Copy follows the 訂製 CUSTOM page.
@@ -13,7 +14,7 @@ const boxes=[['a39bc07b4f4aa850e6','黑色訂製外盒與內襯，裝載圓形�
 const featured=['ase-outstanding-supplier-trophy','national-sustainability-award','uber-eats-trophy','pwc-taiwan-trophy','tmall-super-one-trophy','delta-energy-award-plaque'];
 export default function CustomPage(){
  const root=useRef(null);
- const works=featured.map(slug=>pages.find(p=>p.path==='#/read/pages/'+slug)).filter(p=>p?.hero).map(p=>({...p,card:cardImage(p)}));
+ const works=featured.map(slug=>pages.find(p=>p.path==='#/read/pages/'+slug)).filter(p=>p?.hero).map(p=>({...p,card:cardImage(p),...splitCase(p.title)}));
  useEffect(()=>{document.title='re.O｜客製化獎盃';const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.08});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
  return <main className="pg pg-custom" ref={root}>
   <div className="folio-gutter"><nav className="content-breadcrumb" aria-label="麵包屑"><a href="#/">首頁</a><span>/</span><span>客製化獎盃</span></nav></div>
@@ -38,11 +39,10 @@ export default function CustomPage(){
 
   <div className="folio-gutter"><section className="content-works pg-custom-works" aria-labelledby="pg-works-title">
    <header className="content-works-head"><p className="content-display" aria-hidden="true">Works</p><h2 id="pg-works-title">企業獎盃案例</h2></header>
-   <ol className="content-works-grid is-banners">{works.map((p,i)=><li key={p.id} data-reveal><a href={p.path}>
-    <span className="content-works-photo"><img src={p.card.src} alt={p.card.alt||p.title} width={p.card.width} height={p.card.height} loading="lazy"/></span>
+   <ol className="content-works-grid is-works">{works.map((p,i)=><li key={p.id} data-reveal><a href={p.path}>
+    <CasePhoto page={p} image={p.card} client={p.client}/>
     <span className="content-works-meta"><em>{String(i+1).padStart(2,'0')}</em>{p.metadata?.year&&<span>{String(p.metadata.year).replace(/-/g,'–')}</span>}</span>
-    <span className="content-works-title"><strong>{p.title.split('｜')[0]}</strong><SiteArrow/></span>
-    {p.title.includes('｜')&&<span className="content-works-line">{p.title.split('｜').slice(1).join('｜')}</span>}
+    <span className="content-works-title"><strong>{p.work}</strong><SiteArrow/></span>
    </a></li>)}</ol>
    <div className="pg-center"><Button href="#/explore/cases?filter=企業獎盃">全部企業獎盃案例</Button></div>
   </section></div>

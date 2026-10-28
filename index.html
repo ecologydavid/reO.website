@@ -7,6 +7,8 @@
     <meta name="description" content="re.O 循環設計。探索公版獎盃 A–F，以再生材料為每份榮耀留下印記，線上編輯銘版並下載排版預覽 PDF。" />
     <title>re.O｜循環材料與設計的可能。</title>
     <link rel="icon" type="image/png" href="/assets/reo-logo.png" />
+    <!-- The home hero photo is the largest paint; fetch it alongside the script, on the home route only. -->
+    <script>if(/^#?\/?$/.test(location.hash)){var l=document.createElement('link');l.rel='preload';l.as='image';l.href='%BASE_URL%assets/hero-wide.webp';l.fetchPriority='high';document.head.appendChild(l)}</script>
   </head>
   <body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body>
 </html>

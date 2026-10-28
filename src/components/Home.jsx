@@ -35,25 +35,28 @@ const phases=[
 ];
 const pad=n=>String(n).padStart(2,'0');
 // D and E lead the hero. Positions keep every trophy outside the headline column at any width;
-// D swaps to its three-colour photo only when the stage is wide enough to show all three.
+// D swaps to its three-colour photo only when the stage is wide enough to show all three. The panel's
+// haze is a 160px copy blurred ahead of time, so no live blur filter runs over the hero.
 const slideMs=12000;
 const heroSlides=[
- {id:'E',name:'The way to PEAK',src:'/assets/hero-wide.jpg',width:2400,height:1800,position:'37% 60%',alt:'E 款 The way to PEAK 黑金與白銀再生大理石公版獎盃'},
- {id:'D',name:'再生大理石・白／黑／綠',src:'/content/images/8485826e9190eb7057.webp',wide:'/content/images/0ec85ee98fb1103204.webp',width:1440,height:1080,position:'50% 58%',widePosition:'41% 58%',alt:'D 款再生大理石公版獎盃'}
+ {id:'E',name:'The way to PEAK',src:'/assets/hero-wide.webp',haze:'/assets/hero-haze-E.webp',width:2400,height:1800,position:'37% 60%',alt:'E 款 The way to PEAK 黑金與白銀再生大理石公版獎盃'},
+ {id:'D',name:'再生大理石・白／黑／綠',src:'/content/images/8485826e9190eb7057.webp',wide:'/content/images/0ec85ee98fb1103204.webp',haze:'/assets/hero-haze-D.webp',width:1440,height:1080,position:'50% 58%',widePosition:'41% 58%',alt:'D 款再生大理石公版獎盃'}
 ];
 function Hero({onPreview}){
- const [active,setActive]=useState(0),[paused,setPaused]=useState(false),[wide,setWide]=useState(()=>matchMedia('(min-width: 1280px)').matches);
+ const [active,setActive]=useState(0),[paused,setPaused]=useState(false),[away,setAway]=useState(false),hero=useRef(null),[wide,setWide]=useState(()=>matchMedia('(min-width: 1280px)').matches);
  useEffect(()=>{const query=matchMedia('(min-width: 1280px)'),change=()=>setWide(query.matches);query.addEventListener('change',change);return()=>query.removeEventListener('change',change)},[]);
+ // Off screen the slow zoom and the progress bar pause, so the hero costs nothing while you read on.
+ useEffect(()=>{const observer=new IntersectionObserver(([entry])=>setAway(!entry.isIntersecting));observer.observe(hero.current);return()=>observer.disconnect()},[]);
  // Endless loop, 12s per slide. With motion the progress bar drives the change (so pausing freezes
  // it exactly); under reduced motion a plain timer does. The pause button satisfies WCAG 2.2.2.
  const next=useCallback(()=>setActive(a=>(a+1)%heroSlides.length),[]),still=useRef(matchMedia('(prefers-reduced-motion: reduce)').matches);
- useEffect(()=>{if(paused||!still.current)return;const timer=setTimeout(next,slideMs);return()=>clearTimeout(timer)},[active,paused,next]);
+ useEffect(()=>{if(paused||away||!still.current)return;const timer=setTimeout(next,slideMs);return()=>clearTimeout(timer)},[active,paused,away,next]);
  const slide=heroSlides[active],srcOf=s=>wide&&s.wide?s.wide:s.src;
- return <section className={`rv-hero${paused?' is-paused':''}`} aria-labelledby="rv-hero-title" aria-roledescription="輪播">
+ return <section className={`rv-hero${paused?' is-paused':''}${away?' is-away':''}`} ref={hero} aria-labelledby="rv-hero-title" aria-roledescription="輪播">
   <GoldDust gust={active} running={!paused}/>
   {/* A frosted column carries the headline; the featured trophy stays clear beside it. */}
   <div className="rv-hero-panel">
-   {heroSlides.map((s,i)=><img key={s.id} className={`rv-hero-haze${i===active?' is-active':''}`} src={srcOf(s)} alt="" aria-hidden="true" fetchPriority={i?undefined:'high'}/>)}
+   {heroSlides.map((s,i)=><img key={s.id} className={`rv-hero-haze${i===active?' is-active':''}`} src={s.haze} alt="" aria-hidden="true"/>)}
    <p className="rv-hero-kicker"><span>re.O</span>循環設計</p>
    <div className="rv-hero-copy">
     <h1 id="rv-hero-title"><span><span>回收石材，</span></span><span><span>灌注新的榮耀。</span></span></h1>
@@ -168,7 +171,7 @@ export default function Home({onPreview}){
     <SectionHead index="02" label="客製化獎盃" en="Custom" id="rv-custom-title" title={<>為品牌，<br/>訂製專屬的榮耀。</>} link={['訂製方式與流程','#/read/pages/custom']}/>
     <ol className="rv-modes">{customModes.map(m=><li key={m.n} data-reveal><a href="#/read/pages/custom"><Frame src={m.src} alt={m.alt} width="1440" height="1440" className={m.className}/><span className="rv-mode-label"><em>{m.n}</em><strong>{m.title}</strong><Arrow/></span><span className="rv-mode-line">{m.line}</span></a></li>)}</ol>
     <p className="rv-subhead" data-reveal><span>Selected Works</span><a className="rv-link" href="#/explore/cases?filter=企業獎盃"><span>全部企業獎盃</span><Arrow/></a></p>
-    <div className="rv-works"><div><Work id="ase" className="is-square"/><Work id="pwc" className="is-tall"/></div><div><Work id="pinkoi" className="is-tall"/><Work id="national-sdgs" className="is-tall"/></div></div>
+    <div className="rv-works is-even"><Work id="ase"/><Work id="pwc"/><Work id="pinkoi"/><Work id="national-sdgs"/></div>
    </section>
 
    <section className="rv-section rv-materials" id="materials" aria-labelledby="rv-materials-title">

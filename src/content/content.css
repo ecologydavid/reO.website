@@ -103,3 +103,34 @@
 /* V15 banner cards: the old-site 2:1 banners carry the client name, so they are never cropped. */
 .folio-home .content-works-grid.is-banners .content-works-photo{aspect-ratio:2/1}
 @media(max-width:760px){.folio-home .content-works-grid.is-banners{grid-template-columns:1fr;gap:28px}}
+
+/* V28 works cards: a clean product photo leads; the client's name rises out of the photo's lower-left
+   corner as a white tab on hover or keyboard focus (same cut-in tab as the collection and materials). */
+.folio-home .content-works-grid.is-works .content-works-photo{position:relative;aspect-ratio:4/3}
+.content-works-client{position:absolute;z-index:1;left:0;bottom:0;display:flex;flex-direction:column;gap:7px;max-width:82%;padding:14px 22px 0 0;background:#fff;clip-path:inset(100% 0 0 0);transition:clip-path .55s cubic-bezier(.2,.7,.2,1)}
+.content-works-client>em{font:500 10px/1 "Helvetica Neue","Segoe UI",Arial,sans-serif;font-style:normal;letter-spacing:.16em;text-transform:uppercase;color:#80847d}
+.content-works-client>span{font:700 clamp(16px,1.3vw,20px)/1.3 var(--folio-serif);letter-spacing:.06em;color:var(--folio-ink);transform:translateY(10px);opacity:0;transition:transform .55s .06s cubic-bezier(.2,.7,.2,1),opacity .4s .06s}
+.content-works-grid a:hover .content-works-client,.content-works-grid a:focus-visible .content-works-client{clip-path:inset(0)}
+.content-works-grid a:hover .content-works-client>span,.content-works-grid a:focus-visible .content-works-client>span{transform:none;opacity:1}
+@media(max-width:760px){.folio-home .content-works-grid.is-works .content-works-photo{aspect-ratio:1}.content-works-client{padding:10px 14px 0 0}.content-works-client>span{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.content-works-client,.content-works-client>span{transition:none}}
+
+/* V30 case photo. The client tab keeps even margins inside its white corner (16px left, 14px top,
+   13px bottom). On hover the photo narrows to --main of the frame (to its own shape where it can, so
+   the whole piece stays in view) and two detail shots slide in on the right; the lower one counts the
+   photos still to see on the case page. Entering details animate in even when mounted mid-hover. */
+.content-works-client{z-index:2;gap:6px;max-width:calc(var(--main,1)*100% - 12px);padding:14px 20px 13px 16px}
+.content-works-client>span{font-size:clamp(16px,1.3vw,19px);line-height:1.25}
+.folio-home .content-works-photo.has-details{background:#fff}
+.content-works-photo.has-details>.content-works-main{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:width .7s cubic-bezier(.2,.7,.2,1)}
+.folio-home .content-works-grid a:hover .has-details>.content-works-main{transform:none}
+.content-works-detail{position:absolute;right:0;top:calc(var(--i)*(50% + 2px));width:calc((1 - var(--main))*100% - 4px);height:calc(50% - 2px);overflow:hidden;background:#ecebe6;transform:translateX(calc(100% + 4px));transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.folio-home .content-works-detail img{display:block;width:100%;height:100%;object-fit:cover;transform:none}
+.content-works-detail>em{position:absolute;inset:0;display:grid;place-items:center;background:rgba(31,35,32,.38);color:#fff;font:300 clamp(20px,1.8vw,28px)/1 "Helvetica Neue","Segoe UI",Arial,sans-serif;font-style:normal;letter-spacing:.02em}
+@keyframes works-detail-in{from{transform:translateX(calc(100% + 4px))}to{transform:none}}
+@media(hover:hover){
+ .content-works-grid a:hover .has-details:has(.content-works-detail)>.content-works-main,.content-works-grid a:focus-visible .has-details:has(.content-works-detail)>.content-works-main{width:calc(var(--main)*100%)}
+ .content-works-grid a:hover .content-works-detail,.content-works-grid a:focus-visible .content-works-detail{transform:none;animation:works-detail-in .6s cubic-bezier(.2,.7,.2,1) calc(var(--i)*.07s) both}
+}
+@media(max-width:760px){.content-works-client{padding:10px 14px 9px 12px}}
+@media(prefers-reduced-motion:reduce){.content-works-photo.has-details>.content-works-main,.content-works-detail{transition:none;animation:none!important}}

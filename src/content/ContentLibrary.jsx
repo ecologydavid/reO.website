@@ -1,6 +1,6 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {categoryInfo} from '../components/site/navigation.js';
-import {collectionPages,groupFor,editorFor,cardImage,isBanner} from './catalogue.js';
+import {collectionPages,groupFor,editorFor,cardImage,isBanner,splitCase,detailsFor} from './catalogue.js';
 import {SiteArrow} from '../components/site/SiteHeader.jsx';
 import {Button,ArrowLink} from '../components/site/ui.jsx';
 import {landings} from './landings.jsx';
@@ -9,11 +9,25 @@ const pad=n=>String(n).padStart(2,'0');
 const cta=page=>page.category==='materials'?'閱讀材料應用':page.category==='cases'?'閱讀完整案例':page.category==='products'?'查看商品詳情':'閱讀完整內容';
 // Small card kept for related-content rows on article pages.
 export function ContentCard({page}){const image=cardImage(page);return <article className="content-entry"><a className="content-entry-image" href={page.path} style={isBanner(image)?{aspectRatio:'2/1'}:undefined}>{image?<img src={image.src} alt={image.alt||page.title} loading="lazy" width={image.width} height={image.height}/>:<div className="content-type-letter">{page.category_label}</div>}</a><p className="content-entry-category">{page.subcategory||page.category_label}</p><h2><a href={page.path}>{page.title}</a></h2><p className="content-entry-description">{page.summary}</p><a className="folio-link" href={page.path}>{cta(page)}<SiteArrow/></a></article>}
+// Case photo. On hover the photo narrows (to its own shape where it can, so the whole piece shows)
+// and two detail shots slide in beside it, the last one counting the photos still to see; the client
+// rises in a tab at the lower left. Details load on the first hover only.
+export function CasePhoto({page,image,client}){
+ const [peek,setPeek]=useState(false),{details,more}=detailsFor(page);
+ const main=details.length?Math.min(.72,Math.max(.56,image.width/image.height*.75)):1;
+ return <span className={`content-works-photo${details.length?' has-details':''}`} style={{'--main':main}} onPointerEnter={()=>setPeek(true)}>
+  <img className="content-works-main" src={image.src} alt={image.alt||page.title} width={image.width} height={image.height} loading="lazy"/>
+  {peek&&details.map((d,i)=><span className="content-works-detail" style={{'--i':i}} key={d.src}><img src={d.src} alt="" width={d.width} height={d.height}/>{i===details.length-1&&more>0&&<em>+{more}</em>}</span>)}
+  {client&&<span className="content-works-client"><em>Client</em><span>{client}</span></span>}
+ </span>;
+}
 // Index entry in the same language as the works index: photo, number and group, title, one line.
+// Case cards lead with the work; the client's name stays off the photo until hover or focus.
 function Entry({page,index,group,showLine}){
- const [title,...rest]=page.title.split('｜'),line=rest.join('｜')||(showLine?page.summary:''),image=cardImage(page);
+ const isCase=page.category==='cases',image=cardImage(page),[first,...rest]=page.title.split('｜');
+ const {work:title,client}=isCase?splitCase(page.title):{work:first,client:''},line=isCase?'':rest.join('｜')||(showLine?page.summary:'');
  return <li data-reveal><a href={page.path}>
-  <span className="content-works-photo" style={isBanner(image)?{aspectRatio:'2/1'}:undefined}>{image?<img src={image.src} alt={image.alt||page.title} width={image.width} height={image.height} loading="lazy"/>:<span className="content-type-letter">{page.category_label}</span>}</span>
+  {isCase&&image?<CasePhoto page={page} image={image} client={client}/>:<span className="content-works-photo" style={isBanner(image)?{aspectRatio:'2/1'}:undefined}>{image?<img src={image.src} alt={image.alt||page.title} width={image.width} height={image.height} loading="lazy"/>:<span className="content-type-letter">{page.category_label}</span>}</span>}
   <span className="content-works-meta"><em>{pad(index+1)}</em><span>{group}</span></span>
   <span className="content-works-title"><strong>{title}</strong><SiteArrow/></span>
   {line&&<span className="content-works-line">{line}</span>}
@@ -34,8 +48,8 @@ export default function ContentLibrary({category,filter:initialFilter=''}){
   <div className="folio-gutter"><nav className="content-breadcrumb" aria-label="麵包屑"><a href="#/">首頁</a><span>/</span><span>{info.label}</span></nav></div>
   <header className="pg-top folio-gutter">
    <div className="pg-title">{landing.en&&<p className="content-display" aria-hidden="true">{landing.en}</p>}<h1>{landing.title||info.label}</h1><p>{info.intro}</p></div>
-   {landing.card&&<div className="pg-contact">
-    <dl>{landing.card==='groups'?filters.map(f=><div key={f}><dt><span>{pad(counts[f])}</span>{landing.unit}</dt><dd><button className="pg-filter-link" onClick={()=>choose(f)}>{f}</button></dd></div>):landing.card.map(([en,label,value])=><div key={en}><dt><span>{en}</span>{label}</dt><dd>{value}</dd></div>)}</dl>
+   {landing.card&&<div className={`pg-contact${landing.card==='groups'?' is-groups':''}`}>
+    <dl>{landing.card==='groups'?filters.map(f=><div key={f}><dt><button className="pg-filter-link" onClick={()=>choose(f)}>{f}</button></dt><dd><strong>{counts[f]}</strong><span>{landing.unit}</span></dd></div>):landing.card.map(([en,label,value])=><div key={en}><dt><span>{en}</span>{label}</dt><dd>{value}</dd></div>)}</dl>
     <div className="pg-actions">{landing.actions.map(([label,href,variant])=><Button key={href} href={href} variant={variant}>{label}</Button>)}</div>
    </div>}
   </header>
