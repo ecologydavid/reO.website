@@ -222,3 +222,27 @@ UI UX Pro Max skill is installed at ../.claude/skills/ui-ux-pro-max (v2.15.0, MI
   Details mount on first hover only. Used on the cases index and the custom page works list.
 - Cases/materials summary reads as a phrase: group name (Ming) left, count (light, tabular) and unit
   right on one baseline, e.g. 企業獎盃 … 36 件作品; the name filters the index.
+
+## FAQ page and line breaking (v31, 2026-10-30)
+- #/read/pages/faq is a designed page (FaqPage.jsx): three key numbers, then every answer open in a
+  question | answer ledger (訂製方式 / 製作與配送 / 材質), then contact. Answers are shortened from
+  the migrated FAQ and shipping policy in the company's voice; never mention "舊官網/舊站" to visitors.
+- Line breaking: headings and card titles use text-wrap:balance, running text text-wrap:pretty
+  (site.css). Old-site copy split into unpunctuated phrases is flowed into one paragraph by
+  flowParagraphs (arrange.js; joins with "，", closes with "。", words unchanged; labels, specs and
+  steps excluded). keepRanges keeps "3～4 天" style ranges with their unit on one line.
+- Case detail tiles size by count (--n), so a case with one detail fills the column. Related cards
+  without a photo render as text cards, not grey boxes.
+
+## Shorter home, contact sheets, SEO basics (v33, 2026-10-30)
+- Home keeps hero, process, collection, custom modes, materials, 16 partner marks (12 on phones, link
+  to all 40) and the shop: about 9 screens instead of 14. Selected works live on the custom page, IP
+  collaborations on the cases page, studio/craft/awards on About. Do not add them back to home.
+- Custom page header shows email and phone like About; buttons 寄信洽詢 / 來電洽詢. Contact values:
+  Chinese in Ming 500, email/phone in the Latin sans; .pg-keep phrases never break (address splits
+  only between 板橋區 and 實踐路).
+- SEO: src/seo.js setPageMeta sets title, description and og/twitter copies per route (App only
+  handles the editor). index.html carries canonical, Open Graph/Twitter (assets/og-image.jpg, 1200×630),
+  Organization JSON-LD and a noscript summary; %SITE_URL% comes from the SITE_URL env (workflow), and
+  the build writes robots.txt and sitemap.xml. Hash routes cannot be indexed as separate URLs; moving
+  to path URLs with prerendered HTML is the next step if search traffic matters.

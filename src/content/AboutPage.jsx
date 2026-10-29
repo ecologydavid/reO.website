@@ -1,5 +1,6 @@
 import React,{useEffect,useRef} from 'react';
 import {Button,ArrowLink} from '../components/site/ui.jsx';
+import {setPageMeta} from '../seo.js';
 import './pages.css';
 // About, awards and contact share one page: contact details first, then the studio told in photographs.
 // Copy follows the migrated 關於 ABOUT, 設計獎項 and 聯絡 CONTACT pages.
@@ -8,8 +9,9 @@ const address='新北市板橋區實踐路93巷43弄1號1樓';
 const contact=[
  ['Email','電子郵件',<a href="mailto:service@re-o.co">service@re-o.co</a>],
  ['Phone','電話',<a href="tel:+886289665369">+886-2-8966-5369</a>],
- ['Hours','服務時間',<>週一至週五 10:30–18:00<small>來訪請事前來電預約</small></>],
- ['Address','地址',<>220 {address}<small>統一編號 83502057</small></>]
+ ['Hours','服務時間',<><span className="pg-keep">週一至週五</span> <span className="pg-keep">10:30–18:00</span><small>來訪請事前來電預約</small></>],
+ // The address breaks only between district and street, never inside 93巷43弄.
+ ['Address','地址',<><span className="pg-keep">220 新北市板橋區</span><wbr/><span className="pg-keep">實踐路93巷43弄1號1樓</span><small>統一編號 83502057</small></>]
 ];
 const studio=[
  ['f7cf2451cb151f0457','回收的大理石邊料'],['2beb1f5609257129cd','工作室攝影棚'],['e556ca2577415a6741','材料紋理'],
@@ -28,7 +30,7 @@ const press=[
 ];
 export default function AboutPage({focus}){
  const root=useRef(null);
- useEffect(()=>{document.title='re.O｜關於 re.O';const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.08});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));if(focus)document.getElementById(focus)?.scrollIntoView();return()=>observer.disconnect()},[focus]);
+ useEffect(()=>{setPageMeta({title:'關於 re.O',description:'re.O 以再生材質開發為起點，整合品牌語彙、立體建模、排版、灌模與工作室組裝。聯絡方式、設計獎項與工作室介紹。'});const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.08});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));if(focus)document.getElementById(focus)?.scrollIntoView();return()=>observer.disconnect()},[focus]);
  return <main className="pg pg-about" ref={root}>
   <div className="folio-gutter"><nav className="content-breadcrumb" aria-label="麵包屑"><a href="#/">首頁</a><span>/</span><span>關於 re.O</span></nav></div>
   <header className="pg-top folio-gutter" id="about-contact">

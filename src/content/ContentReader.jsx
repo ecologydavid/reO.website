@@ -4,7 +4,8 @@ import {categoryInfo} from '../components/site/navigation.js';
 import {SiteArrow} from '../components/site/SiteHeader.jsx';
 import {ContentCard} from './ContentLibrary.jsx';
 import {justifyRows} from './justify.js';
-import {arrangeArticle} from './arrange.js';
+import {setPageMeta} from '../seo.js';
+import {arrangeArticle,flowParagraphs} from './arrange.js';
 const ratioOf=im=>im?.width&&im?.height?im.width/im.height:4/3;
 const frameStyle=im=>({aspectRatio:String(ratioOf(im))});
 const pad=n=>String(n).padStart(2,'0');
@@ -16,14 +17,14 @@ function Gallery({images,title,onOpen}){
  const gap=width<600?8:12,target=Math.max(140,Math.min(360,width*.27)),rows=justifyRows(images.map(ratioOf),width,target,gap);
  return <div className="content-justified" ref={box}>{rows.map((row,r)=><div className="content-justified-row" key={r} style={row.open?{maxWidth:row.sum*target+gap*(row.items.length-1)}:undefined}>{row.items.map(i=>{const im=images[i];return <figure key={im.src} style={{flex:`${ratioOf(im)} 1 0`}}><button style={frameStyle(im)} onClick={()=>onOpen(im)} aria-label={`放大圖片 ${i+1}：${im.caption||im.alt||title}`}><img src={im.src} alt={im.alt||`${title} 圖片 ${i+1}`} loading="lazy" width={im.width} height={im.height}/></button>{im.caption&&<figcaption>{im.caption}</figcaption>}</figure>})}</div>)}</div>;
 }
-function Section({section,index}){return <section className="content-prose-section" id={`section-${index}`}><h2>{section.heading||'內容介紹'}</h2>{section.paragraphs.map((p,i)=><p key={i}>{p}</p>)}{!!section.items.length&&<ul>{section.items.map((p,i)=><li key={i}>{p}</li>)}</ul>}</section>}
+function Section({section,index}){return <section className="content-prose-section" id={`section-${index}`}><h2>{section.heading||'內容介紹'}</h2>{flowParagraphs(section.paragraphs).map((p,i)=><p key={i}>{p}</p>)}{!!section.items.length&&<ul>{section.items.map((p,i)=><li key={i}>{p}</li>)}</ul>}</section>}
 function Photo({image,title,onOpen,eager=false,ratio}){return <button className="content-photo" style={{aspectRatio:String(ratio||ratioOf(image))}} onClick={()=>onOpen(image)} aria-label={`放大圖片：${image.alt||title}`}><img src={image.src} alt={image.alt||title} width={image.width} height={image.height} loading={eager?undefined:'lazy'}/></button>}
 // Each text section sits beside its own photo, alternating sides, so the page reads image first.
 function Chapter({chapter,index,title,onOpen}){
  const {section,image}=chapter;
  return <section className={`content-chapter${image?'':' is-text'}`} id={`section-${index}`} data-reveal>
   {image&&<figure style={{'--r':ratioOf(image)}}><Photo image={image} title={title} onOpen={onOpen}/></figure>}
-  <div className="content-chapter-text"><p className="content-chapter-index">{pad(index)}</p><h2>{section.heading||'內容介紹'}</h2>{section.paragraphs.map((p,i)=><p key={i}>{p}</p>)}{!!section.items.length&&<ul>{section.items.map((p,i)=><li key={i}>{p}</li>)}</ul>}</div>
+  <div className="content-chapter-text"><p className="content-chapter-index">{pad(index)}</p><h2>{section.heading||'內容介紹'}</h2>{flowParagraphs(section.paragraphs).map((p,i)=><p key={i}>{p}</p>)}{!!section.items.length&&<ul>{section.items.map((p,i)=><li key={i}>{p}</li>)}</ul>}</div>
  </section>;
 }
 // Short captions from the old site ("揮竿軌跡弧形") become a row of captioned detail photos.
@@ -46,7 +47,7 @@ function Works({works}){
 export default function ContentReader({path}){
  const index=findPage(path),[page,setPage]=useState(null),[error,setError]=useState(''),[gallery,setGallery]=useState(8),[lightbox,setLightbox]=useState(null);
  const closeImage=useRef(null),root=useRef(null);
- useEffect(()=>{let live=true;setPage(null);setError('');setGallery(8);if(!index){setError('找不到這篇內容。');return}loadPage(index.id).then(p=>{if(live){setPage(p);document.title=`re.O｜${p.title}`}}).catch(()=>{if(live)setError('內容暫時無法載入，請重新整理。')});return()=>{live=false}},[index?.id]);
+ useEffect(()=>{let live=true;setPage(null);setError('');setGallery(8);if(!index){setError('找不到這篇內容。');return}loadPage(index.id).then(p=>{if(live){setPage(p);setPageMeta({title:p.title.replace(/｜/g,' '),description:p.summary})}}).catch(()=>{if(live)setError('內容暫時無法載入，請重新整理。')});return()=>{live=false}},[index?.id]);
  useEffect(()=>{if(!lightbox)return;const old=document.body.style.overflow,previous=document.activeElement;document.body.style.overflow='hidden';closeImage.current?.focus();const key=e=>{if(e.key==='Escape')setLightbox(null);if(e.key==='Tab'){e.preventDefault();closeImage.current?.focus()}};document.addEventListener('keydown',key);return()=>{document.body.style.overflow=old;document.removeEventListener('keydown',key);previous?.focus()}},[lightbox]);
  useEffect(()=>{if(!page||!root.current)return;const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.04});root.current.querySelectorAll('[data-reveal]:not(.is-visible)').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[page,gallery]);
  if(error)return <main className="content-not-found folio-gutter"><h1>{error}</h1><a className="folio-link" href="#/explore/cases">探索站內內容<SiteArrow/></a></main>;

@@ -2,6 +2,7 @@ import React,{useCallback,useEffect,useRef,useState} from 'react';
 import logos from '../../data/logo-wall.json';
 import {SiteArrow} from './SiteHeader.jsx';
 import BrandMark from './BrandMark.jsx';
+import {setPageMeta} from '../../seo.js';
 import './brand-wall.css';
 const priority=['ase','delta','pwc','pinkoi','fubon','hola','disney','tmall','taipower','iii'];
 const ordered=[...logos].sort((a,b)=>{const x=priority.indexOf(a.id),y=priority.indexOf(b.id);return (x<0?99:x)-(y<0?99:y)});
@@ -13,9 +14,13 @@ const tone={muke:'is-dark',dcc:'is-silhouette'};
 // forward (the others step back) and a small print of the work follows the cursor: the photo, the
 // project and the partner. Keyboard focus shows the same print beside the tile; touch goes straight
 // to the case.
-export default function LogoWall({standalone=false}){
+// `limit` shows the first marks only (the home page shows two rows) and links to the full wall.
+export default function LogoWall({standalone=false,limit}){
  const card=useRef(null),motion=useRef({x:0,y:0,tx:0,ty:0,r:0,frame:0,on:false,still:false,loaded:false});
  const [active,setActive]=useState(null),[shown,setShown]=useState(null);
+ // On its own route (#/brands) the wall is the page: it takes the h1 and the page title.
+ useEffect(()=>{if(standalone)setPageMeta({title:'合作品牌',description:'與 re.O 合作的 40 個企業、政府與品牌：企業委製、品牌合作與授權設計案例。'})},[standalone]);
+ const Heading=standalone?'h1':'h2';
  useEffect(()=>{const m=motion.current;m.still=matchMedia('(prefers-reduced-motion: reduce)').matches;return()=>cancelAnimationFrame(m.frame)},[]);
  // The print eases towards the pointer and leans a little with its speed.
  const loop=useCallback(()=>{
@@ -41,10 +46,10 @@ export default function LogoWall({standalone=false}){
  },[aim]);
  const hide=useCallback(()=>{motion.current.on=false;setActive(null)},[]);
  const mouse=e=>e.pointerType==='mouse';
- return <section className={`site-brand-wall brand-ledger folio-gutter ${standalone?'standalone':''}`} id="brands">
-  <div className="folio-section-heading"><h2>與不同品牌，<br/>共同完成值得<span style={{whiteSpace:'nowrap'}}>留下的作品。</span></h2><p>企業委製、品牌合作與授權設計案例。</p></div>
+ return <section className={`site-brand-wall brand-ledger folio-gutter ${standalone?"standalone":""}${limit?" is-limited":""}`} id="brands">
+  <div className="folio-section-heading"><Heading>與不同品牌，<br/>共同完成值得<span style={{whiteSpace:'nowrap'}}>留下的作品。</span></Heading><p>企業委製、品牌合作與授權設計案例。</p></div>
   <div className="site-logo-grid" onPointerMove={e=>{if(mouse(e)&&motion.current.on)aim(e.clientX,e.clientY)}} onPointerLeave={e=>{if(mouse(e))hide()}}>
-   {ordered.map(logo=><article className={`site-logo-cell brand-card ${tone[logo.id]||''}${active===logo.id?' is-active':''}`} key={logo.id}>
+   {ordered.slice(0,limit).map(logo=><article className={`site-logo-cell brand-card ${tone[logo.id]||''}${active===logo.id?' is-active':''}`} key={logo.id}>
     <a className="brand-card-link" href={logo.href} aria-label={`閱讀 ${logo.name} 合作案例：${logo.project?.split('｜')[0]||logo.name}`}
      onPointerEnter={e=>{if(mouse(e))show(logo,e.clientX,e.clientY)}}
      onFocus={e=>{if(!e.currentTarget.matches(':focus-visible'))return;const b=e.currentTarget.getBoundingClientRect();show(logo,b.right-12,b.top+b.height/2)}}
@@ -56,6 +61,6 @@ export default function LogoWall({standalone=false}){
   <figure className={`brand-preview${active?' is-on':''}`} ref={card} aria-hidden="true">
    {shown&&<>{shown.preview&&<img src={shown.preview.src} alt="" width={shown.preview.width} height={shown.preview.height}/>}<figcaption><em>{shown.name}</em><strong>{shown.project?.split('｜')[0]||shown.name}</strong></figcaption></>}
   </figure>
-  <div className="site-brand-bottom"><p>依各專案的委製與合作關係展示；HOLA 授權設計、代理委製等資訊詳見案例說明。</p><a className="folio-link" href="#/explore/cases">探索全部合作案例<SiteArrow/></a></div>
+  <div className="site-brand-bottom"><p>依各專案的委製與合作關係展示；HOLA 授權設計、代理委製等資訊詳見案例說明。</p><div className="site-brand-links">{limit&&<a className="folio-link" href="#/brands">全部 {logos.length} 個合作品牌<SiteArrow/></a>}<a className="folio-link" href="#/explore/cases">探索全部合作案例<SiteArrow/></a></div></div>
  </section>
 }

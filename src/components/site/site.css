@@ -130,3 +130,9 @@
 .site-shop-brand{font-weight:600;letter-spacing:.04em}
 @media(max-width:1320px) and (min-width:1101px){.site-shop-label{display:none}}
 @media(max-width:760px){.folio-home .site-actions .site-shop{padding-left:16px}.site-shop-label{display:none}}
+
+/* V31 line breaking, site-wide (not the editor): headings balance their lines; running text avoids a
+   lone character or word on its last line. */
+.folio-home :is(h1,h2,h3,h4){text-wrap:balance}
+.folio-home :is(p,li,dd,dt,figcaption,blockquote){text-wrap:pretty}
+.folio-home :is(.content-works-title strong,.rv-caption h3,.rv-spec h3,.pg-reel-name,.content-works-client>span){text-wrap:balance}

@@ -3,6 +3,7 @@ import {pages,cardImage,splitCase} from './catalogue.js';
 import {SiteArrow} from '../components/site/SiteHeader.jsx';
 import {CasePhoto} from './ContentLibrary.jsx';
 import {Button,ArrowLink} from '../components/site/ui.jsx';
+import {setPageMeta} from '../seo.js';
 import './pages.css';
 // The 客製化獎盃 landing page. The A–F standard catalogue has its own page, so 公版訂製 is not a mode here. Copy follows the 訂製 CUSTOM page.
 const img=id=>`/content/images/${id}.webp`;
@@ -15,12 +16,15 @@ const featured=['ase-outstanding-supplier-trophy','national-sustainability-award
 export default function CustomPage(){
  const root=useRef(null);
  const works=featured.map(slug=>pages.find(p=>p.path==='#/read/pages/'+slug)).filter(p=>p?.hero).map(p=>({...p,card:cardImage(p),...splitCase(p.title)}));
- useEffect(()=>{document.title='re.O｜客製化獎盃';const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.08});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
+ useEffect(()=>{setPageMeta({title:'客製化獎盃',description:'從品牌專屬設計到專屬材質：專案訂製與專料訂製兩種方式，以再生材料訂製企業獎盃與包裝。'});const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.08});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
  return <main className="pg pg-custom" ref={root}>
   <div className="folio-gutter"><nav className="content-breadcrumb" aria-label="麵包屑"><a href="#/">首頁</a><span>/</span><span>客製化獎盃</span></nav></div>
   <header className="pg-top folio-gutter">
    <div className="pg-title"><p className="content-display" aria-hidden="true">Custom</p><h1>客製化獎盃</h1><p>從品牌專屬設計到專屬材質，兩種方式訂製你的榮耀。</p></div>
-   <div className="pg-actions pg-top-actions"><Button href="mailto:service@re-o.co">聯絡訂製</Button><Button variant="ghost" href="tel:+886289665369">+886-2-8966-5369</Button></div>
+   <div className="pg-contact">
+    <dl><div><dt><span>Email</span>電子郵件</dt><dd><a href="mailto:service@re-o.co">service@re-o.co</a></dd></div><div><dt><span>Phone</span>電話</dt><dd><a href="tel:+886289665369">+886-2-8966-5369</a></dd></div></dl>
+    <div className="pg-actions"><Button href="mailto:service@re-o.co">寄信洽詢</Button><Button variant="ghost" href="tel:+886289665369">來電洽詢</Button></div>
+   </div>
   </header>
 
   <ol className="pg-modes folio-gutter" aria-label="訂製方式">{modes.map(m=><li key={m.n} data-reveal>

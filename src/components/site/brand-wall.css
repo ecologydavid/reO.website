@@ -35,3 +35,8 @@
  .folio-home .brand-ledger .site-logo-cell canvas{height:40px}
 }
 @media(prefers-reduced-motion:reduce){.brand-preview,.folio-home .brand-ledger .site-logo-cell,.folio-home .brand-ledger .site-logo-cell canvas{transition:none}}
+.site-brand-links{display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:flex-end}
+@media(max-width:600px){.folio-home .brand-ledger.is-limited .site-logo-cell:nth-child(n+13){display:none}.site-brand-links{justify-content:flex-start}}
+/* V33 the standalone brand wall heading is the page h1; it keeps the section heading size. */
+.folio-home .site-brand-wall h1{font-size:clamp(36px,3.5vw,56px);line-height:1.5;letter-spacing:.035em}
+@media(max-width:600px){.folio-home .site-brand-wall h1{font-size:28px;letter-spacing:.01em}}

@@ -18,7 +18,7 @@ export default function ShopWindow(){
  const href=shopLink[1];
  return <section className="shop-window folio-gutter" id="shop" aria-labelledby="shop-title">
   <div className="shop-panel" data-reveal>
-   <a className="shop-feature" href={href} {...away} tabIndex={-1} aria-hidden="true"><img src={img('5239c1559eb6e8363c')} alt="" width="1440" height="1080" loading="lazy"/></a>
+   <a className="shop-feature" href={href} {...away} tabIndex={-1} aria-hidden="true"><img src={img('5239c1559eb6e8363c')} alt="匠子 CHANZ STUDIO 再生大理石摺紙花器" width="1440" height="1080" loading="lazy"/></a>
    <div className="shop-body">
     <p className="shop-kicker"><span>Shop</span>匠子 CHANZ STUDIO・Pinkoi 官方設計館</p>
     <h2 id="shop-title">讓石材廢料，<br/>走入日常。</h2>

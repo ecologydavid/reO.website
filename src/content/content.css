@@ -124,7 +124,7 @@
 .folio-home .content-works-photo.has-details{background:#fff}
 .content-works-photo.has-details>.content-works-main{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:width .7s cubic-bezier(.2,.7,.2,1)}
 .folio-home .content-works-grid a:hover .has-details>.content-works-main{transform:none}
-.content-works-detail{position:absolute;right:0;top:calc(var(--i)*(50% + 2px));width:calc((1 - var(--main))*100% - 4px);height:calc(50% - 2px);overflow:hidden;background:#ecebe6;transform:translateX(calc(100% + 4px));transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.content-works-detail{--h:calc((100% - (var(--n) - 1)*4px)/var(--n));position:absolute;right:0;top:calc(var(--i)*(var(--h) + 4px));width:calc((1 - var(--main))*100% - 4px);height:var(--h);overflow:hidden;background:#ecebe6;transform:translateX(calc(100% + 4px));transition:transform .6s cubic-bezier(.2,.7,.2,1)}
 .folio-home .content-works-detail img{display:block;width:100%;height:100%;object-fit:cover;transform:none}
 .content-works-detail>em{position:absolute;inset:0;display:grid;place-items:center;background:rgba(31,35,32,.38);color:#fff;font:300 clamp(20px,1.8vw,28px)/1 "Helvetica Neue","Segoe UI",Arial,sans-serif;font-style:normal;letter-spacing:.02em}
 @keyframes works-detail-in{from{transform:translateX(calc(100% + 4px))}to{transform:none}}
@@ -134,3 +134,4 @@
 }
 @media(max-width:760px){.content-works-client{padding:10px 14px 9px 12px}}
 @media(prefers-reduced-motion:reduce){.content-works-photo.has-details>.content-works-main,.content-works-detail{transition:none;animation:none!important}}
+.content-entry.is-text{padding-top:20px;border-top:1px solid var(--folio-ink)}

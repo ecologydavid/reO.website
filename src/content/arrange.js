@@ -38,3 +38,18 @@ export function arrangeArticle(page,find){
  const chapters=body.map(section=>{const image=free.shift();if(image)used.add(image);return {section,image}});
  return {first,chapters,details,works:null,photos:others.filter(im=>!used.has(im)&&!isCard(im)),plain:false};
 }
+
+// The old site set long passages as one unpunctuated phrase per paragraph (a line each in its wide
+// layout). In a reading column every phrase wraps on its own and the left edge turns ragged, so runs
+// of two or more such phrases flow into one paragraph: joined with "，" and closed with "。". The words
+// are untouched. Labels (：｜), spec lines, numbered steps and short keywords are left as they are.
+const isPhrase=p=>{p=p.trim();return p.length>8&&p.length<=90&&/[㐀-鿿]/.test(p)&&!/[。！？!?.；;」』）)…～~]$/.test(p)&&!/[|｜：:。]|STEP|每頁顯示/.test(p)&&!/^[❶-❿①-⑩]/.test(p)&&!/\s[A-Z][A-Za-z]*$/.test(p)};
+export function flowParagraphs(paragraphs){
+ const out=[];let run=[];
+ const flush=()=>{if(run.length>1)out.push(run.map((p,i)=>i<run.length-1&&!/[，、]$/.test(p)?p+'，':p).join('').replace(/[，、]?$/,'。'));else out.push(...run);run=[]};
+ for(const p of paragraphs){if(isPhrase(p))run.push(p.trim());else{flush();out.push(p)}}
+ flush();return out.map(keepRanges);
+}
+// Number ranges keep together with their unit ("3～4 天", "2～3 次校稿"): word joiners around the
+// tilde and a no-break space before the unit, so a line never ends inside a range.
+export const keepRanges=t=>typeof t==='string'?t.replace(/(\d+)\s*([～~–-])\s*(\d+)(\s*)(個工作天|工作天|天|次|週|個月|cm|mm|g)?/g,(m,a,dash,b,sp,unit)=>`${a}⁠${dash}⁠${b}${unit?(sp?' ':'')+unit:sp}`):t;

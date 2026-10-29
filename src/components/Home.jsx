@@ -1,18 +1,16 @@
 import React,{useCallback,useEffect,useId,useRef,useState} from 'react';
 import models from '../data/models.json';
-import cases from '../data/brand-cases.json';
 import SiteHeader from './site/SiteHeader.jsx';
 import SiteFooter from './site/SiteFooter.jsx';
 import LogoWall from './site/LogoWall.jsx';
 import ShopWindow from './site/ShopWindow.jsx';
-import {contentHref} from './site/navigation.js';
 import {siteStats} from './site/stats.js';
 import GoldDust from './GoldDust.jsx';
-import {Arrow,BrandLogo,Button,RoundArrow,SectionHead,Frame} from './site/ui.jsx';
+import {setPageMeta} from '../seo.js';
+import {Arrow,Button,SectionHead,Frame} from './site/ui.jsx';
 import './home.css';
 import './home-v10.css';
 
-const byId=Object.fromEntries(cases.map(c=>[c.id,c]));
 // Recycled-marble process in eight steps. The material page charts three stages (廢棄回收・研磨成粉・
 // 比例澆注); the journal articles 重新定義「廢料」, 實驗再生材質, 強化材質脫氣升級 and 工廠步驟把關
 // describe the steps in between. Photos come from those same pages.
@@ -144,13 +142,12 @@ const featured=['E','D'];
 // One spec line per model from models.json: type, height (or diameter) and price. Each item keeps
 // together when the line wraps.
 const specOf=m=>{const d=m.dimensions_mm,size=Array.isArray(d)?`高 ${d[2]} mm`:`直徑 ${d.diameter} mm`;return [m.kind,size,`NT$${m.price.replace('～','–')}`]};
-const awards=[['2018','金點設計獎','積木收納'],['2019','金點設計獎','摺紙花器'],['2024','台北亮點企業','潛力企業獎']];
-function Work({id,brand,title,className=''}){
- const c=byId[id],href=contentHref(c.source_url);
- return <article className={`rv-work ${className}`} data-reveal><a className="rv-work-photo" href={href} aria-label={`閱讀作品：${c.safe_caption}`}><Frame src={c.photo} alt={c.safe_caption} width="1600" height={id==='ase'?'1600':'1200'}/></a><div className="rv-caption">{brand&&<p>{brand}</p>}<h3>{title||c.safe_caption}</h3><RoundArrow href={href} label={`閱讀作品詳情：${c.safe_caption}`}/></div></article>;
-}
+// The home page keeps the essentials (hero, process, the A–F collection, custom trophies, materials,
+// partners, shop). Selected works live on the custom page, IP collaborations on the cases page, and
+// the studio, craft and awards on the About page.
 export default function Home({onPreview}){
  const root=useRef(null);
+ useEffect(()=>setPageMeta(),[]);
  useEffect(()=>{const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.04});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
  return <div className="folio-home rv-home" ref={root}>
   <a className="folio-skip" href="#collection">跳至公版系列</a>
@@ -170,8 +167,6 @@ export default function Home({onPreview}){
    <section className="rv-section rv-gutter" id="custom" aria-labelledby="rv-custom-title">
     <SectionHead index="02" label="客製化獎盃" en="Custom" id="rv-custom-title" title={<>為品牌，<br/>訂製專屬的榮耀。</>} link={['訂製方式與流程','#/read/pages/custom']}/>
     <ol className="rv-modes">{customModes.map(m=><li key={m.n} data-reveal><a href="#/read/pages/custom"><Frame src={m.src} alt={m.alt} width="1440" height="1440" className={m.className}/><span className="rv-mode-label"><em>{m.n}</em><strong>{m.title}</strong><Arrow/></span><span className="rv-mode-line">{m.line}</span></a></li>)}</ol>
-    <p className="rv-subhead" data-reveal><span>Selected Works</span><a className="rv-link" href="#/explore/cases?filter=企業獎盃"><span>全部企業獎盃</span><Arrow/></a></p>
-    <div className="rv-works is-even"><Work id="ase"/><Work id="pwc"/><Work id="pinkoi"/><Work id="national-sdgs"/></div>
    </section>
 
    <section className="rv-section rv-materials" id="materials" aria-labelledby="rv-materials-title">
@@ -181,31 +176,9 @@ export default function Home({onPreview}){
     </div>
    </section>
 
-   <LogoWall/>
-
-   <section className="rv-section rv-gutter" id="ip" aria-labelledby="rv-ip-title">
-    <SectionHead index="04" label="授權與聯名" en="Collaborations" id="rv-ip-title" title={<>讓經典角色，<br/>走進日常。</>}/>
-    <div className="rv-ip"><Work id="disney-hola" brand="HOLA × Disney" title={byId['disney-hola'].project}/><Work id="marvel-hola" brand="HOLA × Marvel" title={byId['marvel-hola'].project}/><Work id="golden-horse" brand="台北金馬影展 × Pinkoi" title="金馬造型擴香紙鎮"/></div>
-   </section>
+   <LogoWall limit={16}/>
 
    <ShopWindow/>
-
-   <section className="rv-craft" id="craft" aria-labelledby="rv-craft-title">
-    <img src="/content/images/8adb10dc0ad1b38e8f.webp" alt="職人手中灑落的再生材料粉末" width="1440" height="960" loading="lazy"/>
-    <div className="rv-craft-copy rv-gutter" data-reveal><p className="rv-display" aria-hidden="true">Craft</p><h2 id="rv-craft-title">設計的起點，<br/>是材料的下一站。</h2><ul><li>材料研發</li><li>產品設計</li><li>製造組裝</li></ul><Button href="#/explore/journal" variant="glass">走進工作室</Button></div>
-   </section>
-
-   <section className="rv-section rv-about rv-gutter" id="about" aria-labelledby="rv-about-title">
-    <p className="rv-display" aria-hidden="true">Studio</p>
-    <div className="rv-about-label"><BrandLogo alt="" size={300}/><span>About re.O</span></div>
-    <div className="rv-about-body" data-reveal>
-     <Frame src="/content/images/8a959cd06cce7ed889.webp" alt="re.O 工作室分類保存的回收材料" width="1440" height="1080"/>
-     <h2 id="rv-about-title">以設計，延續材料的生命。</h2>
-     <p>讓被忽略的材料，重新進入生活。</p>
-     <dl className="rv-awards">{awards.map(([y,name,work])=><div key={y+work}><dt>{y}</dt><dd>{name}<span>{work}</span></dd></div>)}</dl>
-     <Button href="#/read/pages/about" variant="dark">認識 re.O</Button>
-    </div>
-   </section>
   </main>
   <SiteFooter/>
  </div>;

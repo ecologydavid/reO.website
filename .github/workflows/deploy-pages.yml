@@ -32,6 +32,8 @@ jobs:
       - run: pnpm build
         env:
           BASE_PATH: ${{ endsWith(github.event.repository.name, '.github.io') && '/' || format('/{0}/', github.event.repository.name) }}
+          # Public address for the canonical link, link previews, robots.txt and sitemap.xml.
+          SITE_URL: ${{ endsWith(github.event.repository.name, '.github.io') && format('https://{0}', github.event.repository.name) || format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
       # Replace gh-pages with this build (one commit, no history to grow). .nojekyll serves files as-is.
       - name: Publish dist to gh-pages
         working-directory: dist
