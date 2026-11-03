@@ -246,3 +246,40 @@ UI UX Pro Max skill is installed at ../.claude/skills/ui-ux-pro-max (v2.15.0, MI
   Organization JSON-LD and a noscript summary; %SITE_URL% comes from the SITE_URL env (workflow), and
   the build writes robots.txt and sitemap.xml. Hash routes cannot be indexed as separate URLs; moving
   to path URLs with prerendered HTML is the next step if search traffic matters.
+
+## v34 header mark, footer credit, Pinkoi logo (2026-11-02)
+- The header and menu logo read "re: for real": HomeMark in SiteHeader.jsx sets "for real" in Cormorant
+  Garamond italic 500 (Google Fonts, `text=for real` subset, non-blocking link in index.html). It hides at
+  1101–1240px, where the links need the room, and below 360px. On phones 選單 is icon-only (label kept
+  for screen readers) so the mark, tag and both pills fit.
+- Footer: the bottom legal band is gone; "© re.O 材質再生 循環設計" sits centred under the company row.
+- The Pinkoi pill shows Pinkoi's own wordmark (public/assets/pinkoi-logo.png, cut from the brand-wall
+  photo in its navy #033052). Hover/tap inks the chip; on hover the tilted arrow exits top-right and
+  returns from bottom-left. Before this, the chip stayed white and the arrow kept its tilt, so hover
+  showed no change.
+
+## Studio v4: redesigned plate editor, EPS export (2026-11-03, explicit user request)
+The user asked to replan the 銘版排版工作室 in the public site's look, make customising simpler, and
+export both PDF and .eps. This authorises editor UI changes; all v3 capabilities stay.
+- Layout (src/editor/Editor.jsx, editor-v4.css, own st- classes): left = product (01 款式 thumbs,
+  02 finishes as swatches — only verified combinations; A splits wood × base, E shows two-tone sets —
+  03 front/3D preview, tap a plate to edit it); centre = one large plate (PlateStage.jsx); right =
+  settings (Inspector.jsx). Tablets put settings under the plate; phones stack and switch 排版/成品預覽.
+- PlateStage: click to pick, drag to move, corner handles resize, round knob rotates (snaps 0/45/90°,
+  Shift = 15° steps), double-click or Enter edits text, arrows nudge, Delete removes. Resizes/turns that
+  would cross the outline are refused; moves keep the old slide-along-the-edge fit.
+- Inspector: content, typeface cards, size slider, B/I/U + align + 橫/直, ink swatches (依材質 restores
+  auto colour), 進階設定 for spacing, box width, x/y, angle. Layers with lock, up/down.
+- Drafts autosave (debounced) to the same localStorage key; Ctrl+Z / Ctrl+Shift+Z / Ctrl+Y / Ctrl+D.
+- 下載檔案 menu: PDF 排版確認稿 (unchanged PdfExport.js) or EPS 向量檔 (EpsExport.js): every surface at
+  approximate product scale (listed height or diameter ÷ scene units), red outline, text traced to
+  outlines (trace.mjs: marching squares + Douglas–Peucker, tested in tests/trace.test.mjs), uploads
+  embedded (Flate + ASCII85) and clipped to their traced alpha. Not CAD; production drawing by re.O.
+- DualPreview.jsx and editor-v3.css were removed; ThreePreview/canonical rendering/geometry unchanged.
+- v4.1 (same day, user request): objects may now run past the plate outline. Only the centre is kept
+  on the plate's rectangle (settle() in Editor.jsx); the part outside shows red on the stage (spill
+  canvas in PlateStage) and is never produced: previews, 3D, PDF and EPS all clip to the outline (the
+  EPS wraps each surface's artwork in a clip path). Downloads are no longer blocked; the toast says when
+  red parts were left out. 放回銘版內 (inspector) still uses fitObject to bring one object fully inside.
+  The workspace, product preview, 3D view and PDF sheets are on white. This supersedes the earlier
+  "prevent objects from leaving the boundary" rule.

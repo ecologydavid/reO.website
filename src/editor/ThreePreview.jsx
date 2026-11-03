@@ -9,7 +9,7 @@ export default function ThreePreview({scene,documents}){
   useEffect(()=>{
     let renderer,controls,observer,frame;
     try{
-      renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor('#eaece5',1);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.95;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;
+      renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor('#ffffff',1);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.95;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;
       const world=new THREE.Scene(),camera=new THREE.PerspectiveCamera(35,1,.01,100);camera.position.set(2.8,1.1,6.4);
       world.add(new THREE.HemisphereLight('#ffffff','#7b8075',2.2));
       const key=new THREE.DirectionalLight('#ffffff',3);key.position.set(-3,5,6);key.castShadow=true;key.shadow.mapSize.set(2048,2048);key.shadow.bias=-.001;key.shadow.normalBias=.02;world.add(key);

@@ -2,7 +2,7 @@ import {renderCanonicalProduct,renderCanonicalSurface} from './canonicalRender.j
 import {loadImage} from './render.js';
 function sheet(title,subtitle,logo) {
   const c=document.createElement('canvas');c.width=1240;c.height=1754;const ctx=c.getContext('2d');
-  ctx.fillStyle='#f5f3ed';ctx.fillRect(0,0,c.width,c.height);
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
   ctx.save();ctx.globalCompositeOperation='multiply';ctx.drawImage(logo,64,32,108,108);ctx.restore();ctx.fillStyle='#252d28';
   ctx.font='30px "Microsoft JhengHei", sans-serif';ctx.fillText(title,72,168);
   ctx.fillStyle='#747c70';ctx.font='19px "Microsoft JhengHei", sans-serif';ctx.fillText(subtitle,72,206);
@@ -18,7 +18,6 @@ function place(ctx,image,x,y,w,h) {
 }
 export async function exportPdf(model,layout,documents) {
   const [{jsPDF},product,logo]=await Promise.all([import('jspdf'),renderCanonicalProduct(layout,documents,{width:1300,height:1650}),loadImage('/assets/reo-logo.png')]);
-  if(product.overflow)throw new Error('部分內容超出客製區，請先調整文字或圖案。');
   const pdf=new jsPDF({unit:'mm',format:'a4',compress:true});
   const title=`${model.id} 款・${model.name}${model.id==='F'?'・'+layout.name:''}`;
   const main=sheet(title,`正面整體預覽 · ${layout.finish} · 與銘版特寫共用輪廓及排版`,logo);

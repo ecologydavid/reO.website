@@ -67,14 +67,14 @@ export function frontPlacement(scene,width,height,padding=60){const scale=Math.m
 export async function renderCanonicalProduct(scene,documents,{width=800,height=1100,activeSurface=null,selection=null}={}){
   await ensureMaterialMaps();
   const c=makeCanvas(width,height),ctx=c.getContext('2d'),placement=frontPlacement(scene,c.width,c.height);
-  ctx.fillStyle='#eaece5';ctx.fillRect(0,0,c.width,c.height);ctx.save();ctx.translate(placement.x,placement.y);ctx.scale(placement.scale,placement.scale);
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);ctx.save();ctx.translate(placement.x,placement.y);ctx.scale(placement.scale,placement.scale);
   const shadow=ctx.createRadialGradient(scene.width*.5,scene.height+12,0,scene.width*.5,scene.height+12,scene.width*.6);shadow.addColorStop(0,'#252d281c');shadow.addColorStop(1,'#252d2800');ctx.save();ctx.translate(0,scene.height*.86);ctx.scale(1,.15);ctx.fillStyle=shadow;ctx.fillRect(-scene.width,0,scene.width*3,scene.height);ctx.restore();
   if(scene.id==='F'){
     ctx.save();ctx.beginPath();ctx.arc(500,500,500,0,Math.PI*2);ctx.clip();ctx.drawImage(materialTexture('stone',scene.fills.stone,{modelId:scene.id,finish:scene.finish}),0,0,1000,1000);ctx.restore();
     ctx.strokeStyle=scene.fills.metal;ctx.lineWidth=65;ctx.beginPath();ctx.arc(500,500,451,0,Math.PI*2);ctx.stroke();
     const count=scene.shape==='diamond'?20:scene.shape==='ridge'?72:32;
     for(let i=0;i<count;i++){const a=i/count*Math.PI*2;ctx.strokeStyle=i%2?'#ffffff30':'#252d2820';ctx.lineWidth=scene.shape==='diamond'?5:1.7;ctx.beginPath();ctx.moveTo(500+418*Math.cos(a),500+418*Math.sin(a));ctx.lineTo(500+483*Math.cos(a+.04),500+483*Math.sin(a+.04));ctx.stroke();}
-    ctx.fillStyle='#c2a05d';ctx.fillRect(420,-110,160,142);ctx.fillStyle='#eaece5';ctx.fillRect(390,50,220,18);
+    ctx.fillStyle='#c2a05d';ctx.fillRect(420,-110,160,142);ctx.fillStyle='#ffffff';ctx.fillRect(390,50,220,18);
   }else if(scene.meshes?.length){
     const faces=meshFrontFaces(scene.meshes);
     for(const f of faces){ctx.save();polygonPath(ctx,f.points.map(([x,y])=>[x,y]));ctx.clip();const points=scene.meshes.filter(m=>m.material===f.material).flatMap(m=>m.vertices),ys=points.map(p=>p[1]),top=Math.min(...ys),bottom=Math.max(...ys);ctx.drawImage(materialTexture(f.material,scene.fills[f.material],{modelId:scene.id,finish:scene.finish,endgrain:f.group==='triangular-corner-cut'&&scene.id==='A'}),0,top,scene.width,bottom-top);const shade=.25+Math.max(0,f.normal[0]*-.36+f.normal[1]*.5+f.normal[2]*.8)*.75;ctx.fillStyle=`rgba(0,0,0,${Math.max(0,1-shade)*.5})`;ctx.fillRect(0,0,scene.width,scene.height);ctx.restore();}

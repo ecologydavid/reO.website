@@ -13,5 +13,5 @@ export default function SiteFooter(){return <footer className="site-footer-v5">
   <div><a href="mailto:service@re-o.co">service@re-o.co</a><a href="tel:+886289665369">+886-2-8966-5369</a></div>
   <nav aria-label="服務指南">{supportLinks.map(([name,href])=><a key={href} href={href}>{name}</a>)}<a href="#/read/pages/contact">聯絡預約</a><a className="site-shop-link" href={shopLink[1]} target="_blank" rel="noopener noreferrer">{shopLink[0]}<span aria-hidden="true"> ↗</span><span className="sr-only">（另開新視窗）</span></a></nav>
  </div>
- <p className="site-footer-legal folio-gutter"><span>© re.O 循環設計</span><span>網站設計樣例</span></p>
+ <p className="site-footer-copy folio-gutter">© re.O 材質再生 循環設計</p>
 </footer>}

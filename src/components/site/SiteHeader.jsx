@@ -4,6 +4,8 @@ import {ArrowIcon,BrandLogo,Button,Chip,MenuIcon} from './ui.jsx';
 import './site.css';
 // Content pages and the brand wall import the shared arrow from here.
 export function SiteArrow(){return <Chip/>}
+// The circle mark signed with "for real" in an italic serif (Cormorant Garamond, loaded in index.html).
+function HomeMark({onClick}){return <a className="site-brand" href="#/" onClick={onClick} aria-label="re.O for real 首頁"><span className="folio-brand"><BrandLogo/></span><span className="site-brand-tag" aria-hidden="true">for real</span></a>}
 const activeGroup=hash=>navigation.find(n=>n.match.some(prefix=>hash.startsWith(prefix)))?.id;
 function SiteMenu({onClose,onDismiss}){
  const panel=useRef(null);
@@ -20,7 +22,7 @@ function SiteMenu({onClose,onDismiss}){
   return()=>{document.body.style.overflow=old;document.removeEventListener('keydown',key)};
  },[onDismiss]);
  return <div className="site-menu" id="site-menu" role="dialog" aria-modal="true" aria-label="網站選單" ref={panel}>
-  <div className="site-menu-bar folio-gutter"><a className="folio-brand" href="#/" onClick={onClose} aria-label="re.O 首頁"><BrandLogo/></a><Button variant="ghost" className="site-menu-close" onClick={onDismiss} icon={<MenuIcon open/>}>關閉</Button></div>
+  <div className="site-menu-bar folio-gutter"><HomeMark onClick={onClose}/><Button variant="ghost" className="site-menu-close" onClick={onDismiss} icon={<MenuIcon open/>}>關閉</Button></div>
   <div className="site-menu-grid folio-gutter">{navigation.map((group,i)=><section className="site-menu-group" key={group.id}>
    <a className="site-menu-photo" href={group.href} onClick={onClose} tabIndex={-1} aria-hidden="true"><img src={group.image} alt="" width="480" height="360"/></a>
    <p className="site-menu-index"><span>{String(i+1).padStart(2,'0')}</span>{group.en}</p>
@@ -57,14 +59,14 @@ export default function SiteHeader(){
  const rest=useCallback(()=>place(nav.current?.querySelector('[aria-current=page]')),[place]);
  useEffect(()=>{rest();const observer=new ResizeObserver(rest);observer.observe(nav.current);return()=>observer.disconnect()},[rest,current]);
  return <header className={`folio-header site-header-v5 folio-gutter${condensed?' is-condensed':''}${hidden&&!open?' is-hidden':''}`}>
-  <a className="folio-brand" href="#/" aria-label="re.O 首頁"><BrandLogo/></a>
+  <HomeMark/>
   <nav className="site-links" aria-label="主要導覽" ref={nav} onMouseLeave={rest} onBlur={e=>{if(!nav.current.contains(e.relatedTarget))rest()}}>
    <span className={`site-links-pill${pill?.instant?' is-instant':''}`} aria-hidden="true" style={pill?{width:pill.w,transform:`translateX(${pill.x}px)`,opacity:pill.off?0:1}:{opacity:0}}/>
    {navigation.map(n=><a key={n.id} href={n.href} aria-current={current===n.id?'page':undefined} onMouseEnter={e=>place(e.currentTarget)} onFocus={e=>place(e.currentTarget)}><span>{n.short}</span></a>)}
   </nav>
   <div className="site-actions">
    {/* Retail has its own button: the studio's Pinkoi store, in a new tab (arrow tilted to say so). */}
-   <Button href={shopLink[1]} target="_blank" rel="noopener noreferrer" variant="ghost" className="site-shop" icon={<ArrowIcon/>} aria-label="Pinkoi 選購（另開新視窗）"><span className="site-shop-brand">Pinkoi</span><span className="site-shop-label"> 選購</span></Button>
+   <Button href={shopLink[1]} target="_blank" rel="noopener noreferrer" variant="ghost" className="site-shop" icon={<ArrowIcon/>} aria-label="Pinkoi 選購（另開新視窗）"><img className="site-shop-logo" src="/assets/pinkoi-logo.png" alt="Pinkoi" width="213" height="64"/><span className="site-shop-label">選購</span></Button>
    <Button href="#/preview/B" className="site-studio">排版工作室</Button>
    <Button variant="ghost" className="site-menu-button" ref={trigger} aria-expanded={open} aria-controls="site-menu" onClick={()=>setOpen(true)} icon={<MenuIcon/>}>選單</Button>
   </div>
