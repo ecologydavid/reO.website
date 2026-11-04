@@ -487,3 +487,5 @@
  .rv-home .rv-product:not(.is-feature) .rv-spec h3{font-size:16px}
  .rv-swatches .rv-frame{aspect-ratio:auto;height:clamp(180px,calc((100svh - 190px)/3),300px)}
 }
+/* V39 the hero shows four D photographs; on phones the tabs keep their numbers only. */
+@media(max-width:760px){.rv-hero-tabs button>span:last-child{display:none}.rv-hero-tabs button{grid-template-columns:auto}}

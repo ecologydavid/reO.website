@@ -283,3 +283,59 @@ export both PDF and .eps. This authorises editor UI changes; all v3 capabilities
   red parts were left out. 放回銘版內 (inspector) still uses fitObject to bring one object fully inside.
   The workspace, product preview, 3D view and PDF sheets are on white. This supersedes the earlier
   "prevent objects from leaving the boundary" rule.
+
+## One brand wall, on home (v35, 2026-11-04)
+- By request the home page shows all 40 partner marks (five rows of 8 on desktop) and the separate
+  wall page is gone, so the wall exists in one place only. Hash routes are not indexed as their own
+  pages (the sitemap lists home only), so home is where the names count for search. Each mark's link
+  carries its name and project as text (the marks are canvases). Phones show 12 and open the rest in
+  place (all 40 stay in the markup). #/brands still works: it opens home at the wall. This supersedes
+  the v33 "16 partner marks, link to all 40" note.
+
+## Custom page at a glance, whole trophies, one page end (v36, 2026-11-05)
+- 客製化獎盃: the four services (專案訂製, 專料訂製, 包裝款式, 3D 建模服務) sit side by side in one view,
+  each numbered n / 04, so the whole sequence and its last step read at once; packaging options follow
+  as a short strip, then the works grid. The full-bleed 3D band is gone (04 is the fourth column).
+- Case cards are square (the shape of most case photos) so the whole trophy shows before any hover.
+  Portrait photos are shown whole; the frame's sides continue the photo's own edge colours (sampled
+  from its left and right columns), so no band shows. Do not go back to 4:3 crops.
+- Every page ends with the same open space before the footer (--page-end, site.css): main carries it
+  and its last block drops its own bottom spacing. New final blocks need no padding of their own.
+
+## Calmer page ends, tax ID in footer (v37, 2026-11-05)
+- --page-end is clamp(72px,6.5vw,104px) (64px on phones), tuned by request after v36 felt too open.
+  A ruled .pg-closing line is a short band: 40px above its text, 48–64px below, 56–80px from the
+  content before it. The FAQ's tinted contact band keeps its own inner padding and meets the footer.
+- The footer company line carries 統編：83502057 after the company name (also on About and in JSON-LD).
+
+## Cleaner services, readable packaging, standard page flow (v38, 2026-11-05)
+- 客製化獎盃 services share subgrid rows (title, description, keywords, link line up across columns);
+  keywords are a quiet slash-separated line, not pills; each link sits on its own hairline.
+- Packaging: heading, intro and the two options (全客製化 / 部分客製化) as item–detail rows on the
+  left, the two box photos on the right.
+- 公版獎盃 has no full-bleed hero photo. Right under the facts, the four ordering steps run on one ruled
+  track over a stone band (numbered rings joined by arrowed lines, the last ring filled; vertical on
+  phones). The six models follow at about one screen. Other landings keep their hero photos.
+
+## D-only hero, interactive ordering flow (v39, 2026-11-05)
+- By request the home hero features the D model alone (E stepped down): four real D photographs
+  (three colours, stone grain, held in hand — tab 「將榮譽賦予份量」, the black corrugated gift box) under 「再生大理石，
+  成就高雅的榮譽。」. Each slide has a pre-blurred 160px haze (public/assets/hero-haze-D-*.webp);
+  phone tabs show numbers only.
+- 公版獎盃 ordering flow: a photo on the left follows the active step (A–F mosaic, studio screenshot
+  public/assets/studio-preview.webp, a lettered plate, the workshop); numbered rings on the right.
+  Steps auto-advance in view with a hairline timer and stop once a visitor picks one. Step 01 names
+  A、B、C、D、E、F (never "A–F" there). Step 02 states the layout help rule: more than 10 pieces may ask
+  re.O to lay out; 10 or fewer pay a NT$500 layout fee for that help.
+
+## Matching flow photos, press index (v40, 2026-11-05)
+- Ordering flow photos: 03 提供資料 is an illustration (public/assets/flow-provide.webp, made in the
+  browser: a LOGO vector-file card with a partner mark from the brand wall and a text and name-list
+  card), 04 手工生產 is the studio photo of marble slurry poured into a mould (flow-casting.webp);
+  both supplied or requested by the owner. Each photo must show what its step says.
+- About 「報導與講座」: a stone band with an index (year, outlet, title, one line; external links open
+  in a new tab) beside one sticky print that follows the pointed, focused or tapped entry. Prints are
+  in full colour (by request, superseding the toned v40 prints). Every entry was checked against
+  its linked page; covers are re.O's own photos of the work discussed or stills the studio already
+  published. Never copy photos from outlets' sites. Unverified items (TISDC talks, GQ feature,
+  Taiwan Designers' Week, 人間福報, MOT TIMES) wait for a source link before they are added.

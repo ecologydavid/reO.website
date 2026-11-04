@@ -7,9 +7,17 @@ import {setPageMeta} from '../seo.js';
 import './pages.css';
 // The 客製化獎盃 landing page. The A–F standard catalogue has its own page, so 公版訂製 is not a mode here. Copy follows the 訂製 CUSTOM page.
 const img=id=>`/content/images/${id}.webp`;
-const modes=[
- {n:'01',title:'專案訂製',line:'給予需要的品項、尺寸、數量與 re.O 再生材質，進行設計稿討論，讓設計外觀更好地展現品牌形象。',tags:['獨有設計外觀','多元再生材質','品牌語彙'],src:img('ccf5762abffbaf5ef7'),alt:'Oni Bus Coffee 品牌咖啡托盤，專案訂製案例',link:['企業獎盃案例','#/explore/cases?filter=企業獎盃']},
- {n:'02',title:'專料訂製',line:'給予可再利用的廢棄料，由 re.O 評估可行性，經材質測試與設計，製作專屬材質產品。',tags:['專屬材質','品牌永續形象','品牌故事升級'],src:img('61b1b99657d3baca5c'),alt:'總統盃黑客松獎盃，以焚化再生粒料製作的專料訂製案例',link:['循環材料','#/explore/materials']}
+// Two ways to commission, then packaging and 3D modelling: four services shown together, numbered to 04.
+const steps=[
+ {en:'Mode',title:'專案訂製',line:'給予需要的品項、尺寸、數量與 re.O 再生材質，進行設計稿討論，讓設計外觀更好地展現品牌形象。',tags:['獨有設計外觀','多元再生材質','品牌語彙'],src:img('ccf5762abffbaf5ef7'),alt:'Oni Bus Coffee 品牌咖啡托盤，專案訂製案例',link:['企業獎盃案例','#/explore/cases?filter=企業獎盃']},
+ {en:'Mode',title:'專料訂製',line:'給予可再利用的廢棄料，由 re.O 評估可行性，經材質測試與設計，製作專屬材質產品。',tags:['專屬材質','品牌永續形象','品牌故事升級'],src:img('61b1b99657d3baca5c'),alt:'總統盃黑客松獎盃，以焚化再生粒料製作的專料訂製案例',link:['循環材料','#/explore/materials']},
+ {en:'Packaging',title:'包裝款式',line:'外裝、內襯與商標，皆可依品牌訂製。',tags:['全客製化','部分客製化'],src:img('a39bc07b4f4aa850e6'),alt:'黑色訂製外盒與內襯，裝載圓形獎座',link:['包裝選項','#pg-pack']},
+ {en:'3D Modeling',title:'3D 建模服務',line:'涵蓋產品外觀、公仔角色、裝置零件等各類模型需求。',src:img('78a844104cdc098c56'),width:1200,height:630,position:'42% 50%',alt:'設計師手繪與量測模型草圖',link:['建模服務與案例','#/read/pages/3d-modeling']}
+];
+// Packaging options from the 訂製 CUSTOM page: item, then what can be specified.
+const packaging=[
+ ['全客製化','Full',[['訂製外盒','尺寸、外觀、材質'],['訂製內襯','高密泡棉、紙結構支撐'],['品牌辨識','UV 印刷、燙印工藝']]],
+ ['部分客製化','Partial',[['外盒','公版外盒'],['品牌辨識','UV 印刷、品牌貼紙']]]
 ];
 const boxes=[['a39bc07b4f4aa850e6','黑色訂製外盒與內襯，裝載圓形獎座'],['21b0f1fba438286be3','日月光訂製外盒與內襯'],['7f32aef9f9813f5033','黑色訂製外盒與內襯，裝載直立獎盃']];
 const featured=['ase-outstanding-supplier-trophy','national-sustainability-award','uber-eats-trophy','pwc-taiwan-trophy','tmall-super-one-trophy','delta-energy-award-plaque'];
@@ -27,19 +35,21 @@ export default function CustomPage(){
    </div>
   </header>
 
-  <ol className="pg-modes folio-gutter" aria-label="訂製方式">{modes.map(m=><li key={m.n} data-reveal>
-   <figure><img src={m.src} alt={m.alt} width="1440" height="1440" loading={m.n==='01'?undefined:'lazy'} fetchPriority={m.n==='01'?'high':undefined}/></figure>
-   <div><p className="pg-kicker"><span>{m.n}</span>Mode</p><h2>{m.title}</h2><p>{m.line}</p><ul className="content-keywords">{m.tags.map(t=><li key={t}>{t}</li>)}</ul><ArrowLink href={m.link[1]}>{m.link[0]}</ArrowLink></div>
+  <div className="folio-gutter"><ol className="pg-services" aria-label="訂製服務">{steps.map((s,i)=><li key={s.title} data-reveal style={{transitionDelay:`${i*.08}s`}}>
+   <p className="pg-service-num"><b>{String(i+1).padStart(2,'0')}</b>/ {String(steps.length).padStart(2,'0')}<i>{s.en}</i></p>
+   <figure><img src={s.src} alt={s.alt} width={s.width||1440} height={s.height||1440} fetchPriority={i<2?'high':undefined} style={s.position?{objectPosition:s.position}:undefined}/></figure>
+   <h2>{s.title}</h2><p className="pg-service-line">{s.line}</p>
+   <p className="pg-service-tags">{s.tags?.map(t=><span key={t}>{t}</span>)}</p>
+   <div className="pg-service-more">{s.link[1].startsWith('#pg-')?<ArrowLink className="pg-service-jump" onClick={()=>document.getElementById(s.link[1].slice(1))?.scrollIntoView({behavior:'smooth'})}>{s.link[0]}</ArrowLink>:<ArrowLink href={s.link[1]}>{s.link[0]}</ArrowLink>}</div>
   </li>)}</ol>
 
-  <section className="pg-boxes folio-gutter" aria-labelledby="pg-boxes-title">
-   <div className="pg-split" data-reveal><p className="pg-kicker"><span>03</span>Packaging</p><div><h2 id="pg-boxes-title">包裝款式</h2><p>外裝、內襯與商標，皆可依品牌訂製。</p></div></div>
-   <ul className="pg-box-photos">{boxes.map(([id,alt])=><li key={id} data-reveal><img src={img(id)} alt={alt} width="1440" height="1440" loading="lazy"/></li>)}</ul>
-   <div className="pg-box-lists" data-reveal>
-    <div><h3>全客製化</h3><ul><li>訂製外盒｜尺寸、外觀、材質</li><li>訂製內襯｜高密泡棉、紙結構支撐</li><li>品牌辨識｜UV 印刷、燙印工藝</li></ul></div>
-    <div><h3>部分客製化</h3><ul><li>公版外盒</li><li>品牌辨識｜UV 印刷、品牌貼紙</li></ul></div>
+  <section className="pg-pack" id="pg-pack" aria-labelledby="pg-pack-title" data-reveal>
+   <div>
+    <p className="pg-kicker"><span>03</span>Packaging</p><h2 id="pg-pack-title">包裝選項</h2><p className="pg-pack-intro">外裝、內襯與商標，皆可依品牌訂製。</p>
+    <div className="pg-pack-options">{packaging.map(([name,en,rows])=><div key={name}><h3>{name}<small>{en}</small></h3><dl>{rows.map(([item,detail])=><div key={item+detail}><dt>{item}</dt><dd>{detail}</dd></div>)}</dl></div>)}</div>
    </div>
-  </section>
+   <ul className="pg-pack-photos">{boxes.slice(1).map(([id,alt])=><li key={id}><img src={img(id)} alt={alt} width="1440" height="1440" loading="lazy"/></li>)}</ul>
+  </section></div>
 
   <div className="folio-gutter"><section className="content-works pg-custom-works" aria-labelledby="pg-works-title">
    <header className="content-works-head"><p className="content-display" aria-hidden="true">Works</p><h2 id="pg-works-title">企業獎盃案例</h2></header>
@@ -48,12 +58,7 @@ export default function CustomPage(){
     <span className="content-works-meta"><em>{String(i+1).padStart(2,'0')}</em>{p.metadata?.year&&<span>{String(p.metadata.year).replace(/-/g,'–')}</span>}</span>
     <span className="content-works-title"><strong>{p.work}</strong><SiteArrow/></span>
    </a></li>)}</ol>
-   <div className="pg-center"><Button href="#/explore/cases?filter=企業獎盃">全部企業獎盃案例</Button></div>
+   <div className="pg-center pg-actions"><Button href="#/explore/cases?filter=企業獎盃">全部企業獎盃案例</Button><Button href="#/read/pages/faq" variant="ghost">訂製常見問題</Button></div>
   </section></div>
-
-  <section className="pg-model" aria-labelledby="pg-model-title">
-   <img src={img('78a844104cdc098c56')} alt="設計師手繪與量測模型草圖" width="1200" height="630" loading="lazy"/>
-   <div className="folio-gutter" data-reveal><p className="pg-kicker"><span>04</span>3D Modeling</p><h2 id="pg-model-title">3D 建模服務</h2><p>涵蓋產品外觀、公仔角色、裝置零件等各類模型需求。</p><div className="pg-actions"><Button href="#/read/pages/3d-modeling" variant="light">建模服務與案例</Button><Button href="#/read/pages/faq" variant="glass">訂製常見問題</Button></div></div>
-  </section>
  </main>;
 }

@@ -1,6 +1,6 @@
 import React,{useEffect,useRef} from 'react';
 import {loadBrandArtwork} from './brandArtwork.js';
-export default function BrandMark({image,name}){
+export default function BrandMark({image}){
  const canvas=useRef(null);
  useEffect(()=>{
   let live=true;canvas.current.dataset.artworkState='loading';
@@ -14,5 +14,5 @@ export default function BrandMark({image,name}){
   observer.observe(canvas.current);
   return()=>{live=false;observer.disconnect()};
  },[image]);
- return <canvas ref={canvas} width="512" height="216" role="img" aria-label={name}/>;
+ return <canvas ref={canvas} width="512" height="216" aria-hidden="true"/>;
 }

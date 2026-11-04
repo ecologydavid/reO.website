@@ -14,11 +14,23 @@ export function ContentCard({page}){const image=cardImage(page);return <article 
 // Case photo. On hover the photo narrows (to its own shape where it can, so the whole piece shows)
 // and two detail shots slide in beside it, the last one counting the photos still to see; the client
 // rises in a tab at the lower left. Details load on the first hover only.
+// The frame is square. A portrait photo would lose its top and base there, so it is shown whole and
+// the frame's sides continue the photo's own left and right edge colours, top to bottom, so no band shows.
 export function CasePhoto({page,image,client}){
- const [peek,setPeek]=useState(false),{details,more}=detailsFor(page);
- const main=details.length?Math.min(.72,Math.max(.56,image.width/image.height*.75)):1;
- return <span className={`content-works-photo${details.length?' has-details':''}`} style={{'--main':main,'--n':details.length||1}} onPointerEnter={()=>setPeek(true)}>
-  <img className="content-works-main" src={image.src} alt={image.alt||page.title} width={image.width} height={image.height} loading="lazy"/>
+ const [peek,setPeek]=useState(false),[fill,setFill]=useState(null),photo=useRef(null),{details,more}=detailsFor(page);
+ const tall=image.width<image.height,main=details.length?Math.min(.72,Math.max(.56,image.width/image.height)):1;
+ const sample=()=>{
+  const im=photo.current;if(!tall||!im?.naturalWidth)return;
+  try{
+   const rows=24,c=document.createElement('canvas');c.width=2;c.height=rows;const ctx=c.getContext('2d');
+   ctx.drawImage(im,2,0,1,im.naturalHeight,0,0,1,rows);ctx.drawImage(im,im.naturalWidth-3,0,1,im.naturalHeight,1,0,1,rows);
+   const d=ctx.getImageData(0,0,2,rows).data,edge=k=>Array.from({length:rows},(_,y)=>{const i=(y*2+k)*4;return `rgb(${d[i]},${d[i+1]},${d[i+2]}) ${(y/(rows-1)*100).toFixed(1)}%`}).join(',');
+   setFill(`linear-gradient(${edge(0)}) left/50% 100% no-repeat,linear-gradient(${edge(1)}) right/50% 100% no-repeat`);
+  }catch{}
+ };
+ useEffect(()=>{if(photo.current?.complete)sample()},[image.src]);
+ return <span className={`content-works-photo${details.length?' has-details':''}`} style={{'--main':main,'--n':details.length||1,background:fill||undefined}} onPointerEnter={()=>setPeek(true)}>
+  <img ref={photo} className={`content-works-main${tall?' is-whole':''}`} src={image.src} alt={image.alt||page.title} width={image.width} height={image.height} loading="lazy" onLoad={sample}/>
   {peek&&details.map((d,i)=><span className="content-works-detail" style={{'--i':i}} key={d.src}><img src={d.src} alt="" width={d.width} height={d.height}/>{i===details.length-1&&more>0&&<em>+{more}</em>}</span>)}
   {client&&<span className="content-works-client"><em>Client</em><span>{client}</span></span>}
  </span>;

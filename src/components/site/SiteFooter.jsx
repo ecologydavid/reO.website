@@ -9,7 +9,7 @@ export default function SiteFooter(){return <footer className="site-footer-v5">
  {/* The animated mark signs the company block instead of floating alone in its own row. */}
  <div className="site-footer-info folio-gutter">
   <a className="site-footer-logo" href="#/" aria-label="re.O 首頁"><BrandLogo alt="" size={300}/></a>
-  <div><p>或心國際設計有限公司</p><address>新北市板橋區實踐路93巷43弄1號1樓</address><p>週一至週五 10:30–18:00・來訪請事先預約</p></div>
+  <div><p>或心國際設計有限公司<span className="site-footer-tax">統編：83502057</span></p><address>新北市板橋區實踐路93巷43弄1號1樓</address><p>週一至週五 10:30–18:00・來訪請事先預約</p></div>
   <div><a href="mailto:service@re-o.co">service@re-o.co</a><a href="tel:+886289665369">+886-2-8966-5369</a></div>
   <nav aria-label="服務指南">{supportLinks.map(([name,href])=><a key={href} href={href}>{name}</a>)}<a href="#/read/pages/contact">聯絡預約</a><a className="site-shop-link" href={shopLink[1]} target="_blank" rel="noopener noreferrer">{shopLink[0]}<span aria-hidden="true"> ↗</span><span className="sr-only">（另開新視窗）</span></a></nav>
  </div>

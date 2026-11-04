@@ -36,6 +36,7 @@
 .site-footer-top nav a:hover,.site-footer-info a:hover{color:rgba(255,255,255,.6)}
 .site-footer-info{display:grid;grid-template-columns:auto minmax(0,2fr) minmax(0,1fr) minmax(0,2fr);align-items:center;gap:32px clamp(32px,4vw,64px);padding-top:48px;padding-bottom:48px;font-size:13px;line-height:1.9;color:rgba(255,255,255,.7)}
 .site-footer-info address{font-style:normal}
+.site-footer-tax{display:inline-block;margin-left:12px;padding-left:12px;border-left:1px solid rgba(255,255,255,.22);line-height:1;white-space:nowrap}
 .site-footer-info>div:nth-child(3){display:flex;flex-direction:column}
 .site-footer-info nav{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:flex-end;align-content:center}
 .folio-home .site-footer-logo{display:block;width:clamp(88px,8vw,112px)}
@@ -167,3 +168,16 @@
 .folio-home :is(h1,h2,h3,h4){text-wrap:balance}
 .folio-home :is(p,li,dd,dt,figcaption,blockquote){text-wrap:pretty}
 .folio-home :is(.content-works-title strong,.rv-caption h3,.rv-spec h3,.pg-reel-name,.content-works-client>span){text-wrap:balance}
+
+/* V36 every page ends with the same open space before the footer, whatever its last block is (a
+   closing line, a grid, a load-more button or related articles): the page's main carries it and its
+   last block gives up its own bottom spacing. */
+.folio-home{--page-end:clamp(72px,6.5vw,104px)}
+.folio-home>main,.folio-home #main-content>main{padding-bottom:var(--page-end)}
+.folio-home>main>:last-child,.folio-home #main-content>main>:last-child{padding-bottom:0;margin-bottom:0}
+/* A tinted closing band (FAQ contact) keeps its own inner space and meets the footer directly. */
+.folio-home #main-content>main:has(>.pg-faq-contact:last-child){padding-bottom:0}
+.folio-home #main-content>main>.pg-faq-contact:last-child{padding-bottom:clamp(64px,6vw,96px)}
+/* A ruled closing line is a short band of its own: the space under it matches the space above it. */
+.folio-home #main-content>main:has(>.pg-closing:last-child){padding-bottom:clamp(48px,4.5vw,64px)}
+@media(max-width:760px){.folio-home{--page-end:64px}}

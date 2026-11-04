@@ -32,41 +32,42 @@ const phases=[
  {en:'Reuse',name:'再利用',note:'檢驗打磨，成為獎盃'}
 ];
 const pad=n=>String(n).padStart(2,'0');
-// D and E lead the hero. Positions keep every trophy outside the headline column at any width;
-// D swaps to its three-colour photo only when the stage is wide enough to show all three. The panel's
-// haze is a 160px copy blurred ahead of time, so no live blur filter runs over the hero.
+// The hero features the D model alone (by request E stepped down): four real photographs of D, from
+// the three colours together to the gift box, under one headline. Positions keep every trophy clear
+// of the headline column. Each panel haze is a 160px copy of its photo, so it costs next to nothing.
 const slideMs=12000;
+const img=id=>'/content/images/'+id+'.webp';
 const heroSlides=[
- {id:'E',name:'The way to PEAK',src:'/assets/hero-wide.webp',haze:'/assets/hero-haze-E.webp',width:2400,height:1800,position:'37% 60%',alt:'E 款 The way to PEAK 黑金與白銀再生大理石公版獎盃'},
- {id:'D',name:'再生大理石・白／黑／綠',src:'/content/images/8485826e9190eb7057.webp',wide:'/content/images/0ec85ee98fb1103204.webp',haze:'/assets/hero-haze-D.webp',width:1440,height:1080,position:'50% 58%',widePosition:'41% 58%',alt:'D 款再生大理石公版獎盃'}
+ {n:'01',name:'白／黑／綠 三色',src:img('0ec85ee98fb1103204'),haze:'/assets/hero-haze-D-trio.webp',position:'41% 58%',alt:'D 款公版獎盃，白、黑、綠三色再生大理石並列'},
+ {n:'02',name:'手工研磨石紋',src:img('8485826e9190eb7057'),haze:'/assets/hero-haze-D.webp',position:'50% 58%',alt:'D 款公版獎盃，再生大理石石紋與金屬銘板特寫'},
+ {n:'03',name:'將榮譽賦予份量',src:img('aadb3001769fa976a7'),haze:'/assets/hero-haze-D-hand.webp',position:'62% 55%',alt:'手持 D 款公版獎盃，呈現實際大小'},
+ {n:'04',name:'黑卡浪紙盒包裝',src:img('8c9018e7d0d0ec8c4b'),haze:'/assets/hero-haze-D-box.webp',position:'45% 55%',alt:'D 款公版獎盃收入黑卡浪紙盒'}
 ];
 function Hero({onPreview}){
- const [active,setActive]=useState(0),[paused,setPaused]=useState(false),[away,setAway]=useState(false),hero=useRef(null),[wide,setWide]=useState(()=>matchMedia('(min-width: 1280px)').matches);
- useEffect(()=>{const query=matchMedia('(min-width: 1280px)'),change=()=>setWide(query.matches);query.addEventListener('change',change);return()=>query.removeEventListener('change',change)},[]);
+ const [active,setActive]=useState(0),[paused,setPaused]=useState(false),[away,setAway]=useState(false),hero=useRef(null);
  // Off screen the slow zoom and the progress bar pause, so the hero costs nothing while you read on.
  useEffect(()=>{const observer=new IntersectionObserver(([entry])=>setAway(!entry.isIntersecting));observer.observe(hero.current);return()=>observer.disconnect()},[]);
  // Endless loop, 12s per slide. With motion the progress bar drives the change (so pausing freezes
  // it exactly); under reduced motion a plain timer does. The pause button satisfies WCAG 2.2.2.
  const next=useCallback(()=>setActive(a=>(a+1)%heroSlides.length),[]),still=useRef(matchMedia('(prefers-reduced-motion: reduce)').matches);
  useEffect(()=>{if(paused||away||!still.current)return;const timer=setTimeout(next,slideMs);return()=>clearTimeout(timer)},[active,paused,away,next]);
- const slide=heroSlides[active],srcOf=s=>wide&&s.wide?s.wide:s.src;
  return <section className={`rv-hero${paused?' is-paused':''}${away?' is-away':''}`} ref={hero} aria-labelledby="rv-hero-title" aria-roledescription="輪播">
   <GoldDust gust={active} running={!paused}/>
   {/* A frosted column carries the headline; the featured trophy stays clear beside it. */}
   <div className="rv-hero-panel">
-   {heroSlides.map((s,i)=><img key={s.id} className={`rv-hero-haze${i===active?' is-active':''}`} src={s.haze} alt="" aria-hidden="true"/>)}
+   {heroSlides.map((s,i)=><img key={s.n} className={`rv-hero-haze${i===active?' is-active':''}`} src={s.haze} alt="" aria-hidden="true"/>)}
    <p className="rv-hero-kicker"><span>re.O</span>循環設計</p>
    <div className="rv-hero-copy">
-    <h1 id="rv-hero-title"><span><span>回收石材，</span></span><span><span>灌注新的榮耀。</span></span></h1>
-    <p>大理石邊料研磨成粉，與樹脂調配、澆注、打磨。</p>
-    <div className="rv-hero-actions"><Button href="#collection" variant="light">探索公版獎盃</Button><Button onClick={()=>onPreview(slide.id)} variant="glass">開始 {slide.id} 款排版</Button></div>
+    <h1 id="rv-hero-title"><span><span>再生大理石，</span></span><span><span>成就高雅的榮譽。</span></span></h1>
+    <p>D 款公版獎盃・白、黑、綠三色，手工研磨的石紋質感。</p>
+    <div className="rv-hero-actions"><Button href="#collection" variant="light">探索公版獎盃</Button><Button onClick={()=>onPreview('D')} variant="glass">開始 D 款排版</Button></div>
     <div className="rv-hero-picks"><p><span>A–F</span>選一款開始排版</p><ul>{models.map(m=><li key={m.id}><button onClick={()=>onPreview(m.id)} aria-label={`開始 ${m.id} 款 ${m.name} 排版`}><img src={`/assets/product-thumb-${m.id}.webp`} alt="" width="360" height="270"/><span>{m.id}</span></button></li>)}</ul></div>
    </div>
    <ul className="rv-hero-stats">{siteStats.map(([n,label,href])=><li key={label}><a href={href}><strong>{n}</strong><span>{label}</span></a></li>)}</ul>
   </div>
   <div className="rv-hero-stage">
-   {heroSlides.map((s,i)=><img key={s.id} className={`rv-hero-photo${i===active?' is-active':''}`} src={srcOf(s)} alt={i===active?s.alt:''} aria-hidden={i!==active||undefined} width={s.width} height={s.height} style={{objectPosition:wide&&s.wide?s.widePosition:s.position}} fetchPriority={i?undefined:'high'}/>)}
-   <div className="rv-hero-tabs" role="group" aria-label="主推公版獎盃">{heroSlides.map((s,i)=><button key={s.id} aria-pressed={i===active} onClick={()=>setActive(i)}><span className="rv-hero-bar">{i===active&&<i key={active} onAnimationEnd={next}/>}</span><strong>{s.id}</strong><span>{s.name}</span></button>)}<button className="rv-hero-toggle" onClick={()=>setPaused(p=>!p)} aria-label={paused?'播放輪播':'暫停輪播'}><svg viewBox="0 0 16 16" aria-hidden="true"><path d={paused?'M5 3.5v9l7.5-4.5z':'M5 3.5v9M11 3.5v9'} fill={paused?'currentColor':'none'} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg></button></div>
+   {heroSlides.map((s,i)=><img key={s.n} className={`rv-hero-photo${i===active?' is-active':''}`} src={s.src} alt={i===active?s.alt:''} aria-hidden={i!==active||undefined} width="1440" height="1080" style={{objectPosition:s.position}} fetchPriority={i?undefined:'high'}/>)}
+   <div className="rv-hero-tabs" role="group" aria-label="D 款公版獎盃">{heroSlides.map((s,i)=><button key={s.n} aria-pressed={i===active} onClick={()=>setActive(i)}><span className="rv-hero-bar">{i===active&&<i key={active} onAnimationEnd={next}/>}</span><strong>{s.n}</strong><span>{s.name}</span></button>)}<button className="rv-hero-toggle" onClick={()=>setPaused(p=>!p)} aria-label={paused?'播放輪播':'暫停輪播'}><svg viewBox="0 0 16 16" aria-hidden="true"><path d={paused?'M5 3.5v9l7.5-4.5z':'M5 3.5v9M11 3.5v9'} fill={paused?'currentColor':'none'} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg></button></div>
   </div>
  </section>;
 }
@@ -145,9 +146,11 @@ const specOf=m=>{const d=m.dimensions_mm,size=Array.isArray(d)?`高 ${d[2]} mm`:
 // The home page keeps the essentials (hero, process, the A–F collection, custom trophies, materials,
 // partners, shop). Selected works live on the custom page, IP collaborations on the cases page, and
 // the studio, craft and awards on the About page.
-export default function Home({onPreview}){
+export default function Home({onPreview,section}){
  const root=useRef(null);
  useEffect(()=>setPageMeta(),[]);
+ // A route that names a section (#/brands) opens the home page at it, after the hash change has scrolled to the top.
+ useEffect(()=>{if(section)requestAnimationFrame(()=>document.getElementById(section)?.scrollIntoView())},[section]);
  useEffect(()=>{const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.04});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
  return <div className="folio-home rv-home" ref={root}>
   <a className="folio-skip" href="#collection">跳至公版系列</a>
@@ -176,7 +179,7 @@ export default function Home({onPreview}){
     </div>
    </section>
 
-   <LogoWall limit={16}/>
+   <LogoWall/>
 
    <ShopWindow/>
   </main>

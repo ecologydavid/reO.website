@@ -3,7 +3,6 @@
    back, and a small print of the work (photo, project, partner) follows the cursor. Replaces the
    recycled-glass slabs (v12–v27) and the grey flip ledger (v28). */
 .folio-home .brand-ledger{background:#f4f2ec;padding-top:clamp(56px,6vw,96px);padding-bottom:clamp(56px,6vw,96px);border-top:0}
-.folio-home .brand-ledger.standalone{padding-top:50px}
 .folio-home .brand-ledger .folio-section-heading{margin-bottom:40px}
 .folio-home .brand-ledger .site-logo-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;border:0;background:none}
 .folio-home .brand-ledger .site-logo-cell{aspect-ratio:5/4;border:0;background:#fff;transition:opacity .45s ease,background .45s ease}
@@ -28,7 +27,7 @@
 @media(max-width:1200px){.folio-home .brand-ledger .site-logo-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
 @media(max-width:800px){.folio-home .brand-ledger .site-logo-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:600px){
- .folio-home .brand-ledger,.folio-home .brand-ledger.standalone{padding-top:44px;padding-bottom:48px}
+ .folio-home .brand-ledger{padding-top:44px;padding-bottom:48px}
  .folio-home .brand-ledger .folio-section-heading{margin-bottom:28px}
  .folio-home .brand-ledger .site-logo-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
  .folio-home .brand-ledger .site-logo-cell>.brand-card-link{padding:0 12%}
@@ -36,7 +35,8 @@
 }
 @media(prefers-reduced-motion:reduce){.brand-preview,.folio-home .brand-ledger .site-logo-cell,.folio-home .brand-ledger .site-logo-cell canvas{transition:none}}
 .site-brand-links{display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:flex-end}
-@media(max-width:600px){.folio-home .brand-ledger.is-limited .site-logo-cell:nth-child(n+13){display:none}.site-brand-links{justify-content:flex-start}}
-/* V33 the standalone brand wall heading is the page h1; it keeps the section heading size. */
-.folio-home .site-brand-wall h1{font-size:clamp(36px,3.5vw,56px);line-height:1.5;letter-spacing:.035em}
-@media(max-width:600px){.folio-home .site-brand-wall h1{font-size:28px;letter-spacing:.01em}}
+/* V35 every mark is on the home page (no separate wall page). Phones show four rows; the button opens the rest in place. */
+.site-brand-links .site-brand-more{background:none;border:0;border-bottom:1px solid currentColor;border-radius:0;color:inherit;font:inherit;cursor:pointer;display:none}
+.site-brand-more .rv-chip svg{transform:rotate(90deg);transition:transform .25s}.site-brand-more[aria-expanded="true"] .rv-chip svg{transform:rotate(-90deg)}
+.folio-home .brand-ledger{scroll-margin-top:64px}
+@media(max-width:600px){.folio-home .brand-ledger:not(.is-open) .site-logo-cell:nth-child(n+13){display:none}.site-brand-links .site-brand-more{display:inline-flex}.site-brand-links{justify-content:flex-start}}
