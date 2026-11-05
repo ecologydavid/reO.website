@@ -4,8 +4,8 @@ import {ArrowIcon,BrandLogo,Button,Chip,MenuIcon} from './ui.jsx';
 import './site.css';
 // Content pages and the brand wall import the shared arrow from here.
 export function SiteArrow(){return <Chip/>}
-// The circle mark signed with "for real" in an italic serif (Cormorant Garamond, loaded in index.html).
-function HomeMark({onClick}){return <a className="site-brand" href="#/" onClick={onClick} aria-label="re.O for real 首頁"><span className="folio-brand"><BrandLogo/></span><span className="site-brand-tag" aria-hidden="true">for real</span></a>}
+// The header carries the animated circle mark alone (by request the "for real" signature is gone).
+function HomeMark({onClick}){return <a className="site-brand" href="#/" onClick={onClick} aria-label="re.O 首頁"><span className="folio-brand"><BrandLogo/></span></a>}
 const activeGroup=hash=>navigation.find(n=>n.match.some(prefix=>hash.startsWith(prefix)))?.id;
 function SiteMenu({onClose,onDismiss}){
  const panel=useRef(null);

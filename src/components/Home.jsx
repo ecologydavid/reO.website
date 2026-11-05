@@ -32,22 +32,22 @@ const phases=[
  {en:'Reuse',name:'再利用',note:'檢驗打磨，成為獎盃'}
 ];
 const pad=n=>String(n).padStart(2,'0');
-// The hero features the D model alone (by request E stepped down): four real photographs of D, from
-// the three colours together to the gift box, under one headline. Positions keep every trophy clear
-// of the headline column. Each panel haze is a 160px copy of its photo, so it costs next to nothing.
-const slideMs=12000;
+// The hero features the D model alone (by request E stepped down): three real photographs of D, from
+// the three colours together to the gift box, under one headline. Every slide keeps its alt text (hidden
+// slides are aria-hidden, so screen readers hear only the active one while crawlers still index all three).
+// Positions keep every trophy clear of the headline column. Each panel haze is a 160px copy of its photo, so it costs next to nothing.
+const slideMs=5000;
 const img=id=>'/content/images/'+id+'.webp';
 const heroSlides=[
  {n:'01',name:'白／黑／綠 三色',src:img('0ec85ee98fb1103204'),haze:'/assets/hero-haze-D-trio.webp',position:'41% 58%',alt:'D 款公版獎盃，白、黑、綠三色再生大理石並列'},
- {n:'02',name:'手工研磨石紋',src:img('8485826e9190eb7057'),haze:'/assets/hero-haze-D.webp',position:'50% 58%',alt:'D 款公版獎盃，再生大理石石紋與金屬銘板特寫'},
- {n:'03',name:'將榮譽賦予份量',src:img('aadb3001769fa976a7'),haze:'/assets/hero-haze-D-hand.webp',position:'62% 55%',alt:'手持 D 款公版獎盃，呈現實際大小'},
- {n:'04',name:'黑卡浪紙盒包裝',src:img('8c9018e7d0d0ec8c4b'),haze:'/assets/hero-haze-D-box.webp',position:'45% 55%',alt:'D 款公版獎盃收入黑卡浪紙盒'}
+ {n:'02',name:'將榮譽賦予份量',src:img('aadb3001769fa976a7'),haze:'/assets/hero-haze-D-hand.webp',position:'62% 55%',alt:'手持 D 款公版獎盃，呈現實際大小'},
+ {n:'03',name:'黑卡浪紙盒包裝',src:img('8c9018e7d0d0ec8c4b'),haze:'/assets/hero-haze-D-box.webp',position:'45% 55%',alt:'D 款公版獎盃收入黑卡浪紙盒'}
 ];
 function Hero({onPreview}){
  const [active,setActive]=useState(0),[paused,setPaused]=useState(false),[away,setAway]=useState(false),hero=useRef(null);
  // Off screen the slow zoom and the progress bar pause, so the hero costs nothing while you read on.
  useEffect(()=>{const observer=new IntersectionObserver(([entry])=>setAway(!entry.isIntersecting));observer.observe(hero.current);return()=>observer.disconnect()},[]);
- // Endless loop, 12s per slide. With motion the progress bar drives the change (so pausing freezes
+ // Endless loop, 5s per slide. With motion the progress bar drives the change (so pausing freezes
  // it exactly); under reduced motion a plain timer does. The pause button satisfies WCAG 2.2.2.
  const next=useCallback(()=>setActive(a=>(a+1)%heroSlides.length),[]),still=useRef(matchMedia('(prefers-reduced-motion: reduce)').matches);
  useEffect(()=>{if(paused||away||!still.current)return;const timer=setTimeout(next,slideMs);return()=>clearTimeout(timer)},[active,paused,away,next]);
@@ -66,7 +66,7 @@ function Hero({onPreview}){
    <ul className="rv-hero-stats">{siteStats.map(([n,label,href])=><li key={label}><a href={href}><strong>{n}</strong><span>{label}</span></a></li>)}</ul>
   </div>
   <div className="rv-hero-stage">
-   {heroSlides.map((s,i)=><img key={s.n} className={`rv-hero-photo${i===active?' is-active':''}`} src={s.src} alt={i===active?s.alt:''} aria-hidden={i!==active||undefined} width="1440" height="1080" style={{objectPosition:s.position}} fetchPriority={i?undefined:'high'}/>)}
+   {heroSlides.map((s,i)=><img key={s.n} className={`rv-hero-photo${i===active?' is-active':''}`} src={s.src} alt={s.alt} aria-hidden={i!==active||undefined} width="1440" height="1080" style={{objectPosition:s.position}} fetchPriority={i?undefined:'high'}/>)}
    <div className="rv-hero-tabs" role="group" aria-label="D 款公版獎盃">{heroSlides.map((s,i)=><button key={s.n} aria-pressed={i===active} onClick={()=>setActive(i)}><span className="rv-hero-bar">{i===active&&<i key={active} onAnimationEnd={next}/>}</span><strong>{s.n}</strong><span>{s.name}</span></button>)}<button className="rv-hero-toggle" onClick={()=>setPaused(p=>!p)} aria-label={paused?'播放輪播':'暫停輪播'}><svg viewBox="0 0 16 16" aria-hidden="true"><path d={paused?'M5 3.5v9l7.5-4.5z':'M5 3.5v9M11 3.5v9'} fill={paused?'currentColor':'none'} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg></button></div>
   </div>
  </section>;
@@ -104,7 +104,7 @@ function Process(){
  // Strips are rebuilt when the layout switches between four and two frames, so reveal them here too.
  useEffect(()=>{const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.15});film.current.querySelectorAll('[data-reveal]:not(.is-visible)').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[per]);
  return <section className="rv-section rv-process" id="process" aria-labelledby="rv-process-title">
-  <div className="rv-gutter"><SectionHead index="00" label="再生工藝" en="Process" id="rv-process-title" title={<>從邊料開始，<br/>讓榮耀成形。</>} link={['了解再生大理石','#/read/pages/material-recycled-marble']}/></div>
+  <div className="rv-gutter"><SectionHead index="00" label="再生工藝" en="Process" id="rv-process-title" title={<>從邊料開始，<br/>讓榮耀成形。</>} /></div>
   <div className="rv-gutter">
    {compact&&<ol className="rv-film-legend" aria-label="四個階段">{phases.map(p=><li key={p.en}><strong>{p.name}</strong><span>{p.en}</span></li>)}</ol>}
    <div className="rv-film" aria-label="再生大理石製程" role="group" ref={film}>{strips.map((strip,r)=><React.Fragment key={`${per}-${r}`}>
@@ -152,7 +152,7 @@ export default function Home({onPreview,section}){
  // A route that names a section (#/brands) opens the home page at it, after the hash change has scrolled to the top.
  useEffect(()=>{if(section)requestAnimationFrame(()=>document.getElementById(section)?.scrollIntoView())},[section]);
  useEffect(()=>{const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.04});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
- return <div className="folio-home rv-home" ref={root}>
+ return <div className="folio-home tx rv-home" ref={root}>
   <a className="folio-skip" href="#collection">跳至公版系列</a>
   <SiteHeader/>
   <main>
@@ -160,7 +160,7 @@ export default function Home({onPreview,section}){
    <Process/>
 
    <section className="rv-section rv-gutter" id="collection" aria-labelledby="rv-collection-title">
-    <SectionHead index="01" label="公版獎盃" en="Collection" id="rv-collection-title" title={<>為每份榮耀，<br/>找到合適的形狀。</>} link={['商品詳情與規格','#/explore/standard']}/>
+    <SectionHead index="01" label="公版獎盃" en="Collection" id="rv-collection-title" title={<>為每份榮耀，<br/>找到合適的形狀。</>} />
     <div className="rv-products">{[...models].sort((a,b)=>featured.indexOf(b.id)-featured.indexOf(a.id)).map(m=><article className={`rv-product${featured.includes(m.id)?' is-feature':''}`} key={m.id} data-reveal>
      <button className="rv-product-photo" onClick={()=>onPreview(m.id)} aria-label={`開始 ${m.id} 款 ${m.name} 銘版排版`}><Frame src={`/assets/catalogue-${m.id}.webp`} alt={`${m.id} 款 ${m.name}實品`} width="1200" height="900"/><span className="rv-tab" aria-hidden="true">{m.id}</span></button>
      <div className="rv-spec"><div><h3><span className="sr-only">{m.id} 款 </span>{m.name}</h3><p>{specOf(m).map(t=><span key={t}>{t}</span>)}</p></div><button className="rv-start" onClick={()=>onPreview(m.id)} aria-label={`開始 ${m.id} 款排版`}><span className="rv-start-text">開始排版</span><Arrow/></button></div>
@@ -168,7 +168,7 @@ export default function Home({onPreview,section}){
    </section>
 
    <section className="rv-section rv-gutter" id="custom" aria-labelledby="rv-custom-title">
-    <SectionHead index="02" label="客製化獎盃" en="Custom" id="rv-custom-title" title={<>為品牌，<br/>訂製專屬的榮耀。</>} link={['訂製方式與流程','#/read/pages/custom']}/>
+    <SectionHead index="02" label="客製化獎盃" en="Custom" id="rv-custom-title" title={<>為品牌，<br/>訂製專屬的榮耀。</>} />
     <ol className="rv-modes">{customModes.map(m=><li key={m.n} data-reveal><a href="#/read/pages/custom"><Frame src={m.src} alt={m.alt} width="1440" height="1440" className={m.className}/><span className="rv-mode-label"><em>{m.n}</em><strong>{m.title}</strong><Arrow/></span><span className="rv-mode-line">{m.line}</span></a></li>)}</ol>
    </section>
 

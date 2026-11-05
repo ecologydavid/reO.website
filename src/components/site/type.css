@@ -1,0 +1,84 @@
+/* V42 type system (2026-11-06). One set of faces and one scale for the whole public site, replacing the
+   one-off sizes that grew version by version. Faces are now loaded (index.html), so every system shows
+   the same letters: Noto Serif TC for headings (crisp Ming, not the thin PMingLiU fallback), Noto Sans TC
+   for reading, Inter for Latin and figures. Scale (desktop → phone through clamp):
+     display  Latin section word        Inter 300  116 → 56
+     h1       page title                Serif 600   48 → 32
+     h2       section heading           Serif 600   38 → 26
+     h3       title in a list or card   Serif 600   20 → 18
+     card     work and press titles     Serif 600   17
+     lead     the sentence under a title Sans 400   17 → 16, line 1.9
+     body     running text              Sans 400    15, line 1.85
+     small    notes, captions           Sans 400    13, line 1.75
+     label    numbers, kickers, meta    Inter 500   12, tracked
+   Grey text is #686d65 (AA on white); the old #80847d failed it at small sizes. Scoped to .folio-home.tx
+   (the site's root), one class stronger than the older rules it replaces; the studio is not touched. */
+.folio-home.tx{
+ --tx-serif:"Noto Serif TC","Songti TC",serif;
+ --tx-sans:"Inter","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+ --tx-latin:"Inter","Helvetica Neue",Arial,sans-serif;
+ --tx-ink:#1f2320;--tx-ink-2:#3d433b;--tx-body:#4a5047;--tx-muted:#686d65;
+ --tx-display:clamp(56px,7.4vw,116px);
+ --tx-h1:clamp(32px,3.3vw,48px);
+ --tx-h2:clamp(26px,2.55vw,38px);
+ --tx-h3:clamp(18px,1.4vw,20px);
+ --tx-lead:clamp(16px,1.18vw,17px);
+ /* the older tokens now point at the system */
+ --folio-serif:var(--tx-serif);--serif:var(--tx-serif);--ui-display:var(--tx-latin);--ui-muted:var(--tx-muted);--rv-muted:var(--tx-muted);--folio-muted:var(--tx-muted);
+ font-family:var(--tx-sans);color:var(--tx-ink);
+ -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;
+}
+.folio-home.tx .pg{--pg-latin:var(--tx-latin);--pg-muted:var(--tx-muted)}
+
+/* Display: the large Latin word over a section. Light and tight, so it frames rather than shouts. */
+.folio-home.tx :is(.rv-display,.content-display){font:300 var(--tx-display)/.92 var(--tx-latin);letter-spacing:-.035em}
+
+/* h1: page titles. */
+.folio-home.tx :is(.pg-title h1,.content-article-heading h1,.content-heading h1){font:600 var(--tx-h1)/1.3 var(--tx-serif);letter-spacing:.05em}
+
+/* h2: section headings, one size site-wide. */
+.folio-home.tx :is(.rv-head h2,.folio-section-heading h2,.shop-body h2,.content-works-head h2,.pg-flow-head h2,.pg-split h2,.pg-press-side h2,.pg-pack h2,.pg-faq h2,.pg-faq-contact h2,.content-gallery h2,.content-local-links h2,.content-related>div>h2,.content-gallery-head h2,.pg-band h2,.rv-craft h2,.material-process-heading h2){font:600 var(--tx-h2)/1.45 var(--tx-serif);letter-spacing:.05em}
+.folio-home.tx .folio-section-heading h2 span{font:inherit}
+.folio-home.tx .site-footer-lead>p{font:600 clamp(24px,2.2vw,32px)/1.5 var(--tx-serif);letter-spacing:.05em}
+.folio-home.tx .pg-closing>p{font:500 clamp(20px,1.8vw,26px)/1.6 var(--tx-serif);letter-spacing:.05em;color:var(--tx-ink)}
+
+/* h3: titles inside lists, steps, services and article sections. */
+.folio-home.tx :is(.pg-services h2,.rv-mode-label strong,.pg-flow-row strong,.pg-filter-link,.content-entry h2,.content-related h2:not(:first-child),.pg-pack h3,.rv-spec h3,.rv-caption h3,.content-prose-section h2,.pg-faq-group h3,.pg-faq dt){font:600 var(--tx-h3)/1.5 var(--tx-serif);letter-spacing:.04em}
+.folio-home.tx .content-prose-section h2{font-size:clamp(20px,1.7vw,24px);margin-bottom:16px}
+.folio-home.tx .content-entry h2 a{font:inherit}
+
+/* Card titles: works, press rows, products. */
+.folio-home.tx :is(.content-works-title strong,.pg-press-main strong,.pg-band-name,.shop-item strong){font:600 17px/1.55 var(--tx-serif);letter-spacing:.04em}
+.folio-home.tx .pg-press-main strong{color:var(--tx-ink-2)}
+.folio-home.tx .pg-press-index li.is-on .pg-press-main strong{color:var(--tx-ink)}
+
+/* Lead: the sentence under a page or section title. */
+.folio-home.tx :is(.pg-title>p:not(.content-display),.pg-split p:not(.pg-kicker),.folio-section-heading>p,.shop-lead,.content-heading>p,.pg-pack-intro,.rv-head>p:not(.rv-index):not(.rv-display)){font:400 var(--tx-lead)/1.9 var(--tx-sans);letter-spacing:.03em;color:var(--tx-ink-2)}
+.folio-home.tx .rv-hero-copy>p{font:400 var(--tx-lead)/1.8 var(--tx-sans);letter-spacing:.03em}
+
+/* Body. Articles read a size up. */
+.folio-home.tx :is(.pg-service-line,.pg-flow-body>p,.rv-mode-line,.pg-pack dd,.pg-faq li,.pg-faq dd,.content-entry-description,.pg-contact dd small,.material-copy>p){font:400 15px/1.85 var(--tx-sans);letter-spacing:.03em;color:var(--tx-body)}
+.folio-home.tx :is(.content-prose-section p,.content-prose-section li,.content-intro){font:400 16px/2 var(--tx-sans);letter-spacing:.03em;color:var(--tx-ink-2)}
+
+/* Small: notes, captions, second lines. */
+.folio-home.tx :is(.pg-press-main small,.content-works-line,.pg-flow-note,.rv-process-source,.shop-actions>p,.site-brand-bottom>p,.pg-contact dt,.content-metadata,.content-gallery figcaption,.pg-service-tags,.rv-hero-picks>p){font-size:13px;line-height:1.75;letter-spacing:.03em;color:var(--tx-muted)}
+.folio-home.tx .pg-flow-note{color:var(--tx-body)}
+.folio-home.tx :is(.content-breadcrumb,.content-result-count){font-size:12px;letter-spacing:.04em;color:var(--tx-muted)}
+
+/* Labels: numbers, kickers and meta in Inter, tracked, with figures that line up. */
+.folio-home.tx :is(.pg-kicker,.rv-index,.content-works-meta,.pg-service-num,.pg-press-year,.pg-flow-caption,.content-gallery-head>span,.shop-kicker,.pg-contact dt>span,.content-works-client>em,.pg-press-print figcaption,.pg-band-name>em,.rv-mode-label>em,.pg-lift-name>em){font-family:var(--tx-latin);font-size:12px;font-weight:500;letter-spacing:.12em;font-variant-numeric:tabular-nums}
+.folio-home.tx .pg-press-main em{font:500 11.5px/1.4 var(--tx-sans);letter-spacing:.1em}
+.folio-home.tx .pg-contact dd{font-family:var(--tx-serif);letter-spacing:.04em}
+.folio-home.tx .pg-contact dd a[href^="mailto"],.folio-home.tx .pg-contact dd a[href^="tel"]{font-family:var(--tx-latin);font-weight:400;letter-spacing:.01em}
+.folio-home.tx :is(.pg-contact dd strong,.rv-hero-stats strong){font-family:var(--tx-latin);font-weight:300;letter-spacing:-.01em}
+
+/* Spacing that belongs to type: a kicker sits close to its heading, a heading a little apart from its lead. */
+.folio-home.tx :is(.pg-title h1+p,.pg-split h2+p){margin-top:14px}
+.folio-home.tx .pg-kicker+h2{margin-top:12px}
+
+/* Phones: one step down, never under 12px. */
+@media(max-width:760px){
+ .folio-home.tx :is(.pg-service-line,.pg-flow-body>p,.rv-mode-line,.pg-pack dd,.pg-faq li,.pg-faq dd,.content-entry-description,.material-copy>p){font-size:14.5px}
+ .folio-home.tx :is(.content-prose-section p,.content-prose-section li){font-size:15.5px;line-height:1.95}
+ .folio-home.tx :is(.content-works-title strong,.pg-press-main strong){font-size:16px}
+}

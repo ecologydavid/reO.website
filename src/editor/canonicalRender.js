@@ -43,13 +43,14 @@ export function drawObject(ctx,o,images){
     });
   }ctx.restore();
 }
-export async function renderCanonicalSurface(surface,objects,{selection=null,withBackground=true}={}){
+// scale renders the same plate at a higher pixel density (3D textures, a large stage); 1 is the canonical size.
+export async function renderCanonicalSurface(surface,objects,{selection=null,withBackground=true,scale=1}={}){
   await ensureMaterialMaps();
-  const c=makeCanvas(surface.width,surface.height),ctx=c.getContext('2d');
+  const c=makeCanvas(surface.width*scale,surface.height*scale),ctx=c.getContext('2d'),W=c.width/scale,H=c.height/scale;ctx.scale(scale,scale);
   const images=new Map(await Promise.all(objects.filter(o=>o.type==='image').map(async o=>[o.src,await loadImage(o.src)])));
   const overflow=objects.some(o=>!objectFits(o,surface,ctx));
-  ctx.save();polygonPath(ctx,surface.polygon,c.width,c.height);ctx.clip();
-  if(withBackground)ctx.drawImage(materialTexture(surface.material,surface.fill,surface),0,0,c.width,c.height);
+  ctx.save();polygonPath(ctx,surface.polygon,W,H);ctx.clip();
+  if(withBackground)ctx.drawImage(materialTexture(surface.material,surface.fill,surface),0,0,W,H);
   objects.forEach(o=>drawObject(ctx,o,images));
   if(selection){
     const o=objects.find(o=>o.id===selection);

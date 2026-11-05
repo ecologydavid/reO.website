@@ -10,9 +10,13 @@
     <link rel="canonical" href="%SITE_URL%/" />
     <link rel="icon" type="image/png" href="/assets/reo-logo.png" />
     <link rel="apple-touch-icon" href="/assets/reo-logo.png" />
-    <!-- Only the glyphs of "for real" beside the header logo; loaded without blocking the first paint. -->
+    <!-- V42 type system: headings in Noto Serif TC, text in Noto Sans TC, Latin and figures in Inter.
+         Google serves the Chinese faces in small unicode-range slices, so a page loads only the
+         characters it uses. Non-blocking: text shows at once in the system face, then swaps. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&text=for%20real&display=swap" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600&display=swap" /></noscript>
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="re.O" />
     <meta property="og:locale" content="zh_TW" />

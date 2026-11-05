@@ -147,21 +147,14 @@
 }
 @media(prefers-reduced-motion:reduce){.folio-home .site-actions .site-shop:hover .rv-chip .rv-icon{animation:none}}
 
-/* V34 "for real" beside the circle mark: italic serif, optically centred on the "re:" inside the ring.
-   It condenses with the header and drops where the links need the room (1101–1240px) and on narrow phones. */
-.site-brand{display:flex;align-items:center;gap:10px;flex:none}
-.site-brand-tag{font:italic 500 26px/1 "Cormorant Garamond",Georgia,"Times New Roman",serif;letter-spacing:.01em;color:var(--ui-ink);white-space:nowrap;padding-bottom:3px;transition:font-size .4s var(--ui-ease)}
-.folio-home .site-header-v5.is-condensed .site-brand-tag{font-size:22px}
-@media(max-width:1240px) and (min-width:1101px){.site-header-v5 .site-brand-tag{display:none}}
-@media(max-width:760px){.site-brand{gap:6px}.site-brand-tag,.folio-home .site-header-v5.is-condensed .site-brand-tag{font-size:20px}}
-@media(max-width:359px){.site-header-v5 .site-brand-tag{display:none}}
-/* Phones: 選單 becomes its round icon (the word stays for screen readers) so mark, tag and both
+/* V41 the header mark stands alone: the animated circle logo, no signature beside it. */
+.site-brand{display:flex;align-items:center;flex:none}
+/* Phones: 選單 becomes its round icon (the word stays for screen readers) so the mark and both
    pills fit across 360px. */
 @media(max-width:760px){
  .folio-home .site-actions .site-menu-button{padding:6px;gap:0}
  .site-menu-button>span:first-child{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 }
-@media(prefers-reduced-motion:reduce){.site-brand-tag{transition:none}}
 
 /* V31 line breaking, site-wide (not the editor): headings balance their lines; running text avoids a
    lone character or word on its last line. */
@@ -181,3 +174,22 @@
 /* A ruled closing line is a short band of its own: the space under it matches the space above it. */
 .folio-home #main-content>main:has(>.pg-closing:last-child){padding-bottom:clamp(48px,4.5vw,64px)}
 @media(max-width:760px){.folio-home{--page-end:64px}}
+
+/* V43 navigation (2026-11-06): clearer and calmer. The capsule is frosted glass (a light stone tint, a
+   fine edge and an inner highlight, blurring what passes beneath once the header floats). Labels are
+   larger and darker. One marker only: an ink pill with white text rests on the current section and
+   glides to whichever link is pointed at or focused; the current link turns back to ink meanwhile.
+   (Replaces the bold label + dot for the current page and the white hover pill.) */
+.folio-home .site-links{padding:5px;gap:2px;background:rgba(244,243,239,.62);-webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5);box-shadow:inset 0 0 0 1px rgba(31,35,32,.07),inset 0 1px 0 rgba(255,255,255,.75),0 10px 28px -22px rgba(31,35,32,.45)}
+.folio-home .site-links-pill{top:5px;height:42px;background:var(--ui-ink);box-shadow:0 8px 20px -10px rgba(31,35,32,.55)}
+.folio-home .site-links>a{height:42px;padding:0 22px;font-size:16px;font-weight:500;letter-spacing:.06em;color:#2b302a;transition:color .35s var(--ui-ease)}
+.folio-home .site-links>a>span{line-height:42px;text-shadow:0 42px 0 currentColor}
+.folio-home .site-links>a:hover>span,.folio-home .site-links>a:focus-visible>span{transform:translateY(-42px)}
+.folio-home .site-links>a[aria-current=page],.folio-home .site-links>a:hover,.folio-home .site-links>a:focus-visible{color:#fff;font-weight:500}
+.folio-home .site-links:is(:has(>a:hover),:has(>a:focus-visible))>a[aria-current=page]:not(:hover):not(:focus-visible){color:#2b302a}
+.folio-home .site-links>a[aria-current=page]::after{content:none}
+.folio-home .site-links>a:focus-visible{outline:2px solid var(--ui-ink);outline-offset:2px}
+.folio-home .site-header-v5.is-condensed .site-links{background:rgba(255,255,255,.55)}
+@media(min-width:1600px){.folio-home .site-links>a{padding:0 26px}}
+@media(max-width:1320px){.folio-home .site-links>a{padding:0 15px;font-size:15px;letter-spacing:.04em}}
+@media(max-width:1180px){.folio-home .site-links>a{padding:0 12px}}

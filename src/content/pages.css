@@ -51,16 +51,6 @@
 .pg-lift-name{display:flex;gap:14px;justify-content:center;padding-top:6px;font-size:14px;letter-spacing:.14em;color:rgba(242,240,235,.82)}
 .pg-lift-name em{font:normal 500 12px/1.7 var(--pg-latin);color:rgba(242,240,235,.45)}
 
-.pg-awards{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:center;padding-top:var(--pg-space);scroll-margin-top:24px}
-.pg-awards>figure{grid-column:1/6;margin:0;aspect-ratio:3/4;overflow:hidden;background:#f4f3ef}
-.pg-awards>div{grid-column:7/13}
-.pg-awards h2{margin:18px 0 40px}
-.folio-home .pg-awards h3{font-size:14px;letter-spacing:.14em;color:var(--pg-muted);margin:0 0 6px}
-.pg-years{list-style:none;margin:0 0 40px;padding:0}
-.pg-years li{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 16px;padding:18px 0;border-bottom:1px solid var(--folio-rule)}
-.pg-years span{grid-row:span 2;font:500 15px/1.6 var(--pg-latin);letter-spacing:.04em}
-.pg-years strong{font-size:16px;letter-spacing:.06em}
-.pg-years em{font-style:normal;font-size:14px;color:var(--pg-muted);letter-spacing:.04em}
 
 
 .pg-closing{display:flex;align-items:center;justify-content:space-between;gap:24px 48px;flex-wrap:wrap;margin-top:clamp(56px,5vw,80px);padding-top:40px;padding-bottom:var(--pg-space);border-top:1px solid var(--folio-rule)}
@@ -154,9 +144,6 @@
  .pg-reel li.is-low{margin-top:32px}
  .pg-lift{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 0}
  .pg-lift-name{font-size:12px;gap:8px}
- .pg-awards{display:flex;flex-direction:column;align-items:stretch;gap:40px}
- .pg-awards>figure{aspect-ratio:4/5}
- .pg-years li{grid-template-columns:84px minmax(0,1fr)}
  .pg-closing{display:block}
  .pg-closing .pg-actions{margin-top:24px}
  .pg-center{margin-top:40px}
@@ -362,6 +349,7 @@
 .pg-press-print img.is-on{opacity:1;transform:none}
 .pg-press-print figcaption{position:absolute;left:0;bottom:0;display:flex;align-items:baseline;gap:12px;padding:12px 18px 0 0;background:#f4f2ec;font:500 12px/1.4 var(--pg-latin);letter-spacing:.1em;color:var(--pg-muted)}
 .pg-press-print figcaption em{font-style:normal;font-weight:600;color:var(--folio-ink)}
+.pg-press-print figcaption small{font-size:11px;letter-spacing:.06em;color:#9a958a}
 .pg-press-index>div+div{margin-top:clamp(40px,4vw,64px)}
 .folio-home .pg-press-index h3{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:12px;border-bottom:1px solid var(--folio-ink);font-size:15px;letter-spacing:.14em}
 .pg-press-index h3 span{font:500 12px/1 var(--pg-latin);letter-spacing:.08em;color:var(--pg-muted)}
@@ -379,11 +367,26 @@
 .pg-press-index li.is-on .pg-press-main strong{color:var(--folio-ink)}
 .pg-press-index li.is-on .pg-press-go{color:var(--folio-ink);transform:translate(2px,-2px)}
 .pg-press-row:focus-visible{outline:2px solid var(--folio-ink);outline-offset:4px}
+/* V41 one record of awards, roles, press and talks: pill chips narrow it by kind (white on the stone
+   band), each row names its kind before the source, and a year shows once on the first row it covers. */
+.pg-press-filters{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:20px;border-bottom:1px solid var(--folio-ink)}
+.folio-home .pg-press-filters>button{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 18px;border:0;border-radius:999px;background:#fff;font-size:13px;letter-spacing:.08em;color:var(--folio-ink);cursor:pointer;transition:background .25s,color .25s}
+.pg-press-filters>button span{font:500 11px/1 var(--pg-latin);letter-spacing:.04em;color:var(--pg-muted);transition:color .25s}
+.folio-home .pg-press-filters>button:hover{background:#e9e6dd}
+.folio-home .pg-press-filters>button[aria-pressed=true]{background:var(--folio-ink);color:#fff;font-weight:600}
+.pg-press-filters>button[aria-pressed=true] span{color:rgba(255,255,255,.65)}
+.pg-press-filters>button:focus-visible{outline:2px solid var(--folio-ink);outline-offset:3px}
+.pg-press-main em b{font-weight:600;color:var(--folio-ink)}
+.pg-press-main em span{margin-left:10px;padding-left:10px;border-left:1px solid #cfcabd}
+.pg-press-year.is-same{visibility:hidden}
 @media(max-width:1100px){.pg-press-grid{grid-template-columns:1fr}.pg-press-side{position:static}.pg-press-print{aspect-ratio:16/9}}
 @media(max-width:760px){
  .pg-press-row{grid-template-columns:minmax(0,1fr) 1.5em;gap:8px;padding:16px 0}
  .pg-press-year{grid-column:1/-1;order:-1}
+ .pg-press-year.is-same{display:none}
+ .folio-home .pg-press-filters>button{min-height:36px;padding:0 14px;font-size:12px}
  .pg-press-main strong{font-size:16px}
 }
 @media(prefers-reduced-motion:reduce){.pg-press-print img{transition:opacity .2s;transform:none}}
+
 

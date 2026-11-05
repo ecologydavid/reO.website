@@ -51,7 +51,7 @@ export default function Editor({modelId,onModelChange,onHome}){
   const model=models.find(m=>m.id===modelId)||models[1],history=useHistory(readDraft);
   const [shape,setShape]=useState('ridge'),[activeId,setActiveId]=useState('main'),[selectedId,setSelectedId]=useState('title'),[mode,setMode]=useState('front');
   const [notice,setNotice]=useState(''),[busy,setBusy]=useState(''),[reference,setReference]=useState(false);
-  const [menu,setMenu]=useState(false),[view,setView]=useState('edit'),[saved,setSaved]=useState('');
+  const [menu,setMenu]=useState(false),[big,setBig]=useState('plate'),[inline,setInline]=useState(null),[saved,setSaved]=useState('');
   const [hasLegacy]=useState(()=>{try{return !!localStorage.getItem(legacyStorage)}catch{return false}});
   const inputRef=useRef(null),noticeTimer=useRef(null),measureRef=useRef(null),menuRef=useRef(null);
   if(!measureRef.current)measureRef.current=document.createElement('canvas').getContext('2d');
@@ -71,12 +71,13 @@ export default function Editor({modelId,onModelChange,onHome}){
   const notify=useCallback(message=>{setNotice(message);clearTimeout(noticeTimer.current);noticeTimer.current=setTimeout(()=>setNotice(''),4500)},[]);
   useEffect(()=>()=>clearTimeout(noticeTimer.current),[]);
   function changeModel(id){onModelChange(id);setActiveId('main');setSelectedId('title')}
-  function pickSurface(id){setActiveId(id);setSelectedId('title');setView('edit')}
+  // Picking a plate on the finished product (front or 3D) brings that plate up large to edit.
+  function pickSurface(id){setActiveId(id);setSelectedId('title');setBig('plate')}
   function updateObjects(updater,{record=true,surfaceId=surface.id}={}){history.change(d=>{const key=keyFor(model.id,shape,surfaceId),s=scene.surfaces.find(s=>s.id===surfaceId);const current=(d.documents[key]||documents[surfaceId]||[]).map(o=>settle(o,s));return {...d,documents:{...d.documents,[key]:updater(current)}}},{record})}
   function patch(id,changes,record=true){
     updateObjects(list=>list.map(o=>{if(o.id!==id||o.locked&&!('locked' in changes))return o;return settle({...o,...changes,...('color' in changes&&!('autoColor' in changes)?{autoColor:false}:{})},surface)}),{record});
   }
-  function addText(){if(objects.length>=20)return notify('每區最多可放置 20 個物件。');const o=fitObject({...defaultObjects(surface)[1],id:crypto.randomUUID(),text:'新增文字',autoColor:true,x:surface.width*.5,y:surface.height*.5},surface,measureRef.current);updateObjects(list=>[...list,o]);setSelectedId(o.id);editText()}
+  function addText(){if(objects.length>=20)return notify('每區最多可放置 20 個物件。');const o=fitObject({...defaultObjects(surface)[1],id:crypto.randomUUID(),text:'新增文字',autoColor:true,x:surface.width*.5,y:surface.height*.5},surface,measureRef.current);updateObjects(list=>[...list,o]);setSelectedId(o.id);editText(o.id)}
   async function upload(event){
     const file=event.target.files?.[0];event.target.value='';if(!file)return;
     if(!['image/png','image/jpeg','image/webp'].includes(file.type))return notify('請選擇 PNG、JPG 或 WebP 圖案。');if(file.size>3*1024*1024)return notify('圖案請小於 3 MB。');if(objects.length>=20)return notify('每區最多可放置 20 個物件。');
@@ -90,7 +91,8 @@ export default function Editor({modelId,onModelChange,onHome}){
   function fitSelected(){if(!object||object.locked)return;updateObjects(list=>list.map(o=>o.id===object.id?fitObject({...o,x:surface.width*.5,y:surface.height*.5,boxWidth:Math.min(o.boxWidth||surface.width*.8,surface.width*.8)},surface,measureRef.current):o));notify('已放回銘版內。')}
   function center(axis){if(object)patch(object.id,axis==='x'?{x:surface.width/2}:{y:surface.height/2})}
   // Focus the text box once the inspector has rendered the newly picked object.
-  function editText(){requestAnimationFrame(()=>{const field=document.getElementById('st-text-input');if(field){field.focus();field.select()}})}
+  // Text is edited where it sits: the plate comes up large and the text opens in place.
+  function editText(id=selectedId){setBig('plate');setInline(id)}
   function setFinish(value){history.change(d=>({...d,finishes:{...d.finishes,[model.id]:value}}))}
   function currentSnapshot(){const state=history.getState(),currentScene=getModelScene(model.id,shape,state.finishes?.[model.id]||defaultFinish[model.id]);const currentDocuments=Object.fromEntries(currentScene.surfaces.map(s=>[s.id,(state.documents[keyFor(model.id,shape,s.id)]||documents[s.id]).map(o=>settle(o.type==='text'&&o.autoColor!==false?{...o,color:s.ink}:o,s))]));return {state,scene:currentScene,documents:currentDocuments}}
   // Drafts save themselves a moment after each change, in this browser only.
@@ -123,7 +125,7 @@ export default function Editor({modelId,onModelChange,onHome}){
   const size=Array.isArray(model.dimensions_mm)?model.dimensions_mm.map(v=>v/10).join(' × ')+' cm':'Ø8 × 厚1 cm';
   return <div className="st-app">
     <header className="st-header">
-      <a className="st-mark" href="#/" onClick={e=>{e.preventDefault();onHome()}} aria-label="回到 re.O 首頁"><span className="st-logo"><BrandLogo alt=""/></span><span className="st-tag" aria-hidden="true">for real</span></a>
+      <a className="st-mark" href="#/" onClick={e=>{e.preventDefault();onHome()}} aria-label="回到 re.O 首頁"><span className="st-logo"><BrandLogo alt=""/></span></a>
       <div className="st-title"><p>Plaque Studio</p><h1>銘版排版工作室</h1></div>
       <div className="st-header-actions">
         <span className="st-saved" role="status">{saved}</span>
@@ -137,7 +139,7 @@ export default function Editor({modelId,onModelChange,onHome}){
         </div>
       </div>
     </header>
-    <div className={`st-layout is-${view}`}>
+    <div className={`st-layout is-${big}`}>
       <aside className="st-product" aria-label="選擇產品">
         <div className="st-product-head"><p className="st-kicker">{model.id} 款・{model.kind}</p><h2>{model.name}</h2><p className="st-meta">{size}<span>NT${model.price}</span></p></div>
         <section className="st-step st-step-models"><h3><span>01</span>款式</h3>
@@ -145,16 +147,15 @@ export default function Editor({modelId,onModelChange,onHome}){
           {model.id==='F'?<div className="st-finish-row"><span className="st-label">獎牌造型</span><div className="st-chips">{shapeChoices.map(v=><button type="button" key={v.id} aria-pressed={shape===v.id} onClick={()=>{setShape(v.id);setSelectedId('title')}}>{v.name}</button>)}</div></div>:null}
         </section>
         <section className="st-step st-step-finish"><h3><span>02</span>顏色與材質</h3><Finishes scene={scene} onChange={setFinish}/></section>
-        <section className="st-step st-step-view"><h3><span>03</span>成品預覽<button type="button" className="st-ref" onClick={()=>setReference(true)}>官方線稿<Icon name="expand" size={14}/></button></h3>
-          <ProductView scene={scene} documents={documents} surface={surface} mode={mode} onMode={setMode} onSurface={pickSurface}/>
-          <p className="st-note">圖示重建預覽，色澤紋理以實品為準</p>
+        <section className="st-step st-step-ref"><button type="button" className="st-ref" onClick={()=>setReference(true)}>官方線稿與客製範圍<Icon name="expand" size={14}/></button>
+          <p className="st-note">預覽為圖示重建，色澤紋理以實品為準</p>
           {hasLegacy?<button type="button" className="st-text-btn" onClick={()=>{history.change(readDraft(true));notify('已載入原版草稿，可按復原回到剛才的版本。')}}>載入原版草稿</button>:null}
         </section>
       </aside>
-      <div className="st-mobile-switch" role="group" aria-label="切換檢視">{[['edit','排版'],['view','成品預覽']].map(([id,label])=><button type="button" key={id} aria-pressed={view===id} onClick={()=>setView(id)}>{label}</button>)}</div>
+      <div className="st-mobile-switch" role="group" aria-label="切換檢視">{[['plate','排版'],['product','成品預覽']].map(([id,label])=><button type="button" key={id} aria-pressed={big===id} onClick={()=>setBig(id)}>{label}</button>)}</div>
       <main className="st-work">
         <div className="st-work-bar">
-          <h3 className="st-work-title"><span>04</span>排版</h3>
+          <h3 className="st-work-title"><span>03</span>排版</h3>
           {scene.surfaces.length>1?<div className="st-zones" role="group" aria-label="編輯區域">{scene.surfaces.map(s=><button type="button" key={s.id} aria-pressed={surface.id===s.id} onClick={()=>pickSurface(s.id)}>{s.name}</button>)}</div>:<p className="st-zone-name">{surface.name}</p>}
           <div className="st-work-tools">
             <button type="button" className="st-btn st-btn-ghost st-btn-sm" onClick={addText}><Icon name="text" size={16}/>文字</button>
@@ -164,8 +165,18 @@ export default function Editor({modelId,onModelChange,onHome}){
             <button type="button" className="st-icon" aria-label="重做" title="重做（Ctrl+Shift+Z）" disabled={!history.canRedo} onClick={history.redo}><Icon name="redo" size={18}/></button>
           </div>
         </div>
-        <PlateStage surface={surface} objects={objects} selectedId={selectedId} measure={measureRef.current} outside={outside} onSelect={setSelectedId} onPatch={patch} onCheckpoint={history.checkpoint} onDelete={remove} onEditText={editText}/>
-        <p className={`st-work-note${outside.size?' is-warning':''}`} role="status">{outside.size?'紅色部分超出銘版，不會製作；可直接下載，或拖回框內。':<>拖曳移動・拉角落縮放・拉圓點旋轉・雙擊改字{surface.material==='acrylic'?'・透明壓克力以灰色襯底顯示':''}</>}</p>
+        {/* Picture in picture: the plate and the finished product share one stage. One fills it, the other
+            waits in the corner as a live thumbnail; a tap on the thumbnail swaps them. */}
+        <div className={`st-canvas is-${big}`}>
+          <section className={`st-slot st-slot-plate${big==='plate'?' is-big':' is-pip'}`} aria-label="銘版排版" inert={big!=='plate'||undefined}>
+            <PlateStage surface={surface} objects={objects} selectedId={selectedId} measure={measureRef.current} outside={outside} inline={big==='plate'?inline:null} onInline={setInline} onSelect={setSelectedId} onPatch={patch} onCheckpoint={history.checkpoint} onDelete={remove} onDuplicate={duplicate} onCenter={center} onEditText={editText}/>
+          </section>
+          <section className={`st-slot st-slot-product${big==='product'?' is-big':' is-pip'}`} aria-label="成品預覽" inert={big!=='product'||undefined}>
+            <ProductView scene={scene} documents={documents} surface={surface} mode={mode} onMode={setMode} onSurface={pickSurface}/>
+          </section>
+          <button type="button" className="st-pip-swap" onClick={()=>setBig(big==='plate'?'product':'plate')} aria-label={big==='plate'?'放大成品預覽':'放大銘版排版'}><span>{big==='plate'?(mode==='three'?'3D 預覽':'成品預覽'):'回到排版'}</span><Icon name="expand" size={14}/></button>
+        </div>
+        <p className={`st-work-note${outside.size&&big==='plate'?' is-warning':''}`} role="status">{big==='product'?'拖曳旋轉・點銘版回到排版':outside.size?'紅色部分超出銘版，不會製作；可直接下載，或拖回框內。':<>拖曳移動・拉角落縮放・拉圓點旋轉・雙擊直接改字{surface.material==='acrylic'?'・透明壓克力以灰色襯底顯示':''}</>}</p>
       </main>
       <Inspector object={object} outside={outside.has(selectedId)} objects={objects} surface={surface} onPatch={changes=>patch(selectedId,changes)} onPatchLayer={patch} onSelect={setSelectedId} onDuplicate={duplicate} onDelete={remove} onReorder={reorder} onFit={fitSelected} onCenter={center} onAddText={addText} onUpload={()=>inputRef.current.click()}/>
     </div>

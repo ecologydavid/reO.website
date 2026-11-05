@@ -206,8 +206,8 @@
  .rv-hero h1>span:nth-child(1)>span{animation-delay:.5s}
  .rv-hero h1>span:nth-child(2)>span{animation-delay:.62s}
  .rv-hero-copy>p,.rv-hero-actions,.rv-hero-picks,.rv-hero-stats,.rv-hero-kicker,.rv-hero-tabs{animation:rv-rise .9s .8s cubic-bezier(.2,.7,.2,1) both}
- .rv-home .rv-hero-photo.is-active{animation:rv-zoom 12s cubic-bezier(.2,.7,.2,1) both}
- .rv-hero-bar>i{transform-origin:left;animation:rv-progress 12s linear both}
+ .rv-home .rv-hero-photo.is-active{animation:rv-zoom 5s cubic-bezier(.2,.7,.2,1) both}
+ .rv-hero-bar>i{transform-origin:left;animation:rv-progress 5s linear both}
  .rv-hero.is-paused .rv-hero-bar>i{animation-play-state:paused}
 }
 @keyframes rv-panel{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}

@@ -1,5 +1,6 @@
 import React,{useCallback,useEffect,useRef,useState} from 'react';
 import './ui.css';
+import './type.css';
 // V11 shared vocabulary: a compact arrow that always sits in a round chip, pill buttons, and display headings.
 export function ArrowIcon(){return <svg className="rv-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
 export function MenuIcon({open=false}){return <svg className="rv-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d={open?'m4 4 8 8M12 4l-8 8':'M2.5 5.5h11M2.5 10.5h11'} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>}

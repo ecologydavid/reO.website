@@ -339,3 +339,59 @@ export both PDF and .eps. This authorises editor UI changes; all v3 capabilities
   its linked page; covers are re.O's own photos of the work discussed or stills the studio already
   published. Never copy photos from outlets' sites. Unverified items (TISDC talks, GQ feature,
   Taiwan Designers' Week, 人間福報, MOT TIMES) wait for a source link before they are added.
+
+## Bare header mark, 5s hero, no filler images, one record (v41, 2026-11-06)
+- Every header (site and plaque studio) shows the animated circle logo alone; the "for real"
+  signature and its Cormorant Garamond font link are gone (supersedes the v34 note above).
+- Home hero: three D slides (三色, 將榮譽賦予份量, 黑卡浪紙盒包裝), 5s each (supersedes 12s). All slide
+  photos keep their alt text for indexing; inactive slides stay aria-hidden.
+- Section heads on home carry no read-more link (Process, Collection, Custom); nav and cards link on.
+- Migrated pages hold no layout-only images: the three-tile 「— 案例 —」 dividers on the nine
+  material pages, contact-page logo/FB/IG banners, a re: end card and two avatar icons were removed
+  from public/content/pages and deleted. Client logos, dimension drawings, icon diagrams and the
+  map are content and stay. Re-check new migrations for such tiles.
+- About 「設計講座與產業報導」 (id about-awards) merges awards, industry roles, press and talks into
+  one newest-first record with kind chips (全部/設計獲獎/產業參與/媒體報導/講座與平台); a year shows once;
+  undated broadcasts close the list; each entry switches the sticky print (潛力企業獎 ceremony,
+  award pieces, studio photos).
+
+## One record with exhibitions and talks (v41b, 2026-11-06)
+- 「設計講座與產業報導」 now also lists the 匠子 CHANZ STUDIO 「展覽、課程與分享」 items (2017–2026), 32
+  entries in five kinds: 設計獲獎, 產業參與, 展覽活動, 講座課程, 媒體報導. Data lives in
+  src/content/record.js (field notes at its top); add future press or talks there. Items without
+  their own photo use a re.O event or studio photo marked `generic` (the print says 示意照片).
+
+## Studio v5: realistic 3D, one stage, direct handling (2026-11-06, by request)
+- 3D (ThreeModel.js / ThreePreview.jsx): physically based materials (sealed stone, oiled wood,
+  brushed metal, clear acrylic), a studio environment built in the browser (RoomEnvironment plus a
+  front soft box; no download), neutral tone mapping, a sub-millimetre chamfer on every body edge
+  (chamferMesh in modelGeometry.mjs, tested in tests/chamfer.test.mjs; falls back to sharp edges
+  where the result would not stay closed, e.g. C's wave), printed ink as a matte layer above the
+  metal face. The body builds once per model/finish; edits only repaint plate textures; frames
+  render only when something changed. Tapping a plate in 3D or the front view opens it to edit.
+- Layout: picture in picture. Plate and finished product share one stone stage; one fills it, the
+  other is a live corner card, tap to swap. Phones use the 排版/成品預覽 switch instead of the card.
+- Plate: a floating toolbar above the picked object (size −/+, bold, edit, centre, copy, delete);
+  double-click or Enter edits text in place; drags snap to the plate centre lines and other objects'
+  centres (Alt = free) with a guide line; the plate and front view render at screen density.
+- Canonical shape, PDF/EPS and all earlier capabilities are unchanged (renderCanonicalSurface's new
+  `scale` option defaults to 1).
+- Pending (owner will supply): real product photos or 3D files (glTF/CAD/scans) to replace the
+  reconstructions; an optional path-traced "high quality still" can follow after that.
+
+## Type system (v42, 2026-11-06)
+- One set of faces and one scale for the public site, in src/components/site/type.css (imported by
+  ui.jsx; scoped to `.folio-home.tx`, the class on the Home and ContentSite roots). Faces load from
+  Google Fonts in index.html (non-blocking, display=swap): Noto Serif TC 500/600 for headings, Noto
+  Sans TC for text, Inter for Latin, figures and labels. The thin PMingLiU fallback no longer shows.
+- Scale: display (Latin section word, Inter 300) 116→56; h1 48→32; h2 38→26 (one size for every
+  section heading); h3 20→18; card titles 17; lead 17/1.9; body 15/1.85 (articles 16/2); small 13;
+  labels Inter 500 12 tracked. Grey text #686d65 (AA). Nothing on the site under 12px except legal.
+- New headings or text blocks join an existing role in type.css rather than setting their own size.
+
+## Navigation capsule (v43, 2026-11-06)
+- Frosted-glass capsule (light stone tint, fine edge, inner highlight, backdrop blur). Labels 16px
+  (15px under 1320px), weight 500, ink #2b302a. One marker only: the ink pill with white text rests on
+  the current section and glides to the pointed or focused link (the current label turns back to ink
+  meanwhile). The bold-plus-dot current marker and the white hover pill are retired. Rules at the end
+  of src/components/site/site.css.
