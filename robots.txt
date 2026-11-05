@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ecologydavid.github.io/reO.website/sitemap.xml
