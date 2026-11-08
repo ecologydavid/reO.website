@@ -35,3 +35,8 @@ export function ArrowLink({href,onClick,children,className=''}){const Tag=href?'
 export function RoundArrow({label,href,onClick}){const Tag=href?'a':'button';return <Tag className="rv-round" href={href} onClick={onClick} aria-label={label}><ArrowIcon/></Tag>}
 export function SectionHead({index,label,en,title,link,id}){return <header className="rv-head" data-reveal>{en&&<p className="rv-display" aria-hidden="true">{en}</p>}<p className="rv-index"><span>{index}</span>{label}</p><h2 id={id}>{title}</h2>{link&&<ArrowLink href={link[1]}>{link[0]}</ArrowLink>}</header>}
 export function Frame({src,alt,width,height,mark,className='',priority=false}){return <span className={`rv-frame ${className}`}><img src={src} alt={alt} width={width} height={height} loading={priority?undefined:'lazy'} fetchPriority={priority?'high':undefined}/>{mark&&<span className="rv-mark" aria-hidden="true">{mark}</span>}</span>}
+
+// The plaque studio always opens in its own tab (owner, 2026-11-07): links spread studioTab, buttons call openStudio.
+// Switching models inside the studio stays in that tab.
+export const studioTab={target:'_blank',rel:'noopener'};
+export function openStudio(id){window.open(`#/preview/${id}`,'_blank','noopener')}

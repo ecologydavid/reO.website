@@ -1,0 +1,643 @@
+{
+ "note": "Generated from the owner-supplied STEP files (公版D款.step, 公版E.step 2026-11-06; 公版A.step, 公版B.step, 公版C.step 2026-11-07) by step2mesh + cad2web. Geometry lives in public/assets/models/cad-<id>.bin.",
+ "models": {
+  "D": {
+   "id": "D",
+   "map": {
+    "k": 19.262867851386677,
+    "zTop": 249.59938660711347,
+    "zBot": 0,
+    "x0": -24.956674979941084,
+    "yc": 0
+   },
+   "width": 1000,
+   "height": 4808,
+   "parts": [
+    {
+     "role": "stone",
+     "name": "主體 01 (3)",
+     "vertexStart": 0,
+     "vertexCount": 4937,
+     "indexStart": 0,
+     "indexCount": 21696
+    },
+    {
+     "role": "metal",
+     "name": "主體 13 (6)",
+     "vertexStart": 4937,
+     "vertexCount": 24,
+     "indexStart": 21696,
+     "indexCount": 36
+    }
+   ],
+   "vertexCount": 4961,
+   "indexCount": 21732,
+   "bytes": 161344,
+   "surfaces": {
+    "main": {
+     "plane_origin": [
+      2,
+      2400,
+      493.6124
+     ],
+     "basis_u": [
+      996,
+      0,
+      -0.0022
+     ],
+     "basis_v": [
+      0,
+      1652.8,
+      8.260791
+     ],
+     "source": "CAD face plane (STEP)"
+    },
+    "lower": {
+     "plane_origin": [
+      0,
+      4157.8622399999995,
+      502.4016
+     ],
+     "basis_u": [
+      984.252,
+      0,
+      -0.004503
+     ],
+     "basis_v": [
+      0,
+      635.1608400000001,
+      3.167177
+     ],
+     "source": "CAD face plane (STEP)"
+    }
+   },
+   "front": {
+    "margin": 144,
+    "note": "Front view: the CAD model rendered head-on (near-orthographic) for each finish, drawn over the scene box grown by margin on every side."
+   }
+  },
+  "E": {
+   "id": "E",
+   "map": {
+    "k": 9.673750583103045,
+    "zTop": 192.023506657,
+    "zBot": -1.367509355,
+    "x0": 421.67271874583827,
+    "yc": -45.96705965894084
+   },
+   "width": 1000,
+   "height": 1870.816,
+   "parts": [
+    {
+     "role": "stone",
+     "name": "1",
+     "vertexStart": 0,
+     "vertexCount": 5700,
+     "indexStart": 0,
+     "indexCount": 25194
+    },
+    {
+     "role": "metal",
+     "name": "1",
+     "vertexStart": 5700,
+     "vertexCount": 7746,
+     "indexStart": 25194,
+     "indexCount": 37572
+    }
+   ],
+   "vertexCount": 13446,
+   "indexCount": 62766,
+   "bytes": 452756,
+   "canon": {
+    "back": {
+     "x": 3.7781383444199497,
+     "y": 3.712602581176445,
+     "displayWidth": 993,
+     "displayHeight": 991.5,
+     "polygon": [
+      [
+       0.966767,
+       0
+      ],
+      [
+       0.981873,
+       0
+      ],
+      [
+       0.990937,
+       0.004539
+      ],
+      [
+       0.998489,
+       0.015129
+      ],
+      [
+       1,
+       0.03177
+      ],
+      [
+       0.888218,
+       0.753404
+      ],
+      [
+       0.883686,
+       0.642965
+      ],
+      [
+       0.84139,
+       0.526475
+      ],
+      [
+       0.833837,
+       0.520424
+      ],
+      [
+       0.826284,
+       0.520424
+      ],
+      [
+       0.081571,
+       0.98941
+      ],
+      [
+       0.069486,
+       1
+      ],
+      [
+       0,
+       0.641452
+      ],
+      [
+       0.001511,
+       0.612708
+      ],
+      [
+       0.013595,
+       0.591528
+      ]
+     ]
+    },
+    "front": {
+     "x": 273.09269974361024,
+     "y": 959.6990016207701,
+     "displayWidth": 627.7200015869735,
+     "displayHeight": 723.141877338702,
+     "polygon": [
+      [
+       0.961226,
+       0.405602
+      ],
+      [
+       0.981569,
+       0.422618
+      ],
+      [
+       0.992757,
+       0.43938
+      ],
+      [
+       1,
+       0.471031
+      ],
+      [
+       0.995346,
+       0.495218
+      ],
+      [
+       0.801507,
+       1
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0.235155,
+       0.030353
+      ],
+      [
+       0.245065,
+       0.013003
+      ],
+      [
+       0.26439,
+       0.001659
+      ],
+      [
+       0.285657,
+       0
+      ],
+      [
+       0.30452,
+       0.006568
+      ]
+     ]
+    }
+   },
+   "surfaces": {
+    "back": {
+     "plane_origin": [
+      3.7781383444199497,
+      3.712602581176445,
+      -229.9166
+     ],
+     "basis_u": [
+      993,
+      0,
+      0
+     ],
+     "basis_v": [
+      0,
+      991.5,
+      0
+     ],
+     "source": "CAD face plane (STEP)"
+    },
+    "front": {
+     "plane_origin": [
+      273.09269974361024,
+      959.6990016207701,
+      152.5769
+     ],
+     "basis_u": [
+      627.7200015869735,
+      0,
+      -0.00188
+     ],
+     "basis_v": [
+      0,
+      723.141877338702,
+      88.793087
+     ],
+     "source": "CAD face plane (STEP)"
+    }
+   },
+   "front": {
+    "margin": 56,
+    "note": "Front view: the CAD model rendered head-on (near-orthographic) for each finish, drawn over the scene box grown by margin on every side."
+   }
+  },
+  "A": {
+   "id": "A",
+   "map": {
+    "k": 18.181818181818183,
+    "zTop": 279.181211889,
+    "zBot": 0,
+    "x0": -344.5,
+    "yc": 28.4,
+    "front": "-y"
+   },
+   "width": 1000,
+   "height": 5076.022,
+   "parts": [
+    {
+     "role": "wood",
+     "name": "主體 02 (2)",
+     "vertexStart": 0,
+     "vertexCount": 30,
+     "indexStart": 0,
+     "indexCount": 48
+    },
+    {
+     "role": "stone",
+     "name": "主體 03 (2)",
+     "vertexStart": 30,
+     "vertexCount": 3536,
+     "indexStart": 48,
+     "indexCount": 15582
+    },
+    {
+     "role": "metal",
+     "name": "主體 170",
+     "vertexStart": 3566,
+     "vertexCount": 24,
+     "indexStart": 15630,
+     "indexCount": 36
+    }
+   ],
+   "vertexCount": 3590,
+   "indexCount": 15666,
+   "bytes": 116516,
+   "canon": {
+    "upper": {
+     "x": 0,
+     "y": 1636.3714999803576,
+     "displayWidth": 1000.0000000000001,
+     "displayHeight": 925.1050798196427,
+     "polygon": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       0
+      ],
+      [
+       0.856267,
+       0
+      ],
+      [
+       1,
+       0.590317
+      ],
+      [
+       1,
+       1
+      ]
+     ]
+    },
+    "lower": {
+     "x": 0,
+     "y": 2621.4765798000003,
+     "displayWidth": 998.1818181818179,
+     "displayHeight": 1726.490909090909,
+     "polygon": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0.270649
+      ],
+      [
+       1,
+       1
+      ]
+     ]
+    }
+   },
+   "surfaces": {
+    "upper": {
+     "plane_origin": [
+      0,
+      1636.3714999803576,
+      481.8182
+     ],
+     "basis_u": [
+      1000.0000000000001,
+      0,
+      0
+     ],
+     "basis_v": [
+      0,
+      925.1050798196427,
+      0
+     ],
+     "source": "CAD face plane (STEP)"
+    },
+    "lower": {
+     "plane_origin": [
+      0,
+      2621.4765798000003,
+      506.3636
+     ],
+     "basis_u": [
+      998.1818181818179,
+      0,
+      0
+     ],
+     "basis_v": [
+      0,
+      1726.490909090909,
+      0
+     ],
+     "source": "CAD face plane (STEP)"
+    }
+   },
+   "front": {
+    "margin": 152,
+    "note": "Front view: the CAD model rendered head-on (near-orthographic) for each finish, drawn over the scene box grown by margin on every side."
+   }
+  },
+  "B": {
+   "id": "B",
+   "map": {
+    "k": 8.056459669362894,
+    "zTop": 280.245898034,
+    "zBot": -2.017786869,
+    "x0": -410,
+    "yc": 11.284,
+    "front": "-y"
+   },
+   "width": 1000,
+   "height": 2274.046,
+   "parts": [
+    {
+     "role": "wood",
+     "name": "木板 (2)",
+     "vertexStart": 0,
+     "vertexCount": 779,
+     "indexStart": 0,
+     "indexCount": 3954
+    },
+    {
+     "role": "stone",
+     "name": "大理石 (2)",
+     "vertexStart": 779,
+     "vertexCount": 10853,
+     "indexStart": 3954,
+     "indexCount": 57522
+    },
+    {
+     "role": "metal",
+     "name": "銘板 (2)",
+     "vertexStart": 11632,
+     "vertexCount": 924,
+     "indexStart": 61476,
+     "indexCount": 4284
+    }
+   ],
+   "vertexCount": 12556,
+   "indexCount": 65760,
+   "bytes": 451380,
+   "canon": {
+    "main": {
+     "x": 0,
+     "y": 578.759128242725,
+     "displayWidth": 886.2105636299184,
+     "displayHeight": 563.9521768554027,
+     "polygon": [
+      [
+       0.002764,
+       0.994886
+      ],
+      [
+       0,
+       0.983886
+      ],
+      [
+       0,
+       0.016114
+      ],
+      [
+       0.004927,
+       0.002343
+      ],
+      [
+       0.010255,
+       0
+      ],
+      [
+       0.989745,
+       0
+      ],
+      [
+       0.998509,
+       0.007743
+      ],
+      [
+       1,
+       0.016114
+      ],
+      [
+       1,
+       0.983886
+      ],
+      [
+       0.995073,
+       0.997657
+      ],
+      [
+       0.989745,
+       1
+      ],
+      [
+       0.010255,
+       1
+      ]
+     ]
+    }
+   },
+   "surfaces": {
+    "main": {
+     "plane_origin": [
+      0,
+      578.759128242725,
+      109.0925
+     ],
+     "basis_u": [
+      886.2105636299184,
+      0,
+      0
+     ],
+     "basis_v": [
+      0,
+      563.9521768554027,
+      0
+     ],
+     "source": "CAD face plane (STEP)"
+    }
+   },
+   "front": {
+    "margin": 68,
+    "note": "Front view: the CAD model rendered head-on (near-orthographic) for each finish, drawn over the scene box grown by margin on every side."
+   }
+  },
+  "C": {
+   "id": "C",
+   "map": {
+    "k": 6.666666666666667,
+    "zTop": 75,
+    "zBot": -75,
+    "x0": 121.049975,
+    "yc": -12.500025,
+    "front": "+y"
+   },
+   "width": 1000,
+   "height": 1000,
+   "parts": [
+    {
+     "role": "wood",
+     "name": "主體 02 (7)",
+     "vertexStart": 0,
+     "vertexCount": 878,
+     "indexStart": 0,
+     "indexCount": 4584
+    },
+    {
+     "role": "stone",
+     "name": "主體 02 (8)",
+     "vertexStart": 878,
+     "vertexCount": 452,
+     "indexStart": 4584,
+     "indexCount": 672
+    },
+    {
+     "role": "metal",
+     "name": "主體 102 (1)",
+     "vertexStart": 1330,
+     "vertexCount": 450,
+     "indexStart": 5256,
+     "indexCount": 2016
+    }
+   ],
+   "vertexCount": 1780,
+   "indexCount": 7272,
+   "bytes": 55788,
+   "canon": {
+    "main": {
+     "x": -0.00016666666662482993,
+     "y": 73.64666666666665,
+     "displayWidth": 733.3333333333334,
+     "displayHeight": 466.66666666666674,
+     "polygon": [
+      [
+       0,
+       0
+      ],
+      [
+       0.990909,
+       0
+      ],
+      [
+       0.998673,
+       0.006857
+      ],
+      [
+       1,
+       0.985714
+      ],
+      [
+       0.995636,
+       0.997914
+      ],
+      [
+       0,
+       1
+      ]
+     ]
+    }
+   },
+   "surfaces": {
+    "main": {
+     "plane_origin": [
+      -0.00016666666662482993,
+      73.64666666666665,
+      92.3335
+     ],
+     "basis_u": [
+      733.3333333333334,
+      0,
+      0
+     ],
+     "basis_v": [
+      0,
+      466.66666666666674,
+      0
+     ],
+     "source": "CAD face plane (STEP)"
+    }
+   },
+   "front": {
+    "margin": 30,
+    "note": "Front view: the CAD model rendered head-on (near-orthographic) for each finish, drawn over the scene box grown by margin on every side."
+   }
+  }
+ }
+}

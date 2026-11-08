@@ -105,7 +105,7 @@
 @media(max-width:760px){.folio-home .content-works-grid.is-banners{grid-template-columns:1fr;gap:28px}}
 
 /* V28 works cards: a clean product photo leads; the client's name rises out of the photo's lower-left
-   corner as a white tab on hover or keyboard focus (same cut-in tab as the collection and materials).
+   corner as a white tab on hover or keyboard focus (same cut-in tab as the classic and materials).
    V36: the frame is square, the shape of most case photos, so the whole trophy shows before any
    interaction (4:3 cut the top and base off upright pieces). */
 .folio-home .content-works-grid.is-works .content-works-photo{position:relative;aspect-ratio:1}

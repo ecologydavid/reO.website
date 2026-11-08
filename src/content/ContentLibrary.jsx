@@ -1,8 +1,8 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {categoryInfo} from '../components/site/navigation.js';
-import {collectionPages,groupFor,editorFor,cardImage,isBanner,splitCase,detailsFor} from './catalogue.js';
+import {classicPages,groupFor,editorFor,cardImage,isBanner,splitCase,detailsFor} from './catalogue.js';
 import {SiteArrow} from '../components/site/SiteHeader.jsx';
-import {Button,ArrowLink} from '../components/site/ui.jsx';
+import {Button,ArrowLink,studioTab} from '../components/site/ui.jsx';
 import {landings} from './landings.jsx';
 import {setPageMeta} from '../seo.js';
 import './pages.css';
@@ -51,7 +51,7 @@ export default function ContentLibrary({category,filter:initialFilter=''}){
  const info=categoryInfo[category]||categoryInfo.cases,landing=landings[category]||{};
  const [filter,setFilter]=useState(initialFilter),[query,setQuery]=useState(''),[limit,setLimit]=useState(12);
  const root=useRef(null),index=useRef(null);
- const pool=useMemo(()=>collectionPages(category),[category]);
+ const pool=useMemo(()=>classicPages(category),[category]);
  const filters=useMemo(()=>[...new Set(pool.map(p=>groupFor(p,category)).filter(Boolean))],[pool,category]);
  const counts=useMemo(()=>Object.fromEntries(filters.map(f=>[f,pool.filter(p=>groupFor(p,category)===f).length])),[filters,pool,category]);
  useEffect(()=>{setFilter(initialFilter);setQuery('');setLimit(12);setPageMeta({title:info.label,description:info.intro})},[category,initialFilter,info.label]);
@@ -64,7 +64,7 @@ export default function ContentLibrary({category,filter:initialFilter=''}){
    <div className="pg-title">{landing.en&&<p className="content-display" aria-hidden="true">{landing.en}</p>}<h1>{landing.title||info.label}</h1><p>{info.intro}</p></div>
    {landing.card&&<div className={`pg-contact${landing.card==='groups'?' is-groups':''}`}>
     <dl>{landing.card==='groups'?filters.map(f=><div key={f}><dt><button className="pg-filter-link" onClick={()=>choose(f)}>{f}</button></dt><dd><strong>{counts[f]}</strong><span>{landing.unit}</span></dd></div>):landing.card.map(([en,label,value])=><div key={en}><dt><span>{en}</span>{label}</dt><dd>{value}</dd></div>)}</dl>
-    <div className="pg-actions">{landing.actions.map(([label,href,variant])=><Button key={href} href={href} variant={variant}>{label}</Button>)}</div>
+    <div className="pg-actions">{landing.actions.map(([label,href,variant])=><Button key={href} href={href} {...(href.startsWith('#/preview/')?studioTab:{})} variant={variant}>{label}</Button>)}</div>
    </div>}
   </header>
   {landing.hero&&<figure className="pg-hero"><img src={landing.hero.src} alt={landing.hero.alt} width={landing.hero.width} height={landing.hero.height} fetchPriority="high" style={{objectPosition:landing.hero.position}}/></figure>}

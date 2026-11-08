@@ -42,6 +42,8 @@ export default function ThreePreview({scene,documents,onSurface}){
       };
       renderer.domElement.addEventListener('pointerdown',press);renderer.domElement.addEventListener('pointerup',release);
       runtime.current={renderer,world,camera,controls,group:null,reframe,invalidate,press,release};resize();
+      // Development only: lets the multi-angle render checks drive the camera. Stripped from builds.
+      if(import.meta.env.DEV)window.__studio3d=runtime.current;
       const animate=()=>{controls.update();if(dirty){dirty=false;renderer.render(world,camera)}frame=requestAnimationFrame(animate)};animate();
     }catch{setError('這個裝置無法開啟 WebGL 3D，請使用正面平面模式。');setLoading(false)}
     return()=>{generation.current++;cancelAnimationFrame(frame);observer?.disconnect();controls?.dispose();const r=runtime.current;if(r){renderer.domElement.removeEventListener('pointerdown',r.press);renderer.domElement.removeEventListener('pointerup',r.release);if(r.group)disposeGroup(r.group);r.world.environment?.dispose();r.world.traverse(o=>{if(o!==r.group){o.geometry?.dispose();o.material?.dispose()}})}pmrem?.dispose();renderer?.dispose();renderer?.domElement.remove();runtime.current=null};

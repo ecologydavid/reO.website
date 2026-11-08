@@ -3,11 +3,18 @@ import {objectBounds,textLayout} from './geometry.mjs';
 import {objectFits} from './constraints.mjs';
 import {ensureMaterialMaps,photoMaterialTexture} from './materialMaps.js';
 import {meshFrontFaces} from './modelGeometry.mjs';
+import cadModels from '../data/cad-models.json';
+import {brushedMetal,anodizedMetal} from './proceduralMaterials.js';
+const finishKey={白:'w',黑:'k',綠:'g',金:'au',銀:'ag',銅:'cu'};
+// Front-view file key: stone then metal (D, E, B, C); A is wood then base (h 北美黃檜 / x 木橫擔, w / k / m 水庫淤泥).
+export function frontKey(scene){if(scene.id==='A')return (scene.finish.includes('木橫擔')?'x':'h')+({白:'w',黑:'k',淤泥:'m'}[scene.stone]||'w');return [...scene.finish].map(ch=>finishKey[ch]||'').join('')}
 export function makeCanvas(w,h){const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));return c}
 export function polygonPath(ctx,polygon,w=1,h=1){ctx.beginPath();polygon.forEach(([x,y],i)=>i?ctx.lineTo(x*w,y*h):ctx.moveTo(x*w,y*h));ctx.closePath()}
 const textureCache=new Map();
 export function materialTexture(material,color,options={}){
   const photo=photoMaterialTexture(material,color,options);if(photo)return photo;
+  // Plates: hairlines run top to bottom (never across); E is anodised aluminium with an even grain (owner, 2026-11-07).
+  if(material==='metal'){const key=material+color+(options.modelId==='E'?'E':'');if(!textureCache.has(key))textureCache.set(key,options.modelId==='E'?anodizedMetal(color):brushedMetal(color));return textureCache.get(key)}
   const key=material+color;if(textureCache.has(key))return textureCache.get(key);
   const c=makeCanvas(512,512),ctx=c.getContext('2d');ctx.fillStyle=color;ctx.fillRect(0,0,512,512);
   let seed=314159;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
@@ -17,9 +24,6 @@ export function materialTexture(material,color,options={}){
     const dark=['#252a27','#24453e'].includes(color);
     for(let i=0;i<35;i++){const x=random()*512,y=random()*512;ctx.strokeStyle=dark?'#ddd1a328':'#4b545c20';ctx.lineWidth=.3+random()*2;ctx.beginPath();ctx.moveTo(x,y);ctx.bezierCurveTo(x-80,y+100,x+140,y+100,x-20,y+280);ctx.stroke();}
     for(let i=0;i<14000;i++){ctx.fillStyle=i%2?'#ffffff07':'#00000008';ctx.fillRect(random()*512,random()*512,1,1);}
-  }else if(material==='metal'){
-    const g=ctx.createLinearGradient(0,0,512,180);g.addColorStop(0,'#ffffff28');g.addColorStop(.4,'#ffffff05');g.addColorStop(1,'#00000010');ctx.fillStyle=g;ctx.fillRect(0,0,512,512);
-    for(let y=0;y<512;y+=2){ctx.strokeStyle=y%4?'#ffffff09':'#00000006';ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(512,y);ctx.stroke();}
   }else{const g=ctx.createLinearGradient(0,0,512,512);g.addColorStop(0,'#ffffff10');g.addColorStop(.5,'#ffffff00');g.addColorStop(1,'#0000000c');ctx.fillStyle=g;ctx.fillRect(0,0,512,512);}
   textureCache.set(key,c);return c;
 }
@@ -76,6 +80,10 @@ export async function renderCanonicalProduct(scene,documents,{width=800,height=1
     const count=scene.shape==='diamond'?20:scene.shape==='ridge'?72:32;
     for(let i=0;i<count;i++){const a=i/count*Math.PI*2;ctx.strokeStyle=i%2?'#ffffff30':'#252d2820';ctx.lineWidth=scene.shape==='diamond'?5:1.7;ctx.beginPath();ctx.moveTo(500+418*Math.cos(a),500+418*Math.sin(a));ctx.lineTo(500+483*Math.cos(a+.04),500+483*Math.sin(a+.04));ctx.stroke();}
     ctx.fillStyle='#c2a05d';ctx.fillRect(420,-110,160,142);ctx.fillStyle='#ffffff';ctx.fillRect(390,50,220,18);
+  }else if(cadModels.models[scene.id]?.front){
+    // D and E: the CAD model rendered head-on in this finish (see src/data/cad-models.json).
+    const m=cadModels.models[scene.id].front.margin,key=frontKey(scene);
+    ctx.drawImage(await loadImage(`/assets/models/front-${scene.id}-${key}.webp`),-m,-m,scene.width+2*m,scene.height+2*m);
   }else if(scene.meshes?.length){
     const faces=meshFrontFaces(scene.meshes);
     for(const f of faces){ctx.save();polygonPath(ctx,f.points.map(([x,y])=>[x,y]));ctx.clip();const points=scene.meshes.filter(m=>m.material===f.material).flatMap(m=>m.vertices),ys=points.map(p=>p[1]),top=Math.min(...ys),bottom=Math.max(...ys);ctx.drawImage(materialTexture(f.material,scene.fills[f.material],{modelId:scene.id,finish:scene.finish,endgrain:f.group==='triangular-corner-cut'&&scene.id==='A'}),0,top,scene.width,bottom-top);const shade=.25+Math.max(0,f.normal[0]*-.36+f.normal[1]*.5+f.normal[2]*.8)*.75;ctx.fillStyle=`rgba(0,0,0,${Math.max(0,1-shade)*.5})`;ctx.fillRect(0,0,scene.width,scene.height);ctx.restore();}

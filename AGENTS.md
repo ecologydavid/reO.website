@@ -87,7 +87,7 @@ UI UX Pro Max skill is installed at ../.claude/skills/ui-ux-pro-max (v2.15.0, MI
 
 ## Standard vs custom, image-led articles, designed About (v13, 2026-10-26)
 - 公版獎盃 and 客製化獎盃 are separate: five header links (公版獎盃 / 客製化獎盃 / 合作案例 /
-  循環材料 / 關於 re.O), separate homepage sections (#collection, #custom), and #/read/pages/custom
+  循環材料 / 關於 re.O), separate homepage sections (#classic, #custom), and #/read/pages/custom
   renders the designed CustomPage (src/content/CustomPage.jsx). Tests pin this split.
 - Article pages never stack long text: src/content/arrange.js (tested) turns each section into a
   photo + text chapter (alternating sides), maps old-site short captions to their detail photos,
@@ -114,7 +114,7 @@ UI UX Pro Max skill is installed at ../.claude/skills/ui-ux-pro-max (v2.15.0, MI
 - Hero: headline column + separate stage, so trophies are never under text. D and E alternate on
   the stage (tabs with progress; pause on hover; no autoplay under reduced motion). Object
   positions are tuned so every trophy is whole at 1100–1900px and on phones (tabs get their own
-  strip there). D shows its three-colour photo only from 1280px. D and E lead the collection.
+  strip there). D shows its three-colour photo only from 1280px. D and E lead the classic.
 - Images that show a client name must be shown whole: case cards use the old-site 2:1 banner
   (src/data/card-images.json + cardImage(), tested) in 2:1 frames, never cropped.
 - Process is eight steps sourced from the marble page chart and the journal articles
@@ -162,7 +162,7 @@ UI UX Pro Max skill is installed at ../.claude/skills/ui-ux-pro-max (v2.15.0, MI
   as the 生活設計商品 landing band; the menu foot and footer carry「Pinkoi 線上選購 ↗」. Every Pinkoi
   link opens a new tab and says so to screen readers. Copy follows the 匠子 page; no store ratings.
 
-## Collection labels (v24, 2026-10-27)
+## Classic labels (v24, 2026-10-27)
 - Each A–F card: the model letter in a white tab cut into the photo's bottom-left corner (Ming serif,
   turns ink on hover), then the name in serif and one spec line from models.json (type・height or
   diameter・NT$ price). Small cards show only the round start arrow (label kept for screen readers);
@@ -209,7 +209,7 @@ UI UX Pro Max skill is installed at ../.claude/skills/ui-ux-pro-max (v2.15.0, MI
   ink tile; DCC prints as a silhouette.
 - Header: a Pinkoi pill (ivory, tilted arrow, new tab) beside 排版工作室; "選購" drops 1101–1320px
   and on phones.
-- A set of photos and their facts must read in one screen. Home collection (desktop): E and D two
+- A set of photos and their facts must read in one screen. Home classic (desktop): E and D two
   columns wide and two rows tall, the other four as a 2×2; row height = min(window-based, the height
   that keeps E/D at least 4:5 so no trophy is cut). Home materials: 3×3, row height from the window.
   Standard page: all six models in one row of 4:5 frames.
@@ -235,7 +235,7 @@ UI UX Pro Max skill is installed at ../.claude/skills/ui-ux-pro-max (v2.15.0, MI
   without a photo render as text cards, not grey boxes.
 
 ## Shorter home, contact sheets, SEO basics (v33, 2026-10-30)
-- Home keeps hero, process, collection, custom modes, materials, 16 partner marks (12 on phones, link
+- Home keeps hero, process, classic, custom modes, materials, 16 partner marks (12 on phones, link
   to all 40) and the shop: about 9 screens instead of 14. Selected works live on the custom page, IP
   collaborations on the cases page, studio/craft/awards on About. Do not add them back to home.
 - Custom page header shows email and phone like About; buttons 寄信洽詢 / 來電洽詢. Contact values:
@@ -345,7 +345,7 @@ export both PDF and .eps. This authorises editor UI changes; all v3 capabilities
   signature and its Cormorant Garamond font link are gone (supersedes the v34 note above).
 - Home hero: three D slides (三色, 將榮譽賦予份量, 黑卡浪紙盒包裝), 5s each (supersedes 12s). All slide
   photos keep their alt text for indexing; inactive slides stay aria-hidden.
-- Section heads on home carry no read-more link (Process, Collection, Custom); nav and cards link on.
+- Section heads on home carry no read-more link (Process, Classic, Custom); nav and cards link on.
 - Migrated pages hold no layout-only images: the three-tile 「— 案例 —」 dividers on the nine
   material pages, contact-page logo/FB/IG banners, a re: end card and two avatar icons were removed
   from public/content/pages and deleted. Client logos, dimension drawings, icon diagrams and the
@@ -395,3 +395,97 @@ export both PDF and .eps. This authorises editor UI changes; all v3 capabilities
   the current section and glides to the pointed or focused link (the current label turns back to ink
   meanwhile). The bold-plus-dot current marker and the white hover pill are retired. Rules at the end
   of src/components/site/site.css.
+
+## D and E from the owner's CAD (2026-11-06, by request)
+- The owner supplied STEP files and renders (C:\Users\ecolo\Desktop\所有或心美術圖\3D建模使用). D and E
+  now use them everywhere: 3D (public/assets/models/cad-D.bin, cad-E.bin), front view and PDF (head-on
+  CAD renders front-<id>-<finish>.webp), and the plate outlines/planes in canonical-models.json and
+  model-meshes.json (D main runs edge to edge as in the CAD; E's rear outline is the panel minus what
+  stands in front of it, E's front outline is the flap face; E height 1870.8 units = 193.4 mm).
+- The "2022富邦長春LOGO" and "2025" assemblies in the D file hold no geometry and are not used.
+- Pipeline and conventions: tools/cad/README.md (own STEP tessellator, no CAD kernel or outside code).
+  OBJ copies for people sit beside the STEP files (公版D.obj, 公版E.obj).
+- Checks: every solid closed (0 hole edges); 12-angle and close-up render scans for D and E; ink sits
+  0.05–0.1 mm above each CAD plate face; E's default text follows its rear band (-33°) and the flap.
+- A, B and C from the owner's CAD too (2026-11-07, by request; 公版A.step, 公版B.step, 公版C.step in the same
+  folder). F is not converted yet.
+  - Same pipeline (tools/cad): 3D cad-A/B/C.bin, front views front-A-{hw,hk,hm,xw,xk,xm}, front-B-{w,k},
+    front-C-{w,k}, plate outlines and planes via tools/cad/applycad.mjs.
+  - A: upper wood text area = the column's flat front face above the plate; lower = the CAD plate.
+  - B and C: the main plate is the CAD plate, with its rounded corners. B's old placement override is gone.
+  - Each file holds several finishes of one shape. One set is used, and wood and stone stay finish choices.
+- Materials (owner's notes, 2026-11-07; drawn in src/editor/proceduralMaterials.js):
+  - Metal plates never show horizontal hairlines. D (and the other brushed plates) is brushed top to
+    bottom; E is anodised aluminium, an even matte grain with no direction.
+  - D green stone is lighter grey-green with more flowing gold threads and yellow flecks.
+  - E white stone is a white ground with silver-grey marble veins.
+  - A, B and C use a drawn black stone. v2 (2026-11-08, owner: the hard cream strokes looked crude) follows
+    D/E's black photo: a charcoal ground, soft smoky bands of muted gold flowing down the length, broken into a
+    dry-brushed sandy grain. C draws it from lower on the stone (blackGoldStone(860)) because its wide, low
+    piece only shows the top fifth of the map. White stone is the drawn marble on A–E.
+  - F's green is D's drawn green, as a square crop for the disc.
+  - A follows 公版A-1…A-6 (2026-11-08):
+    - 北美黃檜 is a pale beige-tan wood; 木橫擔 is dark walnut. Both are drawn with flat-sawn cathedral figure.
+    - 水庫淤泥 is a neutral matte grey; its swatch is #999896.
+    - Text on walnut defaults to light ink.
+  - D and E black keep their photo crops; B and C wood keep theirs.
+  - After changing a material, rerun tools/cad/frontgen.mjs for D and E so the baked front views match.
+- Old reconstruction meshes for D/E stay in model-meshes.json for the A/D cut tests only.
+
+## Studio opens in its own tab (2026-11-07, by request)
+- Every entry to 銘版排版工作室 opens a new tab:
+  - links spread `studioTab` (from src/components/site/ui.jsx);
+  - home buttons call `openStudio(id)`, which App passes as Home's `onPreview`.
+- Covered entries: header button, menu link, footer button and links, home hero, A–F picks, product cards,
+  the 公版獎盃 ordering flow, landing actions, and the product-page link.
+- Switching models inside the studio stays in that tab (Editor's `onModelChange` still sets the hash).
+- New studio links must use `studioTab` too.
+
+## Process as a cycle (v43, 2026-11-08, by request; replaces the v20–v23 film)
+- Home `Process` (src/components/Home.jsx; styles "V43 process as a cycle" in home-v10.css).
+- Ring: drawn after the logo GIF (public/assets/reo-logo-motion.gif, analysed frame by frame: the ring is
+  drawn counter-clockwise from just above the dot). The dot sits ON the ring at three o'clock with an open gap
+  of 8° each side; no line touches it. Ring stroke 1 (viewBox units), progress and moving stroke 2, dot r 1.15
+  (≈ the logo's dot-to-stroke ratio; the logo's own stroke was too heavy beside photos).
+- Quadrant cuts: short light-grey ticks (#c9cbc5) at 12, 9 and 6, beneath the ring, never competing with it.
+- Quadrants: counter-clockwise 回收 (top right), 再生 (top left), 成形 (bottom left), 再利用 (bottom right), two
+  round step photos each, evenly at 45°. Each phase name and English name sit in the ring box's corner.
+- Always shown (owner: the diagram stays put, only lines move). No reveal or fade-in on scroll. A short stroke
+  leaves the dot, runs once round the ring and rests (7s loop; the dot swells as it returns). It runs only
+  on screen, hides while a step is open, and is off for reduced motion.
+- V47 (owner sketch, 2026-11-08): the quadrants are four square blocks behind the ring (2×2, 7% past the
+  ring box, 8px white gutters that are the phase cuts; the grey ticks are gone). Filled pale stone
+  #ecebe6 (回收, 成形) alternates with white + hairline #dcdbd4 (再生, 再利用), never dark, so the ring,
+  photos and names lead; the phase in play deepens one step. Each phase name sits in its block's outer
+  corner. A white disc fills the ring, so the blocks frame the circle. Ring box min(70vh,660px,46vw).
+- V46 (owner, 2026-11-08): a lit, hovered or chosen photo lifts (scale 1.09, z above its neighbours, soft
+  shadow) with a firmer 2.5px outline. Letting go of a step restarts the stroke from the dot and it keeps
+  looping. On-screen state lives inside `useCycleFlow` (its own IntersectionObserver), never as a class
+  on the stage: React rewrites that className when a step opens or closes. The run is near even speed so
+  each photo stays lit about 0.5s. Layers: photos 2, lifted photo 3, centre picture 4.
+- V45 (owner, 2026-11-08): the travelling stroke lights each photo it passes (black outline, `is-lit`).
+  It is drawn frame by frame by `useCycleFlow` in Home.jsx, not CSS keyframes, so it knows when it is
+  under a photo; only the drawn part of the dash counts. Ring radius 40 (`ringR`, and `--r` in CSS for
+  the step numbers), so the centre picture is no longer covered; the centre picture is the top layer
+  (z-index 3). The ring box keeps 4.5% room above and below for the photos that reach past it.
+- V44 (owner, 2026-11-08: photos too small, sides too empty): step photos and the centre
+  picture are 23% / 58% of the ring box on desktop, 20% / 50% at ≤1100px (CSS --node / --card). The ring
+  sits between two side columns (desktop grid 1fr | ring | 1fr, ring min(76vh,720px,50vw)). Centre at
+  rest: 「八道工序」 over 「一個循環」, four characters a line, no comma (no big 08).
+  - Side photos are never shrunk side by side: a photo-pair file is split into public/assets/process/
+    <id>-a|b.webp (white gutter removed) and the halves stack full width (`pair:true` in processNotes).
+  - At rest: left lists the four phases (hover dims the other quadrants, click opens the phase's first
+    step); right is a material card (sample photo, 近 30 種廢棄原材, the material summary, link to
+    #/read/pages/material-recycled-marble).
+  - A chosen step (hover with 110ms intent, focus, tap): the photo grows into a 50% round picture in the
+    centre (number, phase, step). The left reads it in full: n / 08, step, line, a longer text, keywords,
+    a link to its studio article (previous / next arrows removed by request). The right shows a second photo from that article with
+    a caption. Other photos fade under a white veil (never opacity, so the ring does not show through).
+  - The fuller texts (`processNotes` in Home.jsx) are condensed from 〈重新定義「廢料」〉〈實驗再生材質〉
+    〈強化材質脫氣升級〉〈工廠步驟把關〉 with no new claims. Keep them sourced.
+- ≤1100px: the two columns sit under the ring. ≤760px: one column, the first step shown by default, and
+  the material card hidden.
+- The step list (`sequence`, `phases`) is unchanged. The node buttons carry the full step text for
+  screen readers.
+- D green v2 (2026-11-08, after 公版D-3…D-6): a sandy grey-green ground with bundles of mustard filaments
+  flowing lengthwise (poured marbling), yellow flecks and pores. F shares it.

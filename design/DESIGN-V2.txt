@@ -3,7 +3,7 @@ re.O — Architectural editorial direction, 2026-10-16
 References: Panasonic Archi Design about page, inspected in browser. Adopt its
 cool neutral space, quiet sans type, asymmetry and photographic storytelling.
 Avoid copying its brand, electrical products, claims or scroll locking.
-Built-in ImageGen concepts: hero-v2.png, collection-v2.png, materials-v2.png.
+Built-in ImageGen concepts: hero-v2.png, classic-v2.png, materials-v2.png.
 Prompt set: calm Japanese architectural editorial, #f3f4f5, graphite, light sans,
 official re.O circular logo, actual E photo, A–F catalogue, powder/material story,
 three process rows and restrained CTA/contact. No gradients, cards, badges or ESG

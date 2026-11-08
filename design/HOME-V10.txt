@@ -93,7 +93,7 @@ VELNODE、TONEWORKS、GROWPOT、SONORA、RIPPLE）：
   材料／案例的細分類不放選單，留在各自的內容庫頁以篩選呈現。
 - 元件：箭頭統一放進圓形 chip；按鈕改為 50px 膠囊（深色、白框、白底、霧面玻璃四種），
   內容庫篩選與搜尋改膠囊，「載入更多」改深色膠囊；作品圓鈕 48px、hover 填色。
-- 首頁：滿版 hero（hero-wide.jpg 2400px／255KB）、Process 編號照片卡、Collection (06)、
+- 首頁：滿版 hero（hero-wide.jpg 2400px／255KB）、Process 編號照片卡、Classic (06)、
   Materials (09) 淺石色色帶、Selected Works (04)、Collaborations (03)、Craft 深色照片帶、
   Studio 編輯式關於區、深色頁尾＋巨大 re.O 字。
 - 展示字使用系統字（Helvetica Neue／Segoe UI），不外載字型，保持離線單檔可用。

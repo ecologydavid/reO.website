@@ -1,10 +1,10 @@
 import React from 'react';
 import {navigation,shopLink,supportLinks} from './navigation.js';
-import {BrandLogo,Button} from './ui.jsx';
+import {BrandLogo,Button,studioTab} from './ui.jsx';
 export default function SiteFooter(){return <footer className="site-footer-v5">
  <div className="site-footer-top folio-gutter">
-  <div className="site-footer-lead"><p>讓下一件作品，<br/>從這裡開始。</p><Button href="#/preview/B" variant="light">開始銘版排版</Button></div>
-  {navigation.map(n=><nav key={n.id} aria-label={n.label}><h2><a href={n.href}>{n.label}</a></h2>{n.links.map(([name,href])=><a key={href} href={href}>{name}</a>)}</nav>)}
+  <div className="site-footer-lead"><p>讓下一件作品，<br/>從這裡開始。</p><Button href="#/preview/B" {...studioTab} variant="light">開始銘版排版</Button></div>
+  {navigation.map(n=><nav key={n.id} aria-label={n.label}><h2><a href={n.href}>{n.label}</a></h2>{n.links.map(([name,href])=><a key={href} href={href} {...(href.startsWith('#/preview/')?studioTab:{})}>{name}</a>)}</nav>)}
  </div>
  {/* The animated mark signs the company block instead of floating alone in its own row. */}
  <div className="site-footer-info folio-gutter">

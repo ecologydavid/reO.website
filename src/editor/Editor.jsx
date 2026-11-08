@@ -36,7 +36,7 @@ function readDraft(preferLegacy=false){
 
 // Finishes as swatches. Every option is one of the product's verified combinations: D and F pair
 // any stone with any metal, A pairs either wood with any base, B/C come in two stones, E in two sets.
-const woods={北美黃檜:'#bd9254',木橫擔:'#82674d'};
+const woods={北美黃檜:'#e0c6a0',木橫擔:'#553322'};
 function Swatch({label,colors,pressed,onClick}){return <button type="button" className="st-swatch" aria-label={label} title={label} aria-pressed={pressed} onClick={onClick}><i style={{background:colors.length>1?`linear-gradient(135deg,${colors[0]} 50%,${colors[1]} 50%)`:colors[0]}}/></button>}
 function Finishes({scene,onChange}){
   // The row names the current choice, so the swatches can stay unlabelled.
@@ -60,8 +60,10 @@ export default function Editor({modelId,onModelChange,onHome}){
   const documents=useMemo(()=>Object.fromEntries(scene.surfaces.map(s=>{
     let seed=defaultObjects(s);
     if(model.id==='F')seed=seed.map((o,i)=>({...o,y:s.height*[.25,.4,.53][i],fontSize:o.fontSize*.72}));
-    if(model.id==='E'&&s.id==='back')seed=seed.map((o,i)=>({...o,x:s.width*.5,y:s.height*[.40,.54,.68][i],rotation:-27,fontSize:o.fontSize*.7}));
-    if(model.id==='E'&&s.id==='front')seed=seed.map((o,i)=>({...o,x:s.width*[.4,.48,.42][i],y:s.height*[.38,.64,.82][i],fontSize:[65,90,40][i]}));
+    // E (CAD outlines, 2026-11-06): the rear panel shows as a band rising at about 33°, so its three lines
+    // follow the band, stacked across it; the front flap takes them level, centred in its widest part.
+    if(model.id==='E'&&s.id==='back')seed=seed.map((o,i)=>{const off=[-112,0,92][i],c=[s.width*.5,s.height*.517];return {...o,x:c[0]+off*.545,y:c[1]+off*.839,rotation:-33,fontSize:o.fontSize*.68}});
+    if(model.id==='E'&&s.id==='front')seed=seed.map((o,i)=>({...o,x:s.width*[.55,.52,.47][i],y:s.height*[.36,.58,.78][i],fontSize:[62,86,40][i]}));
     if(model.id==='D'&&s.id==='lower')seed=seed.map((o,i)=>({...o,y:s.height*[.22,.5,.8][i],fontSize:[50,90,40][i]}));
     const list=history.state.documents[keyFor(model.id,shape,s.id)]||seed;
     return [s.id,list.map(o=>settle(o.type==='text'&&o.autoColor!==false?{...o,color:s.ink,autoColor:true}:o,s))];

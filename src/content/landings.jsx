@@ -2,6 +2,7 @@ import React,{useEffect,useRef,useState} from 'react';
 import cases from '../data/brand-cases.json';
 import {contentHref} from '../components/site/navigation.js';
 import ShopWindow from '../components/site/ShopWindow.jsx';
+import {studioTab} from '../components/site/ui.jsx';
 // Landing pages share the About page language: title + key-facts card, a full-bleed photo,
 // one dark or moving feature band, then the numbered index. Facts follow the product pages.
 const byId=Object.fromEntries(cases.map(c=>[c.id,c]));
@@ -38,7 +39,7 @@ function StudioBand(){
      </button>
      <div className="pg-flow-body">
       <p>{s.line}</p>
-      {i===0?<ul className="pg-flow-picks">{flowModels.map(m=><li key={m}><a href={`#/preview/${m}`} aria-label={`開始 ${m} 款排版`}><img src={`/assets/product-thumb-${m}.webp`} alt="" width="360" height="270" loading="lazy"/><span>{m}</span></a></li>)}</ul>:null}
+      {i===0?<ul className="pg-flow-picks">{flowModels.map(m=><li key={m}><a href={`#/preview/${m}`} {...studioTab} aria-label={`開始 ${m} 款排版`}><img src={`/assets/product-thumb-${m}.webp`} alt="" width="360" height="270" loading="lazy"/><span>{m}</span></a></li>)}</ul>:null}
       {s.note?<p className="pg-flow-note">{s.note}</p>:null}
      </div>
     </li>)}</ol>
@@ -64,7 +65,7 @@ function MaterialReel(){
 }
 
 export const landings={
- standard:{en:'Collection',title:'公版獎盃',
+ standard:{en:'Classic',title:'公版獎盃',
   card:[['Models','款式','A、B、C、D、E、F'],['Studio','線上排版','即時預覽・下載確認稿'],['Lead time','製作時程','3–10 個工作天'],['Price','價格','NT$680 – 3,000']],
   actions:[['開始排版','#/preview/A'],['訂製常見問題','#/read/pages/faq','ghost']],
   // No full-bleed photo here: the ordering steps and the six models come straight after the facts.

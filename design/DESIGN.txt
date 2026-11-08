@@ -1,5 +1,5 @@
 re.O demo design specification — 2026-10-15
-Built-in ImageGen concept set: hero.png, collection.png, materials.png, editor.png.
+Built-in ImageGen concept set: hero.png, classic.png, materials.png, editor.png.
 Direction: warm-white editorial product catalogue, graphite/olive typography,
 large Traditional Chinese serif headlines, square controls, real product photos.
 

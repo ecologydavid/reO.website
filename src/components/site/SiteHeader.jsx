@@ -1,6 +1,6 @@
 import React,{useCallback,useEffect,useRef,useState} from 'react';
 import {navigation,shopLink,supportLinks} from './navigation.js';
-import {ArrowIcon,BrandLogo,Button,Chip,MenuIcon} from './ui.jsx';
+import {ArrowIcon,BrandLogo,Button,Chip,MenuIcon,studioTab} from './ui.jsx';
 import './site.css';
 // Content pages and the brand wall import the shared arrow from here.
 export function SiteArrow(){return <Chip/>}
@@ -27,12 +27,12 @@ function SiteMenu({onClose,onDismiss}){
    <a className="site-menu-photo" href={group.href} onClick={onClose} tabIndex={-1} aria-hidden="true"><img src={group.image} alt="" width="480" height="360"/></a>
    <p className="site-menu-index"><span>{String(i+1).padStart(2,'0')}</span>{group.en}</p>
    <h2><a href={group.href} onClick={onClose}>{group.label}</a></h2>
-   <ul>{group.links.map(([name,href])=><li key={href}><a href={href} onClick={onClose}><span>{name}</span><ArrowIcon/></a></li>)}</ul>
+   <ul>{group.links.map(([name,href])=><li key={href}><a href={href} {...(href.startsWith('#/preview/')?studioTab:{})} onClick={onClose}><span>{name}</span><ArrowIcon/></a></li>)}</ul>
   </section>)}</div>
   <div className="site-menu-foot folio-gutter">
    <nav aria-label="服務指南">{supportLinks.map(([name,href])=><a key={href} href={href} onClick={onClose}>{name}</a>)}<a className="site-shop-link" href={shopLink[1]} target="_blank" rel="noopener noreferrer">{shopLink[0]}<span aria-hidden="true"> ↗</span><span className="sr-only">（另開新視窗）</span></a></nav>
    <p><a href="mailto:service@re-o.co">service@re-o.co</a><a href="tel:+886289665369">+886-2-8966-5369</a></p>
-   <Button href="#/preview/B" onClick={onClose}>開始銘版排版</Button>
+   <Button href="#/preview/B" {...studioTab} onClick={onClose}>開始銘版排版</Button>
   </div>
  </div>;
 }
@@ -67,7 +67,7 @@ export default function SiteHeader(){
   <div className="site-actions">
    {/* Retail has its own button: the studio's Pinkoi store, in a new tab (arrow tilted to say so). */}
    <Button href={shopLink[1]} target="_blank" rel="noopener noreferrer" variant="ghost" className="site-shop" icon={<ArrowIcon/>} aria-label="Pinkoi 選購（另開新視窗）"><img className="site-shop-logo" src="/assets/pinkoi-logo.png" alt="Pinkoi" width="213" height="64"/><span className="site-shop-label">選購</span></Button>
-   <Button href="#/preview/B" className="site-studio">排版工作室</Button>
+   <Button href="#/preview/B" {...studioTab} className="site-studio">排版工作室</Button>
    <Button variant="ghost" className="site-menu-button" ref={trigger} aria-expanded={open} aria-controls="site-menu" onClick={()=>setOpen(true)} icon={<MenuIcon/>}>選單</Button>
   </div>
   {open&&<SiteMenu onClose={close} onDismiss={dismiss}/>}

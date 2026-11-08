@@ -16,7 +16,7 @@ export default function MaterialHero({onPreview}){
    <h1 id="material-hero-title">回收石材，<br/>灌注新的榮耀。</h1>
    <div className="material-hero-copy">
     <p>大理石邊料研磨成粉，與樹脂調配、澆注、打磨。<br/>讓循環材料，成為值得珍藏的公版獎盃。</p>
-    <div className="material-hero-actions"><a className="folio-link" href="#collection">探索公版獎盃<SiteArrow/></a><a className="folio-link" href="#material-process">認識再生工藝<SiteArrow/></a></div>
+    <div className="material-hero-actions"><a className="folio-link" href="#classic">探索公版獎盃<SiteArrow/></a><a className="folio-link" href="#material-process">認識再生工藝<SiteArrow/></a></div>
    </div>
   </div>
   <div className="material-featured" aria-label="主打公版獎盃 B、D、E">

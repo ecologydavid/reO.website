@@ -24,7 +24,7 @@ React + Vite；所有排版在瀏覽器本機處理，沒有訂單或付款後�
 - 草稿僅存於當前瀏覽器。圖案不會傳送至公司或第三方。
 
 設計
-design/hero.png、collection.png、materials.png、editor.png 為 ImageGen 概念。
+design/hero.png、classic.png、materials.png、editor.png 為 ImageGen 概念。
 design/DESIGN.txt 為色彩、字級、間距、文案及有意差異的紀錄。
 實作維持暖白/石墨黑/橄欖綠、開放式產品型錄及三欄編輯器。
 保留真實商品名稱與官網照片，不沿用概念圖自行命名的 A–D 名稱。
