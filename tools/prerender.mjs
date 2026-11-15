@@ -28,6 +28,9 @@ const list = only ? routes.filter(r => decodeURIComponent(r).includes(only)) : r
 const shellFile = path.join(dist, '404.html');
 if (!only || !fs.existsSync(shellFile)) fs.copyFileSync(path.join(dist, 'index.html'), shellFile);
 const shell = fs.readFileSync(shellFile);
+// The plaque studio is not prerendered (it is a tool, not a page to index), but each model gets the shell at its own
+// address, so /studio/D/ answers 200 instead of reaching the app through the host's 404 page.
+for (const id of 'ABCDEF') { fs.mkdirSync(path.join(dist, 'studio', id), {recursive: true}); fs.writeFileSync(path.join(dist, 'studio', id, 'index.html'), shell); }
 const types = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.bin': 'application/octet-stream', '.woff2': 'font/woff2', '.txt': 'text/plain', '.xml': 'application/xml'};
 const server = http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split('?')[0]);
