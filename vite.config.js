@@ -18,13 +18,16 @@ const rebase={
 // %SITE_URL% in index.html (canonical, link previews, structured data) and the build writes
 // robots.txt and sitemap.xml. Routes are hash URLs, which sitemaps cannot list, so only the home page is.
 const site=(process.env.SITE_URL||'').replace(/\/$/,'');
+// Without SITE_URL (a local build) the placeholder is http://localhost: an empty value left href="/" in the canonical,
+// which the HTML build step tried to read as a file.
 const seo={
  name:'reo-seo-files',
- transformIndexHtml:{order:'pre',handler:html=>html.replaceAll('%SITE_URL%',site)},
+ transformIndexHtml:{order:'pre',handler:html=>html.replaceAll('%SITE_URL%',site||'http://localhost')},
  generateBundle(){
   const today=new Date().toISOString().slice(0,10);
   this.emitFile({type:'asset',fileName:'robots.txt',source:`User-agent: *\nAllow: /\n${site?`\nSitemap: ${site}/sitemap.xml\n`:''}`});
   if(site)this.emitFile({type:'asset',fileName:'sitemap.xml',source:`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n <url><loc>${site}/</loc><lastmod>${today}</lastmod></url>\n</urlset>\n`});
  }
 };
-export default defineConfig({base,plugins:[rebase,seo]});
+// JSX goes through src/h.js (reoH), which renders route names as real addresses; see src/router.js.
+export default defineConfig({base,plugins:[rebase,seo],esbuild:{jsxFactory:'reoH',jsxInject:"import {reoH} from '/src/h.js'"}});

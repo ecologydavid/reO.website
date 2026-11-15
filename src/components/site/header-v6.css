@@ -1,0 +1,59 @@
+/* v63 header: one map of the site. Desktop: each header link opens a short panel of its sub-pages; the 選單 button
+   is for phones and tablets only, where it opens the same map as a plain list (see SiteHeader.jsx). */
+@media(min-width:1101px){.folio-home .site-actions .site-menu-button{display:none}}
+.site-sub{position:absolute;top:100%;z-index:5;padding-top:10px;min-width:216px;animation:site-sub-in .22s cubic-bezier(.2,.7,.2,1) both}
+@keyframes site-sub-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.site-sub>div{padding:10px;border-radius:16px;background:#fff;box-shadow:0 0 0 1px rgba(31,35,32,.08),0 18px 40px -18px rgba(31,35,32,.35)}
+.site-sub ul{list-style:none;margin:0;padding:0}
+.site-sub a{display:block;padding:9px 14px;border-radius:10px;font-size:15px;font-weight:500;line-height:1.5;letter-spacing:.04em;white-space:nowrap;color:#2b302a;transition:background .2s,color .2s}
+.site-sub a:hover,.site-sub a:focus-visible{background:#f3f1ec;color:#1f2320}
+.site-sub a:focus-visible{outline:2px solid #1f2320;outline-offset:-2px}
+.site-sub p{margin:8px 0 2px;padding:10px 14px 0;border-top:1px solid rgba(31,35,32,.1);font-size:12px;font-weight:600;letter-spacing:.14em;color:#686d65}
+/* A small caret marks the links that open a panel. */
+.folio-home .site-links>a.has-sub{padding-right:30px}
+.folio-home .site-links>a.has-sub::before{content:"";position:absolute;right:14px;top:50%;width:5px;height:5px;margin-top:-4px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);opacity:.55;transition:transform .3s,opacity .3s}
+.folio-home .site-links>a.has-sub[aria-expanded=true]::before{transform:translateY(2px) rotate(45deg);opacity:1}
+@media(max-width:1320px){.folio-home .site-links>a.has-sub{padding-right:26px}.folio-home .site-links>a.has-sub::before{right:11px}}
+@media(prefers-reduced-motion:reduce){.site-sub{animation:none}}
+
+/* Phone and tablet sheet */
+.site-sheet{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;overflow-y:auto;background:#fff;color:#1f2320;animation:site-sub-in .3s cubic-bezier(.2,.7,.2,1) both}
+.site-sheet-bar{flex:none;display:flex;align-items:center;justify-content:space-between;height:76px;border-bottom:1px solid rgba(31,35,32,.1)}
+.folio-home .site-sheet-bar .folio-brand{width:58px;height:58px;margin-left:-6px}
+.site-sheet-list{flex:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 40px;align-content:start;padding-top:8px;padding-bottom:24px}
+.site-sheet-home{grid-column:1/-1;padding:18px 0 6px;font-size:15px;font-weight:600;letter-spacing:.08em}
+.site-sheet-list section{padding:18px 0;border-top:1px solid rgba(31,35,32,.1)}
+.folio-home .site-sheet h2{margin:0;font:600 22px/1.4 var(--tx-serif,serif);letter-spacing:.05em}
+.folio-home .site-sheet h2 a{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px}
+.folio-home .site-sheet h2 a .rv-icon{width:16px;height:16px;opacity:.45}
+.folio-home .site-sheet h2.is-label{min-height:0;font:600 13px/1.4 var(--tx-sans,sans-serif);letter-spacing:.14em;color:#686d65;padding:6px 0}
+.site-sheet ul{list-style:none;margin:0;padding:0}
+.site-sheet li a{display:flex;align-items:center;min-height:40px;font-size:15px;letter-spacing:.04em;color:#4a5047}
+.site-sheet [aria-current=page]{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1.5px}
+.site-sheet-foot{flex:none;display:flex;flex-wrap:wrap;gap:8px 28px;padding-top:18px;padding-bottom:22px;border-top:1px solid rgba(31,35,32,.1);font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
+.site-sheet a:focus-visible{outline:2px solid #1f2320;outline-offset:3px}
+@media(max-width:700px){.site-sheet-list{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.site-sheet{animation:none}}
+
+/* v64 panels: name + one-line note per row, the current page marked, an arrow that steps in on hover. */
+.site-sub{min-width:300px}
+.site-sub.is-right{left:auto}
+.site-sub>div{padding:8px;border-radius:14px}
+.site-sub a{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:11px 12px 11px 14px;border-radius:9px;white-space:normal;color:#1f2320}
+.site-sub a>span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.site-sub strong{font:600 15px/1.5 var(--tx-sans,sans-serif);letter-spacing:.05em;color:#1f2320;white-space:nowrap}
+.site-sub small{font:400 13px/1.5 var(--tx-sans,sans-serif);letter-spacing:.03em;color:#5a6057;white-space:nowrap}
+.site-sub a .rv-icon{flex:none;width:15px;height:15px;color:#1f2320;opacity:0;transform:translateX(-6px);transition:opacity .25s,transform .3s cubic-bezier(.2,.7,.2,1)}
+.site-sub a:hover,.site-sub a:focus-visible{background:#f3f1ec}
+.site-sub a:hover .rv-icon,.site-sub a:focus-visible .rv-icon{opacity:1;transform:none}
+.site-sub a[aria-current=page]{background:#f3f1ec}
+.site-sub a[aria-current=page] strong::before{content:"";display:inline-block;width:6px;height:6px;margin:0 9px 2px 0;border-radius:50%;background:#1f2320;vertical-align:middle}
+.site-sub ul.is-plain a{padding:8px 12px 8px 14px}
+.site-sub ul.is-plain strong{font-weight:500}
+.site-sub li{animation:site-sub-row .32s cubic-bezier(.2,.7,.2,1) both}
+.site-sub li:nth-child(2){animation-delay:.03s}.site-sub li:nth-child(3){animation-delay:.06s}.site-sub li:nth-child(4){animation-delay:.09s}.site-sub li:nth-child(5){animation-delay:.12s}
+@keyframes site-sub-row{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* Label colours: white only on the link the ink pill is under; every other label is ink on the light capsule. */
+.folio-home .site-links>a:not(.is-pill),.folio-home .site-links>a[aria-current=page]:not(.is-pill),.folio-home .site-links>a:not(.is-pill):hover,.folio-home .site-links>a:not(.is-pill):focus-visible{color:#2b302a}
+.folio-home .site-links>a.is-pill,.folio-home .site-links:is(:has(>a:hover),:has(>a:focus-visible))>a.is-pill[aria-current=page]{color:#fff}
+@media(prefers-reduced-motion:reduce){.site-sub li{animation:none}.site-sub a .rv-icon{transition:none}}

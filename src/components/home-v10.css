@@ -510,15 +510,68 @@
 @media(min-width:1101px){
  /* Row height follows the window height, but never so tall that E and D (two columns wide) crop
     narrower than 4:5, which would cut the outer trophies of each group shot. */
- .rv-products{--rv-row:clamp(250px,min(calc((100svh - 230px)/2),calc((91.66vw - 120px)/4.8 + 43px)),380px);grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(2,var(--rv-row));gap:24px}
+ .rv-products{--rv-row:clamp(250px,min(calc((100svh - 230px)/2),calc((91.66vw - 120px)/4.8)),380px);grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(2,var(--rv-row));gap:24px}
  .rv-product,.rv-product.is-feature{grid-column:span 1;display:flex;flex-direction:column;min-height:0}
  .rv-product.is-feature{grid-column:span 2;grid-row:span 2}
  .rv-product-photo{flex:1;min-height:0}
  .rv-products .rv-product-photo .rv-frame{height:100%;aspect-ratio:auto}
- .rv-product:not(.is-feature) .rv-tab{width:52px;height:52px;font-size:28px}
- .rv-product:not(.is-feature) .rv-spec{padding-top:12px}
- .rv-home .rv-product:not(.is-feature) .rv-spec h3{font-size:16px}
+ .rv-product:not(.is-feature) .rv-tab{--h:52px;font-size:28px}
  .rv-swatches .rv-frame{aspect-ratio:auto;height:clamp(180px,calc((100svh - 190px)/3),300px)}
 }
 /* V39 the hero shows four D photographs; on phones the tabs keep their numbers only. */
 @media(max-width:760px){.rv-hero-tabs button>span:last-child{display:none}.rv-hero-tabs button{grid-template-columns:auto}}
+
+/* V48 classic names (owner, 2026-11-08). The home cards show only the photo and the model's English name:
+   APEX, BOND, CRYSTAL, DELTA, EXCEED, FRAME, each starting with its letter. The letter keeps its square in
+   the white tab cut into the photo's corner; the rest of the name follows in serif small capitals on the
+   same baseline, so the tab reads as one word. Motion, all transform/clip only:
+   - entering view: the tab opens out from the letter, then the letters rise in one by one;
+   - pointing at or focusing the photo: the tab inks as before and the letters roll over in a wave (each
+     slides up and its copy follows from below), the rolling-label language of the header capsule.
+   Reduced motion shows the whole name at once and only the ink change. */
+.rv-tab{--h:64px;width:auto;height:var(--h);display:flex;place-items:initial;align-items:baseline;padding-right:calc(var(--h)*.34)}
+.rv-product.is-feature .rv-tab{--h:92px;width:auto;height:var(--h)}
+.rv-tab>b{flex:none;padding-left:calc(var(--h)*.3);margin-right:.05em;font-weight:600;line-height:var(--h)}
+.rv-tab-tail{display:flex;align-items:flex-start;font-size:.46em;font-weight:500;line-height:1.2;letter-spacing:.16em}
+.rv-tab-tail>i{display:block;font-style:normal;clip-path:inset(0 -.2em)}
+.rv-tab-tail>i>span{position:relative;display:block;transition:transform .55s cubic-bezier(.7,0,.2,1) calc(var(--i)*35ms)}
+.rv-tab-tail>i>span::after{content:attr(data-ch);position:absolute;left:0;top:100%}
+.rv-product-photo:hover .rv-tab-tail>i>span,.rv-product-photo:focus-visible .rv-tab-tail>i>span{transform:translateY(-100%)}
+@media(prefers-reduced-motion:no-preference){
+ .rv-home .rv-product:not(.is-visible) .rv-tab{clip-path:inset(0 calc(100% - var(--h)) 0 0)}
+ .rv-home .rv-product:not(.is-visible) .rv-tab-tail>i>span{transform:translateY(100%)}
+ .rv-home .rv-product.is-visible .rv-tab{animation:rv-tab-open .8s cubic-bezier(.65,0,.2,1) .25s backwards}
+ .rv-home .rv-product.is-visible .rv-tab-tail>i>span{animation:rv-tab-rise .7s cubic-bezier(.2,.7,.1,1) calc(.55s + var(--i)*60ms) backwards}
+}
+@media(prefers-reduced-motion:reduce){.rv-tab-tail>i>span{transition:none}.rv-product-photo:hover .rv-tab-tail>i>span,.rv-product-photo:focus-visible .rv-tab-tail>i>span{transform:none}}
+@keyframes rv-tab-open{from{clip-path:inset(0 calc(100% - var(--h)) 0 0)}to{clip-path:inset(0)}}
+@keyframes rv-tab-rise{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@media(max-width:760px){
+ .rv-tab{--h:46px}
+ .rv-product.is-feature .rv-tab{--h:64px}
+}
+
+/* V49 material labels (owner, 2026-11-08): no arrow chip; a large light index numeral, then the Chinese name
+   (smaller than before) over the studio's English name in tracked capitals, set off by a hairline. */
+.rv-home .rv-swatch-name{justify-content:flex-start;align-items:flex-end;gap:clamp(14px,1.4vw,20px)}
+.rv-home .rv-swatch-name em{margin:0;font:300 clamp(40px,4vw,60px)/.78 var(--tx-latin,var(--ui-display));letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.2)}
+.rv-swatch-words{display:grid;gap:7px;min-width:0;padding-left:clamp(14px,1.4vw,20px);border-left:1px solid rgba(255,255,255,.45)}
+.rv-home .rv-swatch-words strong{flex:none;font-size:clamp(18px,1.55vw,24px);font-weight:600;line-height:1.15;letter-spacing:.1em}
+.rv-swatch-words small{font:500 12px/1.3 var(--tx-latin,var(--ui-display));letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.78);transition:letter-spacing .6s cubic-bezier(.2,.7,.2,1),color .4s}
+.rv-swatches a:hover .rv-swatch-words small{letter-spacing:.22em;color:#fff}
+@media(max-width:760px){
+ .rv-home .rv-swatch-name{flex-direction:column;align-items:flex-start;gap:10px}
+ .rv-home .rv-swatch-name em{display:block;font-size:30px}
+ .rv-swatch-words{padding-left:10px;gap:5px}
+ .rv-home .rv-swatch-words strong{font-size:16px;letter-spacing:.06em}
+ .rv-swatch-words small{letter-spacing:.08em}
+ .rv-swatches a:hover .rv-swatch-words small{letter-spacing:.08em}
+}
+
+/* V50 (owner, 2026-11-08): the English name reads clearly. Pure white, 600, 13–15px with moderate tracking so
+   its capitals sit as a quiet second line under the serif Chinese (which stays the larger voice), with a soft
+   shadow for light photos. */
+.rv-swatch-words{gap:9px}
+.rv-swatch-words small{font-size:clamp(13px,1vw,15px);font-weight:600;letter-spacing:.12em;color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.35)}
+.rv-swatches a:hover .rv-swatch-words small{letter-spacing:.16em}
+@media(max-width:760px){.rv-swatch-words small{font-size:12px;letter-spacing:.06em}.rv-swatches a:hover .rv-swatch-words small{letter-spacing:.06em}}

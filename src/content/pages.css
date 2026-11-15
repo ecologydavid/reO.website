@@ -313,7 +313,7 @@
 .pg-flow-timer{position:absolute;left:0;right:0;bottom:-4px;height:1px;background:var(--folio-ink);transform-origin:left;animation:pg-flow-time 5.2s linear both}
 @keyframes pg-flow-time{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .pg-flow-body{padding-top:8px}
-.pg-flow-body>p{font-size:14px;line-height:1.85;letter-spacing:.04em;color:#8b8e86;transition:color .35s}
+.pg-flow-body>div>p{font-size:14px;line-height:1.85;letter-spacing:.04em;color:#8b8e86;transition:color .35s}
 .pg-flow-note{margin-top:10px;padding:10px 14px;border-left:2px solid var(--folio-ink);background:#fff;font-size:13px!important;line-height:1.8!important}
 .pg-flow-picks{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:12px 0 0;padding:0}
 .pg-flow-picks a{position:relative;display:block;width:44px;height:44px;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(37,45,40,.12);transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s}
@@ -322,7 +322,7 @@
 .pg-flow-picks a:hover,.pg-flow-picks a:focus-visible{transform:translateY(-3px);box-shadow:0 0 0 1px var(--folio-ink),0 6px 14px rgba(37,45,40,.16)}
 .pg-flow-steps>li.is-on .pg-flow-stop{background:var(--folio-ink);border-color:var(--folio-ink);color:#fff}
 .pg-flow-steps>li.is-on .pg-flow-row strong{color:var(--folio-ink)}
-.pg-flow-steps>li.is-on .pg-flow-body>p{color:#4d524a}
+.pg-flow-steps>li.is-on .pg-flow-body>div>p{color:#4d524a}
 .pg-flow-row:hover strong{color:var(--folio-ink)}
 .pg-flow-row:focus-visible{outline:2px solid var(--folio-ink);outline-offset:4px}
 @media(max-width:1100px){.pg-flow-grid{grid-template-columns:1fr}.pg-flow-stage{order:2;aspect-ratio:16/10}}
@@ -331,7 +331,7 @@
  .pg-flow-steps>li{padding-left:50px;padding-bottom:18px}
  .pg-flow-stop{left:-50px;width:34px;height:34px}
  .pg-flow-steps>li:not(:last-child)::before{left:16px;top:38px}
- .pg-flow-body>p{font-size:13px}
+ .pg-flow-body>div>p{font-size:13px}
  .pg-flow-picks{gap:6px}
  .pg-flow-picks a{width:38px;height:38px}
 }
@@ -390,3 +390,79 @@
 @media(prefers-reduced-motion:reduce){.pg-press-print img{transition:opacity .2s;transform:none}}
 
 
+
+/* V51 公版獎盃 (owner, 2026-11-09). Price: a full-width fact holding a stone ledger, two columns of
+   models (letter + English name) with dotted leaders to the price; A lists both woods. Lead time
+   carries its note underneath. The merged ordering step lists its terms as ruled rows in a white
+   panel, each led by an outlined quantity tag. Models in the index go by their English names. */
+.pg-contact dl>div.is-wide{grid-column:1/-1}
+/* v52: the price ledger is a compact 3 × 2 grid (hairlines from a 1px gap), name above price. */
+.pg-standard .pg-top{align-items:start}
+.pg-standard .pg-title{padding-top:clamp(8px,2vw,28px)}
+.pg-prices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px clamp(20px,2.4vw,40px);list-style:none;margin:18px 0 6px;padding:0}
+.pg-prices>li{display:flex;flex-direction:column;gap:6px;min-width:0}
+.pg-prices-name{display:flex;align-items:baseline;gap:6px;font-size:12px;letter-spacing:.08em;color:var(--pg-muted)}
+.pg-prices-name>span{font:400 13px/1.4 var(--pg-latin);letter-spacing:.16em;color:#4d524a}
+.pg-prices-name b{font-weight:700;color:var(--folio-ink)}
+.folio-home .pg-prices strong{font:600 clamp(16px,1.25vw,18px)/1.4 var(--folio-serif);font-variant-numeric:tabular-nums;letter-spacing:.03em;white-space:nowrap;color:var(--folio-ink)}
+.folio-home .pg-contact .pg-prices small{display:block;margin:-2px 0 0;font-size:11px;letter-spacing:.08em;color:var(--pg-muted)}
+.folio-home .pg-contact dd small{margin-top:6px;font-size:13px;letter-spacing:.06em}
+.folio-home .pg-contact dl>div.is-inline dd small{display:inline-block;margin:0 0 0 16px;padding-left:16px;border-left:1px solid rgba(31,35,32,.2);vertical-align:.15em}
+.pg-flow-terms{margin:4px 0 0;padding:2px 18px;background:#fff;box-shadow:0 0 0 1px rgba(31,35,32,.07)}
+.pg-flow-terms>div{display:grid;grid-template-columns:6.4em minmax(0,1fr);column-gap:14px;padding:13px 0;border-top:1px solid rgba(31,35,32,.1)}
+.pg-flow-terms>div:first-child{border-top:0}
+.pg-flow-terms>div.is-more{border-top:1px dashed rgba(31,35,32,.12);padding-top:10px}
+.pg-flow-terms dt{align-self:start;justify-self:start;margin-top:2px;padding:2px 10px;border:1px solid #b9b8ae;border-radius:999px;font-size:12px;font-weight:600;line-height:1.6;letter-spacing:.06em;white-space:nowrap;color:#6b6f67;transition:border-color .35s,color .35s}
+.pg-flow-terms>div.is-more dt{border:0;padding:0}
+.pg-flow-terms dd{margin:0;font-size:13.5px;line-height:1.85;letter-spacing:.04em;color:#8b8e86;transition:color .35s}
+.pg-flow-steps>li.is-on .pg-flow-terms dt{border-color:var(--folio-ink);color:var(--folio-ink)}
+.pg-flow-steps>li.is-on .pg-flow-terms dd{color:#4d524a}
+.folio-home .content-works-title.is-named strong{font:600 15px/1.4 var(--pg-latin);letter-spacing:.22em}
+@media(max-width:760px){
+ .pg-prices{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 20px}
+ .pg-flow-terms{padding:2px 14px}
+ .pg-flow-terms>div{grid-template-columns:1fr;row-gap:6px}
+ .pg-flow-terms>div.is-more dt{display:none}
+ .pg-flow-terms dd{font-size:13px}
+}
+
+/* v53 GuideBand extras (品牌訂製, 禮贈品訂製): the client beside an item's title, then a foot line with plain-text
+   tags and a quiet link. */
+.pg-flow-row .pg-flow-client{margin-left:auto;padding-left:12px;font-size:12px;letter-spacing:.06em;color:var(--pg-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pg-flow-foot{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 20px;margin-top:10px}
+.pg-flow-tags{font-size:12px;letter-spacing:.08em;color:var(--pg-muted)}
+.pg-flow-foot a{font-size:13px;font-weight:600;letter-spacing:.06em;color:var(--folio-ink);background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .35s cubic-bezier(.2,.7,.2,1)}
+.pg-flow-foot a:hover,.pg-flow-foot a:focus-visible{background-size:100% 1px}
+.pg-flow-steps>li:not(.is-on) .pg-flow-foot,.pg-flow-steps>li:not(.is-on) .pg-flow-terms{opacity:.55;transition:opacity .35s}
+@media(max-width:760px){.pg-flow-row .pg-flow-client{display:none}}
+
+/* v54 process bands (品牌訂製, 禮贈品訂製): compact — only the active step opens (rows ease open with grid rows),
+   the rest stay as a numbered list. The optional step (企業專料) has a dashed ring with ＋ and a 選配 tag, and the
+   line beside it is dashed. */
+.pg-flow.is-compact .pg-flow-steps>li{padding-bottom:12px}
+.pg-flow.is-compact .pg-flow-body{display:grid;grid-template-rows:0fr;padding-top:0;transition:grid-template-rows .55s cubic-bezier(.2,.7,.2,1),padding-top .55s cubic-bezier(.2,.7,.2,1)}
+.pg-flow.is-compact .pg-flow-steps>li.is-on .pg-flow-body{grid-template-rows:1fr;padding-top:8px;padding-bottom:6px}
+.pg-flow.is-compact .pg-flow-body>div{min-height:0;overflow:hidden}
+.pg-flow.is-compact .pg-flow-steps>li:not(.is-on) .pg-flow-body>div{visibility:hidden;transition:visibility 0s .55s}
+.pg-flow-optional{flex:none;padding:1px 8px;border:1px dashed #9a9a90;border-radius:999px;font:500 11px/1.5 var(--tx-sans,inherit);font-style:normal;letter-spacing:.08em;color:var(--pg-muted)}
+.pg-flow-steps>li.is-optional .pg-flow-stop{border-style:dashed;font-size:15px}
+.pg-flow-steps>li.is-optional::before,.pg-flow-steps>li:has(+li.is-optional)::before{width:0;background:none!important;border-left:1px dashed #b9b8ae}
+@media(prefers-reduced-motion:reduce){.pg-flow.is-compact .pg-flow-body{transition:none}}
+
+/* v57 FAQ with pictures: each group's sticky column carries a photo and a one-line caption; the three ways
+   to order and the packaging answer each lead with a small square picture. */
+.pg-faq-photo{margin:28px 0 0;max-width:340px}
+.pg-faq-photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:4px;background:#efede7}
+.pg-faq-photo figcaption{margin-top:12px;font-size:14px;letter-spacing:.06em;color:#686d65}
+.pg-faq-thumb{flex:none;width:72px;height:72px;object-fit:cover;border-radius:4px;background:#efede7}
+.pg-faq-group dd ul.pg-faq-ways{gap:14px}
+.pg-faq-ways li,.pg-faq-with{display:flex;align-items:center;gap:18px}
+.pg-faq-ways p,.pg-faq-with p{margin:0}
+.pg-faq-ways b{display:block!important;margin-bottom:2px}
+@media(max-width:900px){
+ .pg-faq-photo{max-width:none}
+ .pg-faq-photo img{aspect-ratio:16/9}
+}
+@media(max-width:600px){.pg-faq-thumb{width:60px;height:60px}.pg-faq-ways li,.pg-faq-with{gap:14px}}
+.pg-faq-group dd img.pg-faq-thumb{flex:none;width:72px;max-width:72px;height:72px;margin:0;aspect-ratio:1}
+@media(max-width:600px){.pg-faq-group dd img.pg-faq-thumb{width:60px;max-width:60px;height:60px}}

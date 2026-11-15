@@ -19,7 +19,7 @@ export default function PlateStage({surface,objects,selectedId,measure,outside,i
   useLayoutEffect(()=>{const observer=new ResizeObserver(([entry])=>setSize({w:entry.contentRect.width,h:entry.contentRect.height}));observer.observe(box.current);return()=>observer.disconnect()},[]);
   // Margin around the plate (in surface units) where spilled parts can still be seen.
   const margin=Math.max(surface.width,surface.height)*SPILL;
-  const pad=size.w<520?18:56,scale=Math.max(.05,Math.min((size.w-pad*2)/surface.width,(size.h-pad*2)/surface.height));
+  const pad=Math.round(Math.max(18,Math.min(56,size.w*.08))),scale=Math.max(.05,Math.min((size.w-pad*2)/surface.width,(size.h-pad*2)/surface.height));
   // Pixels per surface unit on this screen, in steps so resizing does not redraw on every frame.
   const density=Math.max(1,Math.min(3,Math.ceil(scale*(window.devicePixelRatio||1)*2)/2));
   const editing=objects.find(o=>o.id===inline&&o.type==='text');
@@ -99,11 +99,12 @@ export default function PlateStage({surface,objects,selectedId,measure,outside,i
     const b=objectBounds(selected,measure),gap=6/scale,a=selected.rotation*Math.PI/180,w=(b.width+gap*2)*scale,h=(b.height+gap*2)*scale;
     frame={left:selected.x*scale,top:selected.y*scale,width:w,height:h,transform:`translate(-50%,-50%) rotate(${selected.rotation}deg)`};
     // The toolbar sits above the object's upright extent (clear of the rotate knob), or below it near the top.
-    const half=(Math.abs(Math.sin(a))*w+Math.abs(Math.cos(a))*h)/2,off=(size.w-surface.width*scale)/2,cx=Math.max(158-off,Math.min(size.w-158-off,selected.x*scale)),above=selected.y*scale-half-58>-pad+8;
+    const half=(Math.abs(Math.sin(a))*w+Math.abs(Math.cos(a))*h)/2,off=(size.w-surface.width*scale)/2,cx=Math.max(176-off,Math.min(size.w-176-off,selected.x*scale)),above=selected.y*scale-half-58>-pad+8;
     bar={left:cx,top:above?selected.y*scale-half-52:selected.y*scale+half+14};
   }
-  const text=selected?.type==='text',fontStep=f=>Math.max(3,Math.min(400,Math.round(f*10)/10));
-  const sizeBy=k=>{if(!selected||selected.locked)return;onPatch(selected.id,text?{fontSize:fontStep(selected.fontSize*k)}:{width:Math.max(10,selected.width*k),height:Math.max(10,selected.height*k)})};
+  // Sizes step in whole px, at least 1px per press.
+  const text=selected?.type==='text',fontStep=(f,k)=>Math.max(3,Math.min(400,k>1?Math.max(Math.round(f)+1,Math.round(f*k)):Math.min(Math.round(f)-1,Math.round(f*k))));
+  const sizeBy=k=>{if(!selected||selected.locked)return;onPatch(selected.id,text?{fontSize:fontStep(selected.fontSize,k)}:{width:Math.max(10,selected.width*k),height:Math.max(10,selected.height*k)})};
   const finish=()=>onInline(null);
   return <div className={`st-stage${hover?' is-'+hover:''}`} ref={box} onPointerDown={e=>begin(e,'move')} onPointerMove={move} onPointerUp={end} onPointerCancel={end} onPointerLeave={()=>{if(!drag.current)setHover(null)}}
     onDoubleClick={e=>{if(e.target.closest('.st-float,.st-inline'))return;const o=topAt(point(e));if(o?.type==='text'&&!o.locked){onSelect(o.id);onEditText(o.id)}}}>
@@ -126,7 +127,7 @@ export default function PlateStage({surface,objects,selectedId,measure,outside,i
       {bar&&!editing&&!drag.current?<div className="st-float" role="toolbar" aria-label="快速調整" style={bar} onPointerDown={e=>e.stopPropagation()}>
         {selected.locked?<span className="st-float-note">已鎖定</span>:<>
           <button type="button" aria-label={text?'縮小文字':'縮小圖案'} title="縮小" onClick={()=>sizeBy(1/1.1)}><Icon name="minus" size={15}/></button>
-          <span className="st-float-size">{text?Math.round(selected.fontSize):Math.round(selected.width)}</span>
+          <span className="st-float-size">{text?Math.round(selected.fontSize):Math.round(selected.width)}<small>px</small></span>
           <button type="button" aria-label={text?'放大文字':'放大圖案'} title="放大" onClick={()=>sizeBy(1.1)}><Icon name="plus" size={15}/></button>
           {text?<><i aria-hidden="true"/><button type="button" className={selected.bold?'is-on':undefined} aria-pressed={!!selected.bold} aria-label="粗體" title="粗體" onClick={()=>onPatch(selected.id,{bold:!selected.bold})}><b>B</b></button>
           <button type="button" aria-label="編輯文字" title="編輯文字（Enter）" onClick={()=>onEditText(selected.id)}><Icon name="text" size={15}/></button></>:null}

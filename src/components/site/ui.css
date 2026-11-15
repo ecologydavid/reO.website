@@ -40,3 +40,6 @@
 /* Animated brand mark (transparent GIF); the picture element swaps in the still PNG for reduced motion. */
 .folio-home .rv-logo{display:block;width:100%;height:100%;aspect-ratio:1}
 .folio-home .rv-logo>img{width:100%;height:100%;object-fit:contain;mix-blend-mode:normal}
+/* v59.1: action icons (mail, phone, faq, studio, back to top) sit dead centre in their circle and stay still on
+   hover; only arrows nudge. */
+.folio-home .rv-chip .rv-icon.is-action,.folio-home a:hover>.rv-chip .rv-icon.is-action,.folio-home button:hover>.rv-chip .rv-icon.is-action{display:block;width:14px;height:14px;transform:none}

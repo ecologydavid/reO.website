@@ -55,7 +55,7 @@
 .st-kicker{font-size:12px;letter-spacing:.12em;color:var(--muted)}
 .st-product-head h2{font:600 22px/1.4 var(--serif);letter-spacing:.06em;margin-top:4px}
 .st-meta{font-size:13px;color:var(--muted);margin-top:6px}
-.st-meta span{margin-left:12px;font-weight:600;color:var(--ink);letter-spacing:.04em}
+.st-meta span{display:inline-block;white-space:nowrap;margin-left:12px;font-weight:600;color:var(--ink);letter-spacing:.04em}
 .st-step h3,.st-work-title{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:13px;font-weight:600;line-height:1.4;letter-spacing:.1em}
 .st-step h3>span,.st-work-title>span{font:500 11px/1 var(--latin);letter-spacing:.12em;color:var(--muted)}
 .st-label{display:block;font-size:12px;letter-spacing:.06em;color:var(--muted);margin-bottom:8px}
@@ -345,3 +345,182 @@
 }
 @media(prefers-reduced-motion:reduce){.st-slot{transition:none}}
 .st-slot.is-pip .st-frame,.st-slot.is-pip .st-float,.st-slot.is-pip .st-guide{display:none}
+
+/* V6 (2026-11-11, by request) one clear workspace.
+   Left: models as photo cards (2 columns, letter + English name) and large named swatches.
+   Centre: the plate and the finished product side by side, both full height and live (no corner card);
+   the add buttons are gone from the bar (they live in the right column only).
+   Right: 04 內容 (add text / graphic, the list) and 05 設定 (one line per control), sized to the
+   screen: only the list shrinks and scrolls inside, so the column never needs scrolling. */
+.st-layout{grid-template-columns:clamp(290px,21vw,360px) minmax(0,1fr) clamp(300px,21vw,350px)}
+.st-product{gap:24px}
+.st-kicker span{margin-right:10px;font:600 11px/1 var(--latin);letter-spacing:.24em;color:var(--ink)}
+
+.st-models{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.st-models button{align-items:stretch;gap:0;border-radius:14px;overflow:hidden;background:var(--stone);box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .2s,background .2s}
+.st-models img{display:block;width:100%;aspect-ratio:4/3;height:auto;object-fit:cover;border-radius:0;background:#e9e7e1;transition:opacity .25s,transform .5s var(--ease)}
+.st-models button[aria-pressed] img{box-shadow:none}
+.st-models button[aria-pressed=false] img{opacity:.78}
+.st-models button:hover img{opacity:1;transform:scale(1.03)}
+.st-models span{display:block;padding:9px 12px 10px;font:500 11px/1 var(--latin);letter-spacing:.2em;text-align:left;color:var(--muted)}
+.st-models span b{font-weight:700;color:var(--ink)}
+.st-models button:hover{box-shadow:inset 0 0 0 1px var(--line-strong)}
+.st-models button[aria-pressed=true]{background:#fff;box-shadow:0 0 0 2px var(--ink)}
+.st-models button[aria-pressed=true] span{color:var(--ink);font-weight:600}
+
+.st-finish-row{grid-template-columns:1fr;gap:10px}
+.st-finish-row .st-label{font-size:12px}
+.st-finish-row+.st-finish-row{margin-top:18px}
+.st-swatches{gap:14px}
+.st-swatch{display:flex;flex-direction:column;align-items:center;gap:7px;width:auto;height:auto;min-width:44px}
+.st-swatch i{width:40px;height:40px}
+.st-swatch span{font-size:12px;line-height:1;color:var(--muted);white-space:nowrap}
+.st-swatch:hover i{box-shadow:inset 0 0 0 1px rgba(31,35,32,.16),0 0 0 2px #fff,0 0 0 3px var(--line-strong)}
+.st-swatch[aria-pressed=true] span{color:var(--ink);font-weight:600}
+.st-chips button{min-height:36px}
+
+/* Centre: two panes. */
+.st-canvas{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:12px;border-radius:0;background:none;overflow:visible}
+.st-slot{position:relative;left:auto;top:auto;width:auto;height:auto;z-index:auto;border-radius:22px;overflow:hidden;transition:none}
+.st-slot-plate{background:#f3f1ec}
+.st-slot-product{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}
+.st-slot-label{position:absolute;z-index:3;left:20px;top:22px;font-size:13px;font-weight:600;letter-spacing:.1em}
+.st-slot-product .st-view{padding-top:60px}
+.st-slot-product .st-switch{left:auto;right:14px;top:14px;background:var(--stone)}
+.st-slot-product .three-reset{top:auto;bottom:10px;right:12px}
+.st-slot-product .three-instruction{display:none}
+.st-slot .st-work-note{flex:none;padding:0 16px 14px}
+.st-work-bar{padding:0 4px 12px}
+
+/* Right: contents and settings. */
+.st-inspector{display:flex;flex-direction:column;padding:16px 20px 16px 14px;overflow-y:auto}
+.st-inspector .st-panel-head{min-height:34px}
+.st-inspector .st-panel-head h2{display:flex;align-items:center;font-family:inherit;font-size:13px;font-weight:600;line-height:1.4;letter-spacing:.1em}
+.st-inspector .st-panel-head h2>.st-num{margin:0 10px 0 0;font:500 11px/1 var(--latin);letter-spacing:.12em;color:var(--muted)}
+.st-layers{flex:0 1 auto;display:flex;flex-direction:column;min-height:0;margin:0;padding:0;border:0}
+.st-add{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.st-btn.st-btn-add{min-height:42px;padding:0 10px;gap:6px;font-size:13px;box-shadow:none}
+.st-btn-ghost.st-btn-add{box-shadow:inset 0 0 0 1px var(--line-strong)}
+.st-btn-ghost.st-btn-add:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.st-layers ul{flex:0 1 auto;min-height:80px;max-height:216px;overflow-y:auto;margin:10px 0 0;scrollbar-width:thin}
+.st-layer{padding:8px 10px}
+.st-layers-empty{padding:10px;font-size:12px;color:var(--muted)}
+.st-settings{flex:none;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.st-fields{gap:12px;margin-top:10px}
+.st-row{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start}
+.st-row>.st-label{margin:0;padding-top:8px;font-size:12px}
+.st-row-control{min-width:0}
+.st-field textarea,.st-row textarea{display:block;width:100%;min-height:58px;padding:7px 10px;border:1px solid var(--line-strong);border-radius:10px;background:#fff;font-size:14px;line-height:1.55;resize:vertical;transition:border-color .2s,box-shadow .2s}
+.st-row textarea:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(31,35,32,.08)}
+.st-fonts{gap:4px}
+.st-fonts button{flex-direction:row;justify-content:center;gap:5px;padding:7px 4px;border-radius:10px}
+.st-fonts b{font-size:15px}
+.st-fonts span{font-size:11px}
+.st-range{gap:10px}
+.st-range input[type=number]{width:58px;padding:6px 8px}
+.st-tools{gap:6px}
+.st-group{padding:2px}
+.st-tog{min-width:29px;height:30px;padding:0 5px;font-size:14px}
+.st-inks{gap:4px}
+.st-inks>button{width:30px;height:30px}
+.st-inks i{width:22px;height:22px}
+.st-inks>.st-ink-auto{height:30px;padding:0 10px 0 4px;margin-right:2px}
+.st-ink-custom input{width:26px;height:26px}
+.st-file{padding-top:7px}
+.st-more{padding-top:8px}
+.st-more summary{justify-content:flex-start;gap:8px}
+.st-more summary span{margin-right:auto;font-size:11px;color:#a3a69f;letter-spacing:.02em}
+.st-locked,.st-out{margin-top:10px;padding:8px 12px}
+.st-empty{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:10px;font-size:13px;line-height:1.5;color:var(--muted)}
+.st-empty li{display:flex;align-items:center;gap:10px}
+.st-empty b{display:grid;place-items:center;flex:none;width:22px;height:22px;border-radius:50%;background:var(--stone);font:600 11px/1 var(--latin);color:var(--ink)}
+
+@media(max-width:1100px){
+ .st-layout{grid-template-columns:300px minmax(0,1fr)}
+ .st-inspector{overflow:visible;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px;align-items:start}
+ .st-settings{margin-top:0;padding-top:0;border-top:0}
+}
+@media(max-width:760px){
+ .st-models{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ .st-models span{padding:7px 8px 8px;letter-spacing:.12em}
+ .st-canvas{display:block;height:62vh}
+ .st-slot{height:100%}
+ .st-slot:not(.is-big){display:none}
+ .st-inspector{display:flex}
+ .st-settings{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+ .st-layers ul{max-height:none}
+}
+/* v6 fit: the plate pane gets most of the centre; shorter model photos; one-line style and colour rows. */
+.st-layout{grid-template-columns:clamp(270px,19.5vw,350px) minmax(0,1fr) clamp(320px,22vw,360px)}
+.st-canvas{grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)}
+.st-slot-product{box-shadow:none;border:1px solid var(--line)}
+.st-models img{aspect-ratio:3/2}
+.st-product{gap:20px}
+.st-range input[type=number]{width:66px}
+.st-row{grid-template-columns:30px minmax(0,1fr);gap:8px}
+.st-tools{gap:4px;flex-wrap:nowrap}
+.st-tog{min-width:26px;height:28px;padding:0 4px}
+.st-inks{flex-wrap:nowrap;gap:3px}
+.st-inks>button{width:28px;height:28px}
+.st-inks i{width:21px;height:21px}
+.st-inks>.st-ink-auto{height:28px;gap:5px;padding:0 9px 0 3px;font-size:12px}
+@media(max-width:1100px){.st-layout{grid-template-columns:290px minmax(0,1fr)}}
+/* The toolbar's pop-in keeps its centring (st-pop's `transform:none` used to cancel translateX(-50%)). */
+.st-float{animation-name:st-float-pop}
+@keyframes st-float-pop{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translateX(-50%)}}
+@media(max-width:760px){.st-inspector{align-items:stretch}}
+
+/* v6.1 (2026-11-11, by request) larger, clearer studio text: one step up everywhere, a darker grey
+   (the site's AA grey), size in px, colour = black or the picker. */
+.st-app{--muted:#686d65}
+.st-layout{grid-template-columns:clamp(280px,20vw,360px) minmax(0,1fr) clamp(330px,23vw,380px)}
+.st-saved{font-size:13px}
+.st-back{font-size:14px}
+.st-kicker{font-size:13px}
+.st-kicker span{font-size:12px}
+.st-meta{font-size:14px}
+.st-step h3,.st-work-title,.st-inspector .st-panel-head h2{font-size:15px}
+.st-step h3>span,.st-work-title>span,.st-inspector .st-panel-head h2>.st-num{font-size:12px}
+.st-inspector .st-panel-head h2>span:last-child:not(.st-num){font-size:13px}
+.st-label,.st-finish-row .st-label,.st-row>.st-label{font-size:13px}
+.st-models span{font-size:13px;letter-spacing:.16em}
+.st-swatch span{font-size:13px}
+.st-chips button{font-size:14px}
+.st-ref{font-size:14px}
+.st-note{font-size:12px}
+.st-zones button,.st-switch button{font-size:14px;min-height:34px}
+.st-slot-label{font-size:15px}
+.st-work-note,.st-slot .st-work-note{font-size:13px}
+.st-btn.st-btn-add{font-size:14px;min-height:44px}
+.st-layer{font-size:14px;padding:9px 10px}
+.st-row{grid-template-columns:36px minmax(0,1fr)}
+.st-row>.st-label{padding-top:7px}
+.st-row textarea{font-size:15px}
+.st-fonts button{padding:7px 4px}
+.st-fonts b{font-size:17px}
+.st-fonts span{font-size:13px}
+.st-range input[type=number]{width:64px;font-size:14px}
+.st-range label>span{font-size:13px;color:var(--muted)}
+.st-tog{font-size:15px;min-width:28px;height:30px}
+.st-file{font-size:14px}
+.st-more summary{font-size:14px}
+.st-more summary span{font-size:12px;color:var(--muted)}
+.st-number span{font-size:12px}
+.st-number input{font-size:14px}
+.st-empty{font-size:14px}
+.st-locked,.st-out{font-size:13px}
+.st-float-size{font-size:13px;min-width:44px}
+.st-float-size small{margin-left:2px;font-size:10px;color:var(--muted)}
+/* Colour: black, or any colour from the picker (with its code). */
+.st-inks{flex-wrap:wrap;gap:8px}
+.st-inks>.st-ink-black,.st-ink-pick{display:inline-flex;align-items:center;gap:8px;width:auto;height:36px;padding:0 14px 0 6px;border-radius:999px;font-size:14px;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-strong);cursor:pointer;transition:box-shadow .2s}
+.st-inks>.st-ink-black i{width:24px;height:24px}
+.st-inks>.st-ink-black[aria-pressed=true],.st-ink-pick.is-on{box-shadow:inset 0 0 0 1.5px var(--ink);font-weight:600}
+.st-ink-pick input{width:24px;height:24px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer}
+.st-ink-pick input::-webkit-color-swatch-wrapper{padding:0}
+.st-ink-pick input::-webkit-color-swatch{border:0;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(31,35,32,.18)}
+.st-ink-pick input::-moz-color-swatch{border:0;border-radius:50%}
+.st-ink-pick code{font:500 12px/1 var(--latin);letter-spacing:.04em;color:var(--muted);font-weight:500}
+@media(max-width:1100px){.st-layout{grid-template-columns:290px minmax(0,1fr)}}
+.st-product{gap:16px}
+.st-models span{padding:8px 12px}

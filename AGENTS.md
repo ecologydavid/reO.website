@@ -489,3 +489,259 @@ export both PDF and .eps. This authorises editor UI changes; all v3 capabilities
   screen readers.
 - D green v2 (2026-11-08, after 公版D-3…D-6): a sandy grey-green ground with bundles of mustard filaments
   flowing lengthwise (poured marbling), yellow flecks and pores. F shares it.
+
+## Classic names on home (v48, 2026-11-08, by request)
+- The home Classic grid (section #classic) shows only each model's photo and its English name, which keeps the
+  model letter as its first letter: A APEX, B BOND, C CRYSTAL, D DELTA, E EXCEED, F FRAME (`classicNames` in
+  Home.jsx). The Chinese name, spec/price line and 開始排版 buttons are removed there (other pages keep them);
+  the photo still opens the studio in a new tab.
+- The name grows out of the white letter tab in the photo's corner: the letter in the serif, the rest in serif
+  small capitals on the same baseline, so it reads as one word. Motion (CSS only, "V48 classic names" in
+  home-v10.css): on entering view the tab opens out from the letter and the letters rise one by one; on
+  hover/focus the tab inks and the letters roll over in a wave. Reduced motion shows the name at once.
+
+## Home materials, Big Data print (v49, 2026-11-08, by request)
+- Home materials use the same photo as each material's card in the materials library (its page hero; 再生大理石
+  is the broken slab pile, no longer the powder), and the materials landing reel uses the same nine. The material
+  is named 焚化粒料 in titles and labels (its page title, the MATERIAL index label, home, reel); prose keeps its
+  wording.
+- Labels have no arrow chip: a large light numeral, a hairline, then the Chinese name over the English name
+  from the studio's MATERIAL index (Recycled Marble, Glass, Wooden Crossarm — the old CROSSRAM typo fixed —
+  Coffee Grounds, Reservoir Silt, Coal Ash, Sawdust, Wood Veneer Panel, Incineration Aggregates). Phones stack
+  numeral over names.
+- Brand wall: Big Data's print is the upright 2025 網路人氣標章 plaque shown whole (4000a780…webp, 520px).
+
+## Home link, no studio button in the header, 39 marks (v50, 2026-11-08, by request)
+- The header capsule starts with 首頁 (#/; current on home and #/brands). The 排版工作室 button is gone from the
+  header (the menu overlay keeps its links). Studio entries that remain: home hero 開始 D 款排版 and the A–F picks,
+  the home Classic photos, the menu overlay (公版獎盃 group link + 開始銘版排版), the footer (開始銘版排版 + the
+  公版獎盃 column link), the 公版獎盃 landing (開始排版 action + ordering-flow step 01 picks) and each product
+  page's 進入 X 款排版工作室 link. All open a new tab.
+- Brand wall: one mark per case. 行政院國家永續發展委員會 shared the SDGs trophy with 行政院 and was removed; 39
+  marks now (the last row has a gap until more are added). The test checks 39.
+- Home material labels: the English line is pure white, 600, 13–15px, lightly tracked, under the serif Chinese.
+
+## 公版獎盃 facts and flow, English model names, 品牌訂製 (v51, 2026-11-09, by request)
+- Facts card (landings.jsx standard): Lead time 「3 個工作天」 with 「10 座以上工期另計」 beside it; Price is a
+  full-width stone ledger (PriceList), one row per model: letter + English name, dotted leader, NT$ price.
+  APEX 北美黃檜 2,500 / 木橫擔 2,800, BOND 2,800, CRYSTAL 2,000, DELTA 2,300, EXCEED 3,000, FRAME 680 (owner's figures).
+  Card entries take an optional 4th value: class names for the row (is-wide spans both columns, is-inline).
+- Ordering flow is three steps: 選擇款式 / 銘板排版及提供資料 / 手工生產. Step 02's terms (owner's wording) render as
+  ruled rows in a white panel with outlined quantity tags (pg-flow-terms). 手工生產: 「製作工期依訂購數量而定。」
+- The 六款公版 index shows APEX…FRAME (classicNames, now shared from src/components/site/classics.js).
+- 生活設計商品 is renamed 品牌訂製: its own navigation group (6 groups, after 客製化獎盃; header, menu, footer) and
+  page at #/explore/products (en 'Brand'), listing lifestyle products only (classic trophies stay on 公版獎盃).
+  Non-trophy #/read/products/ pages highlight 品牌訂製 in the header. Content for this page is still to come.
+
+## 品牌訂製 = former 客製化獎盃, 禮贈品訂製, one-line process (v52, 2026-11-09, by request)
+- The 客製化獎盃 page moved whole into 品牌訂製 (CustomPage.jsx, en 'Brand'; route kept at #/read/pages/custom so old
+  links land). 客製化獎盃 no longer exists as a name in navigation, home section 02, closings or breadcrumbs.
+- 禮贈品訂製 (en 'Gifts', #/explore/products, nav id 'gifts') holds everything that is not a trophy, Pinkoi range
+  included. Non-trophy #/read/products/ pages highlight it.
+- Both pages carry the owner's 一條龍 process (ProcessLine.jsx + process-line.css): a hairline of seven stations
+  that draws itself on view; vertical on phones. 品牌訂製: 概念設計、包裝規劃 > 3D 建模 > 開模 > 材質灌製 > 組裝 >
+  品檢包裝 > 出貨, with 企業專料 joining 材質灌製 from below (links to the 專料訂製 service). 禮贈品訂製: 需求確認、造型設計、
+  包裝規劃 > … > 出貨, no branch. Keep the owner's step wording.
+- 公版獎盃: the title sits top-left (.pg-standard .pg-top aligns start); prices are a compact 3 × 2 grid (2 × 3 on phones).
+
+## Steady header, plain prices, 品牌訂製 and 禮贈品訂製 rebuilt (v53, 2026-11-09, by request)
+- Header jitter fix: the condensed header returns its lost height as margin-bottom (24px desktop, 32px phones) so the
+  page never moves, and condensing has a gap (in above 40px, out below 8px). Keep both if the header changes.
+- 公版 price: a plain 3 × 2 list (2 columns on phones), no box: "APEX 款" (bold first letter) above the price; A shows
+  "NT$ 2,500 / 2,800" with 北美黃檜 / 木橫擔 under it.
+- 品牌訂製 (#/read/pages/custom, category 'custom') and 禮贈品訂製 (#/explore/products) now render through ContentLibrary
+  like 公版獎盃: facts card (訂製方式, 包裝, email, phone) → 一條龍 ProcessLine → GuideBand (the 公版 ordering band,
+  generalised in landings.jsx) → case index → closing. CustomPage.jsx is gone.
+  - 品牌訂製 GuideBand: 專案訂製, 專料訂製, 包裝款式 (packaging options as ruled terms), 3D 建模服務. Cases: 企業獎盃.
+  - 禮贈品訂製 GuideBand: 品牌禮贈, 品牌器物, IP 授權與聯名, 場域紀念, each told by one real case (copy from that case).
+    Cases: every non-trophy case (生活設計 + IP生活設計). The Pinkoi shop window and old product pages are no longer listed.
+  - Case lists run newest first; undated cases and proposals last.
+
+## The process is the image-led band (v54, 2026-11-09, by request) — supersedes the v52/v53 ProcessLine
+- ProcessLine is removed. On 品牌訂製 and 禮贈品訂製 the GuideBand (compact mode) holds the owner's 一條龍 steps, one
+  item per step, each with its own photo and text condensed from the site's pages (訂製 CUSTOM, 建模 MODELING, 關於,
+  journal 實驗再生材質 / 可回收包裝材 / 生產鏈合作循環運送, home process ring); no new claims.
+  - 品牌訂製: 01 概念設計・包裝規劃 → 02 3D 建模 → 03 開模 → ＋ 企業專料 (選配, unnumbered, dashed ring and line) →
+    04 材質灌製 → 05 組裝 → 06 品檢包裝 → 07 出貨.
+  - 禮贈品訂製: 01 需求確認・造型設計・包裝規劃 → 02 3D 建模 → 03 開模 → 04 材質灌製 → 05 組裝 → 06 品檢包裝 → 07 出貨.
+- Compact mode: only the active step opens (grid-rows ease); picked by click/tap/keyboard, not hover; auto-advances
+  while in view until picked. The 公版 band keeps its open, hover-to-pick behaviour.
+
+## Footer as one block (v55, 2026-11-10, by request)
+The footer info row shares the link grid (lead column + six) with no rule between them: the mark in the lead
+column, then 公司 / 聯絡 / 服務指南 (two columns each) under the same small headings as the link groups. 統編 sits
+under the phone in 聯絡. A hairline inside the gutter, then the centred "© re.O 材質再生 循環設計" closes the page.
+v56 (by request): one way of writing the footer text. Every 公司 and 聯絡 line has a two-character grey label
+(名稱 地址 時間 來訪 / 信箱 電話 統編) with its value beside it; 服務指南 stays a plain list of links like the groups
+above. One text size (14px, as the links above), one row rhythm (12px) and the same heading gap as the link groups.
+On phones 公司 and 聯絡 each take the full width.
+
+## Studio v6: one clear workspace (2026-11-11, by request)
+All studio capabilities, canonical shapes and exports are unchanged; this is layout only (Editor.jsx, Inspector.jsx,
+editor-v4.css "V6" block at the end).
+- Left: 01 款式 as 2-column photo cards (catalogue-X.webp, 3:2, letter + English name; 3 columns on phones);
+  02 顏色與材質 as 40px swatches, each named underneath, the row naming the part and the current choice.
+- Centre: plate and finished product side by side (about 1.75 : 1), both full height and live. This supersedes
+  v5's picture in picture (no corner card or swap button). The plate pane is stone, the product pane white with a
+  hairline; 正面 / 3D 旋轉 sit at its top right. Phones keep the 排版／成品預覽 switch and show one pane.
+- 新增文字 / 上傳圖案 appear ONCE, in the right column (removed from the bar above the plate).
+- Right: 04 內容 (add buttons, the list with lock and order) and 05 設定 (label left, one line per control:
+  內容, 字體, 大小, 樣式, 顏色, then 進階設定). The column fits the screen; only the list shrinks and scrolls inside.
+  Numbering runs 01–05 across the three columns.
+- PlateStage padding scales with the pane (8%, 18–56px); the floating toolbar keeps its centring (its pop-in
+  animation used to cancel translateX(-50%)). 3D framing leaves more side margin for narrow panes.
+- v6.1 (same day, by request): text size reads and steps in whole px (inspector "px", toolbar "129px", ±1px
+  at least per press). Colour is 黑色 or 自訂 (picker with its code); default text is black (#000) on plates
+  whose ink was dark, light ink stays for dark wood/stone (inkFor in Editor.jsx). All studio text one step
+  larger, grey #686d65; right column 330–380px.
+
+## FAQ figures and pictures (v57, 2026-11-11, by request)
+Facts: 公版 3 個工作天 (10 座以上工期另計), 設計校稿 3 次, 本島宅配 1–2 天; answers match. Each group's sticky
+column carries a photo with a one-line caption; 公版/專案/專料 and the packaging answer have 72px pictures.
+
+## One destination, one place (v58, 2026-11-11, by request)
+Navigation (navigation.js) feeds the header menu overlay and the footer; every destination is listed once:
+- Group headings link to their landing page, so the lists below never repeat it (no "公版獎盃 A–F", "全部…").
+- 公版獎盃: 線上排版工作室. 品牌訂製: 3D 建模與設計 (企業獎盃 cases are on the page). 禮贈品訂製: Pinkoi 線上選購
+  (retail, external, new tab; the header Pinkoi pill stays). 企業與IP案例: 合作品牌牆. 材料與工藝: 再生大理石,
+  工藝與工作室文章. 關於 re.O: 設計講座與產業報導, 匠子 CHANZ STUDIO (moved from materials).
+- 服務指南 (footer info row and menu foot) is the only home of 常見問題 (renamed from 訂製常見問題 / 訂製與服務常見問題),
+  運送說明 and 退換貨說明. The FAQ breadcrumb reads 首頁 / 服務指南 / 常見問題.
+- Removed duplicates: FAQ under 公版 and 品牌訂製; 聯絡與預約 and 品牌理念 (both the About page; contact is its first
+  section and the footer); 品牌與工藝內容 (#/explore/about only re-listed About pages; About's closing now links CHANZ);
+  case filters repeated under gifts and cases; 聯絡預約 and Pinkoi in the footer's 服務指南.
+- Old routes still resolve. Footer headings are white 15px links with a hover arrow; sub-links 72% white.
+
+## Action icons, light footer (v59, 2026-11-11, by request)
+- Landing actions: 公版 = 開始排版・寄信洽詢・來電洽詢・訂製常見問題; 品牌訂製 and 禮贈品訂製 = 寄信洽詢・來電洽詢・
+  訂製常見問題. Page buttons may link the FAQ (only the menus list each destination once, v58).
+- Buttons that act carry an icon for what they do (ActionIcon / iconFor in ui.jsx: mail, phone, faq, studio pen);
+  other buttons keep the arrow.
+- Footer: warm stone (#f3f1ec) with ink text and a hairline above; black is kept for one slim closing band:
+  "re.O 材質再生 循環設計" signature (Inter re.O + serif), "© <year> 或心國際設計有限公司", 回到頂部 button.
+  Supersedes the dark footer and v34's lone centred credit line.
+- v59.1: action icons are drawn centred on the 16-unit grid (bbox centre 8,8), render as 14px blocks in their chip
+  and do not take the arrows' hover nudge (.rv-icon.is-action). Checked by measuring path bounds against the chip.
+
+## Copy, case figures and covers (v60, 2026-11-16, by request)
+- Brand wall note: 「依各專案的委製與合作關係展示；授權設計、代理委製等資訊詳見案例說明。」 (no HOLA).
+- 企業專料 / 專料訂製 wording is 「企業有顆粒、粉末化可再利用的廢棄物料」 (band step, materials closing, FAQ, home custom line,
+  migrated custom page and derived FAQ). The owner wrote 「粉末話」; read as 「粉末化」.
+- 企業與IP案例 summary: `stats` in landings.jsx (合作企業 100+ 家, 企業獎盃 90+ 件作品, 品牌訂製 80+ 件作品) replaces the
+  per-group counts; these are the owner's figures, not computed. The filter chips above the index still filter.
+- Case covers (case-photos.json) now show the whole piece: 花瓣獎盃 6966ff…, 台達書頁 1769cc…, 網路人氣標章 4000a7…, SUP 獎牌
+  a9132c…. The old covers moved into the hover details (480px in public/assets/case-details). case-national-sdgs.webp is
+  portrait 1773×2364; it was listed as 1600×1200 and showed cropped (fixed in case-photos, page JSON and content index).
+
+## Nine more covers, whole portrait details (v61, 2026-11-16, by request)
+- New covers (case-photos.json): SDGs 鑰匙圈 4e9a26…, 總統盃黑客松 19b630…, 資誠永續影響力獎 007aaa…, 威廉瓊斯盃 5b900e…,
+  台達玻璃樹 f9a083…, 山水獎牌 dacec9…, plus three crops in public/assets: case-fubon-champion.webp (富邦長春盃 高爾夫球獎盃,
+  the "富邦 高爾夫球獎盃" title card cropped off), case-go-kart.webp (light-ground original research/assets/69f2dedf…,
+  the "台達 跑跑卡丁車獎盃" title cropped off), case-top-100-skills.webp (square from research/assets/69fc3a4b…).
+  Owner rule: a cover never shows an added client wordmark or title card; the client's name on the product itself stays.
+  Replaced covers that duplicated a hover detail moved into the details (480px).
+- Article 設計細節 frames are square; a portrait photo there (ratio < 0.85) is now shown whole with the frame's sides
+  continuing its edge colours (edgeFill.js, shared with CasePhoto). Fixes the cropped 台達玻璃樹 「玻璃樹幹」 photo.
+- /assets/case-*.webp photos were listed at 1600×1200 or 1600×1600 whatever their shape; their real sizes are now
+  recorded in case-photos.json, content-index.json and the page JSON, so article frames no longer crop them.
+
+## Covers for 品牌訂製 and 禮贈品訂製 (v62, 2026-11-16, by request)
+- 24 covers replaced (case-photos.json), each matched to the owner's screenshot by image comparison against the page,
+  research/assets and the owner's art folder. New files in public/assets: case-fubon-junior (art folder 251204/C39EA060…),
+  case-delta-50-plaque (research 69f2de2c…, 台達 title cropped off), case-delta-50-senior (art folder 獎盃/GOE_3982.JPG),
+  case-songyan-calendar, case-onibus, case-jsl-diffuser (「澗水藍 水墨擴香基座 JSL Craft Diffuser Base」 lettering filled
+  from the surrounding background, by request), case-ironman-clock (迪士尼×和樂 title cropped off), case-ads-finial,
+  case-marble-pen, case-rsl-tray (RSL瓏山林 title cropped off), case-moosy-stand, case-8-ball, case-bee, case-dice,
+  case-wax-seal, case-undefeated, case-wang-jinhua. Dice and undefeated have no original on file: they are cut from the
+  owner's screenshots (653px / 574px); replace them when originals arrive.
+- Square covers from wide photos: the photo is centred and the frame extends its own top and bottom edge colours,
+  blurred and feathered (never a mirrored strip, which pulled ghost copies of the object into the frame).
+- T.B. Design 動物雕塑咖啡填壓器 (d9b131…): the sideways rhino photo 20b8bd0… is removed from its gallery.
+- Old covers that duplicated a hover detail moved into the details (480px thumbnails).
+
+## Site review: navigation, footer, readability (v63, 2026-11-16, by request)
+Audit method: full-page captures of ten pages (desktop 1440, phone 390) plus a script that measured every text node's
+size and contrast and every chip icon's centre. Icons were all centred (within 0.75px). Findings fixed here:
+- One map of the site (supersedes the v11/v58 overlay on desktop). Header links 首頁 + six groups; a link with sub-pages
+  shows a caret and opens a panel on hover or keyboard focus (SubPanel in SiteHeader.jsx; 關於 re.O also lists 服務指南).
+  The 選單 button and its sheet (SiteMenu, plain list, no photos) exist only at ≤1100px. Styles: site/header-v6.css.
+- Footer (SiteFooter.jsx, site/footer-v6.css; supersedes v55–v59): mark + company facts (name, 統編, address, hours,
+  email, phone) on the left, four link columns in header order (訂製服務, 作品與材料, 關於, 服務指南), one slim closing line.
+  About 300px tall on desktop instead of 640px. The "讓下一件作品" lead and the black band are gone.
+- Wayfinding on detail pages (ContentReader.jsx): the breadcrumb leads with a 「← 返回〈列表〉」 pill; the page ends with
+  上一則 / 回到列表 / 下一則 in the list's own order, and 繼續探索 shows the entries after the next one (it used to show the
+  same first three on every page, which read as a loop). Breadcrumb text 13.5px.
+- Readability (site/refine-v63.css, loaded after type.css): labels and meta 13px in the AA grey; nothing under 12px.
+  Step bands (公版 ordering, 品牌訂製, 禮贈品訂製): steps that are not active stay readable (were 3:1), body 15px; the active
+  step is marked by its filled ring and ink title. Home process ring: same picture, side text and small labels one step up.
+- Case grids (.is-works): four per row from 1280px.
+- SEO/GEO, not done here: hash routes (#/…) are one URL to search engines and AI crawlers, which do not run JavaScript.
+  The real step is path URLs with prerendered HTML per page, then per-page titles, canonical, sitemap and BreadcrumbList /
+  Product data. Waiting on the owner's go-ahead (it changes every URL).
+
+## Path URLs, prerendered pages, D/E/B hero (v64, 2026-11-17, by request)
+- Addresses (src/router.js): / · /<old-site path>/ (pages/x, products/x, blog/posts/x, about/x) · /explore/<category>/ ·
+  /studio/<A–F>/ · /brands/. Code, navigation.js and page data still NAME routes in the old hash form ('#/read/pages/x');
+  src/h.js (the JSX factory, vite.config.js esbuild.jsxFactory) renders any <a href="#/…"> with its real address, and
+  router.js turns in-site clicks into pushState. So: keep writing href="#/…" in components; for window.open or
+  navigation in code use toPath()/navigate(). Old #/… links are rewritten on arrival. The single-file offline preview
+  (file://) keeps hash routing.
+- Prerender (tools/prerender.mjs, run by `pnpm build`): headless Chrome opens all 150 routes of dist and saves each as
+  dist/<path>/index.html with its own title, description, canonical, og:url and BreadcrumbList (src/seo.js setPageMeta
+  takes `trail`); sitemap.xml lists them (needs SITE_URL). dist/404.html is the plain shell (studio and unknown
+  addresses). main.jsx loads a route's code and data before React renders, so a prerendered page is not replaced by a
+  loading screen. A new page type must call setPageMeta, or the prerenderer waits and reports it as not rendered.
+  A local build without SITE_URL uses http://localhost in canonicals. Hosting must serve <path>/index.html (any static
+  host does) and, for /studio/, fall back to 404.html or index.html.
+- Home hero (Home.jsx Hero, components/hero-v64.css; supersedes v39–v41 D-only): slides D, E, B, one whole-trophy photo
+  each. The left column follows the slide (letter + English name, material line, size, price, 3 個工作天, 開始 X 款排版) and
+  shows A to E as square photo cards (F, a medal, stays on the 公版 page). Hero site figures (06/64/09) are no longer shown.
+- Fact cards (site/facts-v64.css): stone panel, Chinese label first, serif values 600, figures Inter 500. Figures count up
+  on first view (site/CountUp.jsx; markup always holds the final text, the prerenderer writes it back). 公版獎盃: 款式 and
+  製作時程 left, 線上排版 and the six-row price list right.
+- Header panels (navigation.js `menu`, SubPanel): [name, route, note] rows, first row the group's own page; current page
+  dotted; 140ms leave delay; panels near the right edge align right. Only the link under the ink pill is white
+  (`is-pill`); before, the current label could turn white on the light capsule while a panel was open.
+- Lists show everything (no 載入更多; 64 cards at most, photos lazy). Case grid stays four per row, five from 1800px.
+- About: founder section (李東陽 Dong, 負責人・設計師; portrait public/assets/founder-dong.webp from the owner's 個人照230829).
+  Only sourced facts (TISDC deck, 東森新聞 2019, Golden Pin 2018/2019). A fuller biography waits for the owner's text.
+
+## Hero names, A–F panel, ink footer, material openings (v65, 2026-11-18, by request)
+Styles: site/refine-v65.css (loaded last).
+- Home hero: the large letter is the name's first letter and the rest follows smaller (Delta as one word; no second
+  "D"). Same in the stage tabs and the A to E cards. 製作 reads 「3 個工作天起」.
+- 公版獎盃 header panel: 六款公版總覽, 線上排版工作室, then A to F in order, one line each (letter badge, name, price).
+  B, D and E are featured: ink badge, bold name and a small 主打 mark (navigation.js menu rows carry {letter, featured}).
+- Footer: ink (#1c1e1c) with white text; secondary lines 76% white, headings 74% (AA). Logo inverted. Supersedes the
+  stone footer of v63.
+- 企業與IP案例 band: five works in one even row (Disney 米奇桌鐘, T.B. Design 填壓器, Marvel 鋼鐵人桌鐘 without the title
+  lettering, ComeBikeDay 泥好蛙, 金馬); heading 「讓材料與角色，走進日常。」; the band meets the hero photo (no white strip).
+- Material pages (content/MaterialIntro.jsx, material-intro.css; list in site/materials.js): full-width opening with the
+  page's own photo, n / 09, name, English name, opening text, a button down to the works. The photo is crushed and
+  reborn on a canvas (holds, breaks into fragments, gathers back; about 2.5s; 再看一次 replays). The <img> underneath is
+  the real picture for search, prerender and reduced motion. No generated imagery is used.
+- Process band titles: 品牌訂製 「從概念設計，到獎座出貨。」, 禮贈品訂製 「從需求確認，到禮品交付。」 (each page's first and last step).
+
+## Featured glint, one effect per material (v66, 2026-11-19, by request)
+- 公版 header panel: no 主打 tag. B, D and E keep the ink badge and bold name, and a soft gold light passes across the
+  name every 3.6s (off under reduced motion). Badge to name gap 16px.
+- Material openings: each material comes apart in its own way (effects table in content/MaterialIntro.jsx): marble slabs
+  crack and drop; glass bursts into triangles from one point; crossarm beams slide out row by row; coffee grounds pour
+  down; silt runs down in streams; ash lifts and thins; sawdust is blown right as thin shavings; veneer panels turn on
+  edge; aggregates tumble down as round pellets. Same engine, same hold / apart / return timing; add a material by
+  adding one entry.
+
+## Material opening as a short film (v67, 2026-11-20, by request)
+The owner asked for an animation, not an effect on the picture. content/MaterialIntro.jsx now plays four acts (about
+5.4s, canvas, replayable): the photo comes apart in the material's own way (v66 effects) and its pieces fade; they
+become about 1,900 grains coloured from the photo (900 on phones); the grains stream in and pour into the re.O mark in
+the order the logo draws (counter-clockwise from above the dot, gap kept, dot last); the ring sets solid in the
+material's own texture, one light runs round it, and the photo returns. Ring right of the text on desktop, above it on
+phones. Nothing is generated; colours and texture come from the page's photo. Timings: the T table in the file.
+
+## The formed mark follows the logo (v68, 2026-11-21, by request)
+MaterialIntro's ring was measured against public/assets/reo-logo.png: slim ring (band 0.075 R; the logo's own stroke is
+0.044 R, kept a little heavier so the material's texture reads), dot radius 0.07 R at 0.98 R, open space of 11° above
+and below the dot (the logo has 8.75°; the owner asked for a little more). "re" lights up last, with a glow that
+settles. Its shape is not redrawn: public/assets/reo-re-mask.png is cut from the logo (frame 2.198 R wide, centred on
+the ring). Film length 6.2s.

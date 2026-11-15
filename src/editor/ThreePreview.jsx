@@ -29,7 +29,7 @@ export default function ThreePreview({scene,documents,onSurface}){
       renderer.domElement.setAttribute('aria-label','可旋轉的 3D 獎盃模型，拖曳旋轉、滾輪縮放，點銘版可切換編輯區域');renderer.domElement.setAttribute('role','img');renderer.domElement.setAttribute('tabindex','0');
       host.current.appendChild(renderer.domElement);
       let dirty=true;const invalidate=()=>{dirty=true};controls.addEventListener('change',invalidate);
-      const reframe=()=>{const r=runtime.current,ratio=r?.sceneRatio||1;const distance=Math.max(6.4,3*ratio/(2*Math.tan(camera.fov*Math.PI/360)*camera.aspect)*1.15,3/(2*Math.tan(camera.fov*Math.PI/360))*1.18);camera.position.set(2.8,1.1,6.4).normalize().multiplyScalar(distance);controls.target.set(0,0,0);controls.update();invalidate()};
+      const reframe=()=>{const r=runtime.current,ratio=r?.sceneRatio||1;const distance=Math.max(6.4,3*ratio/(2*Math.tan(camera.fov*Math.PI/360)*camera.aspect)*1.45,3/(2*Math.tan(camera.fov*Math.PI/360))*1.18);camera.position.set(2.8,1.1,6.4).normalize().multiplyScalar(distance);controls.target.set(0,0,0);controls.update();invalidate()};
       const resize=()=>{if(!host.current)return;const {width,height}=host.current.getBoundingClientRect();renderer.setSize(Math.max(1,width),Math.max(1,height));camera.aspect=width/Math.max(1,height);camera.updateProjectionMatrix();if(runtime.current)reframe();invalidate()};
       observer=new ResizeObserver(resize);observer.observe(host.current);
       // A tap (not a drag) on a plate picks that plate.

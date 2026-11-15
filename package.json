@@ -6,7 +6,7 @@
   "packageManager": "pnpm@11.25.0",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 8787",
-    "build": "vite build",
+    "build": "vite build && node tools/prerender.mjs",
     "build:offline": "node scripts/build-offline-preview.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 8787",
     "test": "node --test tests/*.test.mjs"

@@ -1,0 +1,77 @@
+/* v63 review (2026-11-16, by request): measured on every page, text under 13px or under AA contrast is raised;
+   step-by-step bands stay readable when a step is not the active one; case grids hold four per row on wide screens;
+   breadcrumbs become a usable way back. Loaded after type.css; same scope (.folio-home.tx). */
+
+/* 1. Labels and meta: 13px, the AA grey. (Were 10–12px, several at 3.8:1.) */
+.folio-home.tx :is(.pg-kicker,.rv-index,.content-works-meta,.pg-service-num,.pg-press-year,.pg-flow-caption,.content-gallery-head>span,.shop-kicker,.pg-contact dt>span,.content-works-client>em,.pg-press-print figcaption,.pg-band-name>em,.rv-mode-label>em,.pg-lift-name>em){font-size:13px;letter-spacing:.1em}
+.folio-home.tx :is(.content-works-meta,.content-works-client>em,.content-gallery-head>span,.content-details figcaption>span,.content-article-heading>div>p){color:var(--tx-muted)}
+.folio-home.tx :is(.shop-items em,.content-entry-category){font-size:12px;letter-spacing:.1em;color:var(--tx-muted)}
+.folio-home.tx .pg-press-main :is(b,span,em){font-size:12.5px}
+.folio-home.tx .pg-press-filters span{font-size:12px}
+.folio-home.tx .rv-hero-picks>p{font-size:13px;color:rgba(255,255,255,.82)}
+.folio-home.tx .content-result-count{font-size:13px}
+
+/* 2. Step bands (公版 ordering, 品牌訂製 and 禮贈品訂製 processes). Every step reads at rest: the active one is marked by
+      its filled ring and ink title, not by fading the others to 3:1. Body text 15px. */
+.folio-home.tx .pg-flow-row strong{color:#4a5047}
+.folio-home.tx .pg-flow-steps>li.is-on .pg-flow-row strong,.folio-home.tx .pg-flow-row:hover strong{color:var(--tx-ink)}
+.folio-home.tx .pg-flow-body>div>p{font:400 15px/1.85 var(--tx-sans);letter-spacing:.03em;color:#5a6057}
+.folio-home.tx .pg-flow-steps>li.is-on .pg-flow-body>div>p{color:var(--tx-ink-2)}
+.folio-home.tx .pg-flow-terms dd{font-size:14.5px;line-height:1.8;color:#5a6057}
+.folio-home.tx .pg-flow-steps>li.is-on .pg-flow-terms dd{color:var(--tx-ink-2)}
+.folio-home.tx .pg-flow-terms dt{font-size:13px;color:#4a5047}
+.folio-home.tx .pg-flow-steps>li:not(.is-on) :is(.pg-flow-foot,.pg-flow-terms){opacity:1}
+.folio-home.tx .pg-flow-stop{font-size:13px;color:#4a5047;border-color:#a3a399}
+.folio-home.tx .pg-flow-steps>li.is-on .pg-flow-stop{color:#fff}
+.folio-home.tx :is(.pg-flow-tags,.pg-flow-optional){font-size:13px}
+.folio-home.tx .pg-flow-foot a{font-size:14px}
+@media(max-width:760px){.folio-home.tx .pg-flow-body>div>p{font-size:14.5px}.folio-home.tx .pg-flow-terms dd{font-size:14px}}
+
+/* 3. Case grids: four per row from 1280px (three left each row short of a screen); tighter row gap. */
+@media(min-width:1280px){
+ .folio-home.tx .content-works-grid.is-works{grid-template-columns:repeat(4,minmax(0,1fr));gap:52px 20px}
+ .folio-home.tx .content-works-grid.is-works .content-works-title strong{font-size:16px}
+}
+
+/* 4. Breadcrumb: a line you can read and use. Detail pages lead with a way back to their list. */
+.folio-home.tx .content-breadcrumb{flex-wrap:wrap;gap:6px 12px;padding:22px 0;font-size:13.5px;line-height:1.6;letter-spacing:.04em;color:var(--tx-muted)}
+.folio-home.tx .content-breadcrumb a{color:var(--tx-ink-2);background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .3s cubic-bezier(.2,.7,.2,1)}
+.folio-home.tx .content-breadcrumb a:hover,.folio-home.tx .content-breadcrumb a:focus-visible{background-size:100% 1px;color:var(--tx-ink)}
+.folio-home.tx .content-breadcrumb .content-back{display:inline-flex;align-items:center;gap:8px;height:36px;margin-right:12px;padding:0 16px 0 12px;border-radius:999px;background:#f3f1ec;font-weight:600;color:var(--tx-ink);transition:background .2s}
+.folio-home.tx .content-breadcrumb .content-back:hover,.folio-home.tx .content-breadcrumb .content-back:focus-visible{background:#e9e6dd}
+.folio-home.tx .content-back span{transition:transform .3s}
+.folio-home.tx .content-back:hover span{transform:translateX(-3px)}
+@media(max-width:650px){.folio-home.tx .content-breadcrumb{font-size:13px;padding:16px 0}.folio-home.tx .content-breadcrumb.has-back>:not(.content-back){display:none}}
+
+/* 5. Previous / next within the list, with the list itself in the middle: no detail page is a dead end. */
+.content-pager{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:0 24px;margin-top:clamp(56px,6vw,96px);border-top:1px solid var(--tx-ink,#1f2320);border-bottom:1px solid rgba(31,35,32,.12)}
+.content-pager>a{display:flex;flex-direction:column;justify-content:center;gap:8px;min-height:104px;padding:22px 0;min-width:0}
+.content-pager em{display:flex;align-items:center;gap:8px;font:normal 500 13px/1 var(--tx-sans,sans-serif);letter-spacing:.1em;color:var(--tx-muted,#686d65)}
+.content-pager strong{font:600 18px/1.5 var(--tx-serif,serif);letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.content-pager .is-next{align-items:flex-end;text-align:right}
+.content-pager .is-all{align-self:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(31,35,32,.2);font-size:14px;font-weight:600;letter-spacing:.06em;white-space:nowrap;transition:box-shadow .2s,background .2s}
+.content-pager .is-all:hover{box-shadow:inset 0 0 0 1px #1f2320;background:#f3f1ec}
+.content-pager em span{transition:transform .3s}
+.content-pager .is-prev:hover em span{transform:translateX(-4px)}
+.content-pager .is-next:hover em span{transform:translateX(4px)}
+.content-pager a:focus-visible{outline:2px solid #1f2320;outline-offset:3px}
+@media(max-width:700px){.content-pager{grid-template-columns:1fr 1fr;gap:0 16px}.content-pager .is-all{grid-column:1/-1;grid-row:2;margin:0 0 18px}.content-pager>a{min-height:84px}.content-pager strong{font-size:16px}}
+
+/* 6. Home process ring: same picture, easier to read. Side text one step up; the smallest Latin labels no longer 10px. */
+.folio-home.tx :is(.rv-cycle-phase em,.rv-cycle-name em){font-size:11.5px;letter-spacing:.16em}
+.folio-home.tx .rv-cycle-card figcaption span{font-size:12.5px}
+.folio-home.tx :is(.rv-cycle-kicker,.rv-cycle-range,.rv-cycle-count i,.rv-cycle-more figcaption small){font-size:13px}
+.folio-home.tx .rv-cycle-steps-of{font-size:14px}
+.folio-home.tx .rv-cycle-text{font-size:15px;line-height:1.9}
+.folio-home.tx .rv-cycle-points li{font-size:14px}
+.folio-home.tx .rv-cycle-figure span{font-size:14px;line-height:1.7}
+.folio-home.tx .rv-cycle-index button{padding:20px 0}
+.folio-home.tx .rv-cycle-index button:focus-visible{outline:2px solid var(--tx-ink);outline-offset:4px}
+@media(prefers-reduced-motion:reduce){.folio-home.tx .content-breadcrumb a,.content-pager em span,.folio-home.tx .content-back span{transition:none}}
+
+/* v64 case grids: four per row stays (cards about 320px wide at 1440: titles of 12–18 characters fit one or two
+   lines, and the hover view still has room for the photo plus two detail shots). Five per row only on very wide
+   screens (from 1800px), where a card is again about 320px. */
+@media(min-width:1800px){.folio-home.tx .content-works-grid.is-works{grid-template-columns:repeat(5,minmax(0,1fr))}}
+/* Cards far down a long list appear without the staggered rise (it would replay on every row while scrolling). */
+.folio-home.tx .content-works-grid.is-works>li:nth-child(n+13){transition-delay:0s}

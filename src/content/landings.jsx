@@ -1,87 +1,171 @@
 import React,{useEffect,useRef,useState} from 'react';
 import cases from '../data/brand-cases.json';
 import {contentHref} from '../components/site/navigation.js';
-import ShopWindow from '../components/site/ShopWindow.jsx';
 import {studioTab} from '../components/site/ui.jsx';
+import {classicNames} from '../components/site/classics.js';
 // Landing pages share the About page language: title + key-facts card, a full-bleed photo,
 // one dark or moving feature band, then the numbered index. Facts follow the product pages.
 const byId=Object.fromEntries(cases.map(c=>[c.id,c]));
 
-// The four ordering steps beside one photograph that follows the active step. The steps advance on
+// The ordering steps beside one photograph that follows the active step. The steps advance on
 // their own while the band is in view (a hairline under the active step shows the time left) and
 // stop for good once someone points at, taps or tabs to a step. Step 01 lists every model.
+// v51 (owner, 2026-11-09): 線上排版 and 提供資料 are one step, 銘板排版及提供資料, whose terms read as
+// ruled rows (owner's wording); 手工生產 says only that lead time follows the quantity.
 const flowModels=['A','B','C','D','E','F'];
 const flow=[
  {title:'選擇款式',line:'A、B、C、D、E、F 六款公版造型，點選任一款開始排版。',alt:'A、B、C、D、E、F 六款公版獎盃'},
- {title:'線上排版',line:'在排版工作室編排文字與圖案，即時預覽，下載排版確認稿。',note:'訂購超過 10 支，可請 re.O 協助排版；10 支以內如需協助排版，酌收排版費 NT$500。',src:'/assets/studio-preview.webp',width:1600,height:1000,position:'50% 0',alt:'re.O 銘版排版工作室畫面'},
- {title:'提供資料',line:'下單前提供 LOGO 圖檔（ai 檔）與獎盃文字內容。',src:'/assets/flow-provide.webp',width:1600,height:1200,position:'50% 50%',alt:'示意圖：品牌 LOGO 向量檔與獎盃文字、得獎名單'},
- {title:'手工生產',line:'製作時程依訂單累積數量而定，3–10 個工作天完成。',src:'/assets/flow-casting.webp',width:1800,height:1202,position:'50% 50%',alt:'再生大理石漿料灌注入模'}
+ {title:'銘板排版及提供資料',terms:[
+  ['10 座以上','可以請我們協助免費設計排版。'],
+  ['低於 10 座','請自行排版上傳（我們有提供線上排版工作室，排版完成後可下載 .EPS 檔案），收件後我們會以實際印刷條件協助調整。'],
+  ['','若訂購低於 10 座，仍可以請我們協助設計排版，酌收排版費 NT$500。']
+ ],src:'/assets/studio-preview.webp',width:1600,height:1000,position:'50% 0',alt:'re.O 銘版排版工作室畫面'},
+ {title:'手工生產',line:'製作工期依訂購數量而定。',src:'/assets/flow-casting.webp',width:1800,height:1202,position:'50% 50%',alt:'再生大理石漿料灌注入模'}
 ];
 const two=n=>String(n).padStart(2,'0');
-function StudioBand(){
+const img=id=>`/content/images/${id}.webp`;
+// v53: the 公版 ordering band generalised (GuideBand), so 品牌訂製 and 禮贈品訂製 explain themselves the same way:
+// a photo on the left follows the active item; on the right numbered rings, each item with its line, optional
+// ruled terms, plain-text tags and a link. Items advance on their own while in view until someone picks one.
+// compact (v54): only the active item opens, picked by click, tap or keyboard (not hover, which would move rows
+// under the pointer). An optional item is unnumbered (＋) and the numbering skips it.
+function GuideBand({id='pg-band-title',kicker,en,title,items,compact}){
+ const numbers=[];items.reduce((n,s)=>{numbers.push(s.optional?'＋':two(n+1));return s.optional?n:n+1},0);
+ const total=two(items.filter(s=>!s.optional).length);
  const [active,setActive]=useState(0),[auto,setAuto]=useState(true),[seen,setSeen]=useState(false),box=useRef(null);
  useEffect(()=>{const observer=new IntersectionObserver(([entry])=>setSeen(entry.isIntersecting),{threshold:.35});observer.observe(box.current);return()=>observer.disconnect()},[]);
  const pick=i=>{setAuto(false);setActive(i)};
- return <section className="pg-flow" ref={box} aria-labelledby="pg-band-title">
+ return <section className={`pg-flow${compact?' is-compact':''}`} ref={box} aria-labelledby={id}>
   <div className="pg-flow-grid folio-gutter">
    <div className="pg-flow-stage">
-    {flow.map((s,i)=>i===0
+    {items.map((s,i)=>s.mosaic
      ?<div key={s.title} className={`pg-flow-shot pg-flow-mosaic${i===active?' is-on':''}`} role="img" aria-label={s.alt} aria-hidden={i!==active||undefined}>{flowModels.map(m=><span key={m}><img src={`/assets/catalogue-${m}.webp`} alt="" width="1200" height="900" loading="lazy"/><em>{m}</em></span>)}</div>
-     :<img key={s.title} className={`pg-flow-shot${i===active?' is-on':''}`} src={s.src} alt={i===active?s.alt:''} aria-hidden={i!==active||undefined} width={s.width} height={s.height} loading="lazy" style={{objectPosition:s.position}}/>)}
-    <p className="pg-flow-caption" aria-hidden="true"><b>{two(active+1)}</b>/ {two(flow.length)}<span>{flow[active].title}</span></p>
+     :<img key={s.title} className={`pg-flow-shot${i===active?' is-on':''}`} src={s.src} alt={i===active?s.alt:''} aria-hidden={i!==active||undefined} width={s.width||1440} height={s.height||1080} loading="lazy" style={{objectPosition:s.position||'50% 50%'}}/>)}
+    <p className="pg-flow-caption" aria-hidden="true"><b>{numbers[active]}</b>/ {total}<span>{items[active].caption||items[active].title}</span></p>
    </div>
    <div className="pg-flow-text">
-    <div className="pg-flow-head"><p className="pg-kicker"><span>01</span>Studio</p><h2 id="pg-band-title">先排版，再訂製。</h2></div>
-    <ol className="pg-flow-steps">{flow.map((s,i)=><li key={s.title} className={i===active?'is-on':undefined} onPointerEnter={e=>{if(e.pointerType==='mouse')pick(i)}}>
+    <div className="pg-flow-head"><p className="pg-kicker"><span>{kicker}</span>{en}</p><h2 id={id}>{title}</h2></div>
+    <ol className="pg-flow-steps">{items.map((s,i)=><li key={s.title} className={[i===active&&'is-on',s.optional&&'is-optional'].filter(Boolean).join(' ')||undefined} onPointerEnter={e=>{if(!compact&&e.pointerType==='mouse')pick(i)}}>
      <button type="button" className="pg-flow-row" aria-pressed={i===active} onClick={()=>pick(i)} onFocus={e=>{if(e.currentTarget.matches(':focus-visible'))pick(i)}}>
-      <span className="pg-flow-stop">{two(i+1)}</span><strong>{s.title}</strong>
-      {i===active&&auto&&seen?<span className="pg-flow-timer" key={active} onAnimationEnd={()=>setActive((active+1)%flow.length)}/>:null}
+      <span className="pg-flow-stop">{numbers[i]}</span><strong>{s.title}</strong>{s.optional?<em className="pg-flow-optional">選配</em>:null}{s.client?<small className="pg-flow-client">{s.client}</small>:null}
+      {i===active&&auto&&seen?<span className="pg-flow-timer" key={active} onAnimationEnd={()=>setActive((active+1)%items.length)}/>:null}
      </button>
-     <div className="pg-flow-body">
-      <p>{s.line}</p>
-      {i===0?<ul className="pg-flow-picks">{flowModels.map(m=><li key={m}><a href={`#/preview/${m}`} {...studioTab} aria-label={`開始 ${m} 款排版`}><img src={`/assets/product-thumb-${m}.webp`} alt="" width="360" height="270" loading="lazy"/><span>{m}</span></a></li>)}</ul>:null}
-      {s.note?<p className="pg-flow-note">{s.note}</p>:null}
-     </div>
+     <div className="pg-flow-body"><div>
+      {s.line?<p>{s.line}</p>:null}
+      {s.mosaic?<ul className="pg-flow-picks">{flowModels.map(m=><li key={m}><a href={`#/preview/${m}`} {...studioTab} aria-label={`開始 ${m} 款排版`}><img src={`/assets/product-thumb-${m}.webp`} alt="" width="360" height="270" loading="lazy"/><span>{m}</span></a></li>)}</ul>:null}
+      {s.terms?<dl className="pg-flow-terms">{s.terms.map(([k,v])=><div key={v} className={k?undefined:'is-more'}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>:null}
+      {s.tags||s.link?<p className="pg-flow-foot">{s.tags?<span className="pg-flow-tags">{s.tags.join(' / ')}</span>:null}{s.link?<a href={s.link[1]}>{s.link[0]}<span aria-hidden="true"> →</span></a>:null}</p>:null}
+     </div></div>
     </li>)}</ol>
    </div>
   </div>
  </section>;
 }
+const StudioBand=()=><GuideBand kicker="01" en="Studio" title="先排版，再訂製。" items={flow.map((s,i)=>i===0?{...s,mosaic:true}:s)}/>;
+
+// v54 (owner, 2026-11-09): on 品牌訂製 and 禮贈品訂製 the 一條龍 process IS the image-led band: one item per step,
+// each with its own photo and text. Step names are the owner's; the text is condensed from the site's own pages
+// (訂製 CUSTOM, 建模 MODELING, 關於, journal: 實驗再生材質, 工廠步驟把關, 可回收包裝材, 生產鏈合作循環運送) and the home
+// process ring, with no new claims. 企業專料 is optional: it sits between 開模 and 材質灌製, unnumbered.
+const packTerms=[['全客製化','訂製外盒（尺寸、外觀、材質）、訂製內襯（高密泡棉、紙結構支撐）、品牌辨識（UV 印刷、燙印工藝）'],['部分客製化','公版外盒、品牌辨識（UV 印刷、品牌貼紙）']];
+const modelTerms=[['拆件','矽膠模具量產之拆件與結構規劃'],['模流','模流方向與脫模限制的設計建議'],['細節','模型細節優化與製作可行性分析']];
+const step={
+ model:{line:'協助完成高品質的數位模型、建模量產的可行性。',terms:modelTerms,link:['建模服務與案例','#/read/pages/3d-modeling']},
+ mold:{line:'設計開模、固化外觀。配方成功與否，最後的關鍵在模具設計，讓後續成品的損耗率降至 3%。',link:['閱讀〈實驗再生材質〉','#/read/blog/posts/實驗再生材質']},
+ cast:{line:'經材質實驗與比例優化，與樹脂調和；真空除泡，去除氣泡孔洞，再以矽膠模具灌注成形。',link:['循環材料','#/explore/materials']},
+ ship:{line:'包裝出貨皆由 re.O 把關；與廠商往來時，重複利用已使用的紙箱與氣泡紙，讓廢棄物重新再利用。',link:['閱讀〈生產鏈合作循環運送〉','#/read/blog/posts/生產鏈合作循環運送']}
+};
+const brandSteps=[
+ {title:'概念設計・包裝規劃',line:'給予需要的品項、尺寸、數量與 re.O 再生材質，進行設計稿討論，讓設計外觀更好地展現品牌形象。包裝的外裝、內襯與商標，皆可依品牌訂製。',terms:packTerms,src:img('78a844104cdc098c56'),width:1200,height:630,position:'42% 50%',alt:'設計師手繪與量測模型草圖'},
+ {title:'3D 建模',...step.model,src:img('366400aa399a223d2d'),width:1440,height:720,alt:'八號球蠟燭的 3D 建模圖'},
+ {title:'開模',...step.mold,src:img('0b9cc353f2982e96ef'),width:1440,height:1440,alt:'成排的灌注模具'},
+ {title:'企業專料',optional:true,line:'企業有顆粒、粉末化可再利用的廢棄物料，由 re.O 評估可行性，經材質測試與設計，製作專屬材質產品，在材質灌製時加入。',tags:['專屬材質','品牌永續形象','品牌故事升級'],src:img('8a959cd06cce7ed889'),width:1440,height:1080,alt:'re.O 工作室分類保存的回收材料',caption:'企業專料（選配）'},
+ {title:'材質灌製',...step.cast,src:'/assets/flow-casting.webp',width:1800,height:1202,alt:'再生大理石漿料灌注入模'},
+ {title:'組裝',line:'於 re.O 工作室組裝，結合各式異材，完成作品。',src:img('eaa0be28bf809c8400'),width:1317,height:988,alt:'B 款獎盃再生大理石構件與木質盃身的表面細節'},
+ {title:'品檢包裝',line:'逐件挑選，排除氣孔、白點、刮痕，再裝入依品牌訂製的外盒與內襯。',src:img('a39bc07b4f4aa850e6'),width:1440,height:1440,alt:'黑色訂製外盒與內襯，裝載圓形獎座'},
+ {title:'出貨',...step.ship,src:img('9c539bc9ebc1b804f7'),width:1440,height:960,alt:'以膠帶封箱出貨'}
+];
+const giftSteps=[
+ {title:'需求確認・造型設計・包裝規劃',line:'給予需要的品項、尺寸、數量與 re.O 再生材質，進行設計稿討論，讓設計外觀更好地展現品牌形象。包裝的外裝、內襯與商標，皆可依品牌訂製。',terms:packTerms,src:img('ccf5762abffbaf5ef7'),width:1440,height:1440,position:'50% 55%',alt:'Oni Bus Coffee 品牌咖啡托盤，以咖啡渣材質製作'},
+ {title:'3D 建模',...step.model,src:img('be7967ddc7a98240e3'),width:1440,height:720,alt:'T.B. Design 動物雕塑咖啡填壓器的 3D 建模圖'},
+ {title:'開模',...step.mold,src:'/assets/process/5c56baec4a1a1dcc1a-a.webp',width:720,height:720,alt:'模具與材質的成型測試'},
+ {title:'材質灌製',...step.cast,src:img('62d4e165d65fcd2e3f'),width:1440,height:1440,alt:'調配中的再生材料'},
+ {title:'組裝',line:'經過篩選的零件，送回 re.O 工作室進行最後加工與組裝。',src:img('25d378e5481c1d60e6'),width:1440,height:1080,alt:'篩選後送回工作室的零件'},
+ {title:'品檢包裝',line:'逐件挑選，排除氣孔、白點、刮痕。標準品使用全紙漿、無塑膠的可回收包裝，拆解後可一併交給紙類回收。',src:img('986f98c5092659186a'),width:1440,height:1080,alt:'再生紙漿包裝的內襯'},
+ {title:'出貨',...step.ship,src:img('3542c85073c56cf250'),width:1440,height:1440,alt:'重複利用的紙箱與氣泡紙'}
+];
+const BrandBand=()=><GuideBand compact kicker="01" en="Process" title="從概念設計，到獎座出貨。" items={brandSteps}/>;
+const GiftBand=()=><GuideBand compact kicker="01" en="Process" title="從需求確認，到禮品交付。" items={giftSteps}/>;
 
 function CollaborationBand(){
- const works=[['disney-hola','Disney × HOLA'],['marvel-hola','Marvel × HOLA'],['golden-horse','台北金馬影展 × Pinkoi']];
+ // v65 (owner, 2026-11-18): five works in one row. [route, partner, work, photo, alt]
+ const d=byId['disney-hola'],g=byId['golden-horse'];
+ const works=[
+  [contentHref(d.source_url),'Disney × HOLA',d.project.split('／')[0],d.photo,d.safe_caption],
+  ['#/read/pages/animal-shaped-coffee-tamper-–-tb-design','T.B. Design','動物雕塑咖啡填壓器','/content/images/3f4e62ca36347bf8e6.webp','獅子、長頸鹿與犀牛三款動物雕塑咖啡填壓器'],
+  [contentHref(byId['marvel-hola'].source_url),'Marvel × HOLA',byId['marvel-hola'].project.split('／')[0],'/assets/case-ironman-clock.webp','鋼鐵人方舟反應爐圖樣的水庫淤泥桌鐘'],
+  ['#/read/pages/wooper','順騎自然 ComeBikeDay','泥好蛙','/content/images/556941054ff6b8fac1.webp','ComeBikeDay 泥好蛙，灰與金兩色'],
+  [contentHref(g.source_url),'台北金馬影展 × Pinkoi',g.project.split('／')[0],g.photo,g.safe_caption]
+ ];
  return <section className="pg-band is-gallery" aria-labelledby="pg-band-title">
-  <div className="pg-split folio-gutter" data-reveal><p className="pg-kicker"><span>01</span>Collaborations</p><div><h2 id="pg-band-title">讓經典角色，走進日常。</h2></div></div>
-  <ul className="pg-band-works folio-gutter">{works.map(([id,brand],i)=>{const c=byId[id];return <li key={id} style={{'--i':i}} data-reveal><a href={contentHref(c.source_url)}><span className="pg-band-frame"><img src={c.photo} alt={c.safe_caption} width="2400" height="2400" loading="lazy"/></span><span className="pg-band-name"><em>{brand}</em>{c.project.split('／')[0]}</span></a></li>})}</ul>
+  <div className="pg-split folio-gutter" data-reveal><p className="pg-kicker"><span>01</span>Collaborations</p><div><h2 id="pg-band-title">讓材料與角色，走進日常。</h2></div></div>
+  <ul className="pg-band-works is-five folio-gutter">{works.map(([href,brand,name,photo,alt],i)=><li key={href} style={{'--i':i}} data-reveal><a href={href}><span className="pg-band-frame"><img src={photo} alt={alt} width="1440" height="1440" loading="lazy"/></span><span className="pg-band-name"><em>{brand}</em>{name}</span></a></li>)}</ul>
  </section>;
 }
 
 function MaterialReel(){
- const swatches=[['再生大理石','/assets/material-powder.jpg'],['回收玻璃','/assets/material-glass.jpg'],['退役木橫擔','/assets/material-wood.jpg'],['咖啡渣','/content/images/16b62643e8869dd106.webp'],['水庫淤泥','/content/images/b22b4e7305e255f890.webp'],['煤灰','/content/images/790b5fdc0f89df0d7f.webp'],['木屑','/content/images/95bd8644e4a1dcf166.webp'],['木頭拼板','/content/images/a602a0b334820cff7d.webp'],['焚化再生粒料','/content/images/e862a0c81a178eedc0.webp']];
+ const swatches=[['再生大理石','/content/images/4c8f7e6331677eaa2e.webp'],['回收玻璃','/content/images/ca877fddda3d50ddac.webp'],['退役木橫擔','/content/images/7d8b979cef105f3cff.webp'],['咖啡渣','/content/images/16b62643e8869dd106.webp'],['水庫淤泥','/content/images/b22b4e7305e255f890.webp'],['煤灰','/content/images/790b5fdc0f89df0d7f.webp'],['木屑','/content/images/95bd8644e4a1dcf166.webp'],['木頭拼板','/content/images/a602a0b334820cff7d.webp'],['焚化粒料','/content/images/e862a0c81a178eedc0.webp']];
  return <section className="pg-studio" aria-labelledby="pg-band-title">
   <div className="pg-split folio-gutter" data-reveal><p className="pg-kicker"><span>01</span>Textures</p><div><h2 id="pg-band-title">材料的下一站。</h2><p>從回收原材的特性出發，探索設計與製造的可能。</p></div></div>
   <div className="pg-reel" aria-label="循環材料質地"><ul>{[...swatches,...swatches].map(([name,src],i)=><li key={i} className={i%swatches.length%2?'is-low':undefined} aria-hidden={i>=swatches.length||undefined}><img src={src} alt={i<swatches.length?`${name}原材料質地`:''} loading="lazy"/><span className="pg-reel-name"><em>{String(i%swatches.length+1).padStart(2,'0')}</em>{name}</span></li>)}</ul></div>
  </section>;
 }
 
+// Price per classic model (NT$, owner 2026-11-09). A's price depends on its wood.
+const prices=[['A',[['北美黃檜',2500],['木橫擔',2800]]],['B',[['',2800]]],['C',[['',2000]]],['D',[['',2300]]],['E',[['',3000]]],['F',[['',680]]]];
+// v53: plain list, no box. Name (bold first letter) + 款 above the price; A's two woods share one line.
+function PriceList(){
+ return <ul className="pg-prices">{prices.map(([id,options])=><li key={id}>
+  <span className="pg-prices-name"><span lang="en"><b>{id}</b>{classicNames[id].slice(1)}</span>款</span>
+  {options.length>1&&<small>{options.map(([wood])=>wood).join(' / ')}</small>}
+  <strong><i>NT$</i>{options.map(([,price])=>price.toLocaleString('en-US')).join(' / ')}</strong>
+ </li>)}</ul>;
+}
+
 export const landings={
  standard:{en:'Classic',title:'公版獎盃',
-  card:[['Models','款式','A、B、C、D、E、F'],['Studio','線上排版','即時預覽・下載確認稿'],['Lead time','製作時程','3–10 個工作天'],['Price','價格','NT$680 – 3,000']],
-  actions:[['開始排版','#/preview/A'],['訂製常見問題','#/read/pages/faq','ghost']],
+  // v51 (owner, 2026-11-09): lead time and the price of each model, as the owner gave them.
+  // v64: the price list sits in the right column (under 線上排版), one model per row; 款式 and 製作時程 on the left.
+  card:[['Models','款式','A、B、C、D、E、F','is-left'],['Studio','線上排版','即時預覽・下載確認稿'],['Lead time','製作時程',<>3 個工作天<small>10 座以上工期另計</small></>,'is-left'],['Price','價格',<PriceList/>,'is-price']],
+  actions:[['開始排版','#/preview/A'],['寄信洽詢','mailto:service@re-o.co','ghost'],['來電洽詢','tel:+886289665369','ghost'],['訂製常見問題','#/read/pages/faq','ghost']],
   // No full-bleed photo here: the ordering steps and the six models come straight after the facts.
   band:StudioBand,indexEn:'Models',indexTitle:'六款公版',grid:'is-models',
-  closing:['需要專屬造型，或品牌自己的材料？',['客製化獎盃','#/read/pages/custom'],['生活設計商品','#/explore/products']]},
+  closing:['需要專屬造型，或品牌自己的材料？',['品牌訂製','#/read/pages/custom'],['禮贈品訂製','#/explore/products']]},
+ // v60 (owner, 2026-11-16): the cases summary shows the owner's headline figures instead of the per-group counts
+ // (the index below still filters by group).
  cases:{en:'Works',title:'企業與IP案例',card:'groups',unit:'件作品',
+  stats:[['合作企業','100+','家'],['企業獎盃','90+','件作品'],['品牌訂製','80+','件作品']],
   actions:[['聯絡合作','mailto:service@re-o.co'],['合作品牌牆','#/brands','ghost']],
   hero:{src:'/assets/case-ase.webp',alt:'日月光 ASE 最佳供應獎盃',width:2400,height:2400,position:'50% 42%'},
   band:CollaborationBand,indexEn:'Works',indexTitle:'全部合作案例',grid:'is-works',
-  closing:['合作領域涵蓋電子金控、政府單位與商業品牌。',['合作品牌牆','#/brands'],['客製化獎盃','#/read/pages/custom']]},
+  closing:['合作領域涵蓋電子金控、政府單位與商業品牌。',['合作品牌牆','#/brands'],['品牌訂製','#/read/pages/custom']]},
  materials:{en:'Materials',title:'循環材料',card:'groups',
   actions:[['專料訂製','#/read/pages/custom'],['寄信洽詢','mailto:service@re-o.co','ghost']],
   hero:{src:'/content/images/8a959cd06cce7ed889.webp',alt:'re.O 工作室分類保存的回收材料',width:1440,height:1080,position:'50% 50%'},unit:'種材料',
   band:MaterialReel,indexEn:'Materials',indexTitle:'全部循環材料',grid:'is-materials',
-  closing:['提供可再利用的廢棄料，由 re.O 評估製作專屬材質。',['專料訂製','#/read/pages/custom'],['工藝與工作室文章','#/explore/journal']]},
- products:{en:'Objects',title:'生活設計商品',band:ShopWindow},
+  closing:['企業有顆粒、粉末化可再利用的廢棄物料，由 re.O 評估製作專屬材質。',['專料訂製','#/read/pages/custom'],['工藝與工作室文章','#/explore/journal']]},
+ // v53 (owner, 2026-11-09): 品牌訂製 (the former 客製化獎盃, #/read/pages/custom) and 禮贈品訂製 (#/explore/products)
+ // follow the 公版 page: facts card, the 一條龍 process, an image-led explanation, then the cases.
+ custom:{en:'Brand',title:'品牌訂製',
+  card:[['Modes','訂製方式','專案訂製・專料訂製'],['Packaging','包裝','全客製化・部分客製化'],['Email','電子郵件',<a href="mailto:service@re-o.co">service@re-o.co</a>],['Phone','電話',<a href="tel:+886289665369">+886-2-8966-5369</a>]],
+  actions:[['寄信洽詢','mailto:service@re-o.co'],['來電洽詢','tel:+886289665369','ghost'],['訂製常見問題','#/read/pages/faq','ghost']],
+  band:BrandBand,indexEn:'Works',indexTitle:'企業獎盃案例',grid:'is-works',meta:'year',
+  closing:['想先看看公版款式，或為品牌準備禮贈品？',['公版獎盃','#/explore/standard'],['禮贈品訂製','#/explore/products']]},
+ products:{en:'Gifts',title:'禮贈品訂製',
+  card:[['Range','品項','品牌禮贈・品牌器物・IP 聯名'],['Packaging','包裝','全客製化・部分客製化'],['Email','電子郵件',<a href="mailto:service@re-o.co">service@re-o.co</a>],['Phone','電話',<a href="tel:+886289665369">+886-2-8966-5369</a>]],
+  actions:[['寄信洽詢','mailto:service@re-o.co'],['來電洽詢','tel:+886289665369','ghost'],['訂製常見問題','#/read/pages/faq','ghost']],
+  band:GiftBand,indexEn:'Works',indexTitle:'禮贈品案例',grid:'is-works',
+  closing:['需要專屬造型，或品牌自己的材料？',['品牌訂製','#/read/pages/custom'],['循環材料','#/explore/materials']]},
  journal:{en:'Journal',title:'設計與工藝'},
  about:{en:'Studio',title:'品牌與工藝內容'}
 };

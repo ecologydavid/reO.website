@@ -6,10 +6,10 @@
   "alt": "2025 Shawn Coffee Latte Art Competition 字體設計外觀獎盃"
  },
  "#/read/pages/8-ball-shaped-scented-candle": {
-  "src": "/content/images/0cbe77ad893ba3d8ba.webp",
-  "width": 1440,
-  "height": 1079,
-  "alt": "8 Ball 八號球造型香氛蠟燭"
+  "src": "/assets/case-8-ball.webp",
+  "width": 480,
+  "height": 480,
+  "alt": "點燃的八號球造型香氛蠟燭"
  },
  "#/read/pages/adi-forum-trophy": {
   "src": "/content/images/9686e933d371e1f0a2.webp",
@@ -18,34 +18,34 @@
   "alt": "反光鏡面科技未來獎盃"
  },
  "#/read/pages/ads-curtain-rod-finial": {
-  "src": "/content/images/f3b0b595e0a436ad03.webp",
-  "width": 1440,
-  "height": 1440,
-  "alt": "安德斯大理石波紋窗飾"
+  "src": "/assets/case-ads-finial.webp",
+  "width": 800,
+  "height": 800,
+  "alt": "大理石波紋窗簾桿頭裝在銅色窗簾桿上"
  },
  "#/read/pages/ap-innovation-trophy": {
-  "src": "/content/images/2e80cdc91bc12dd64a.webp",
+  "src": "/content/images/9f852e3cfac94d045e.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "亞太獎盃頂部旋轉階梯Logo設計特寫"
+  "alt": "八等份比例延伸盃體設計"
  },
  "#/read/pages/animal-shaped-coffee-tamper-–-tb-design": {
-  "src": "/content/images/9166d225d85d9d6db4.webp",
+  "src": "/content/images/3f4e62ca36347bf8e6.webp",
   "width": 960,
   "height": 960,
-  "alt": "獅子頭部造型油土手工雕塑咖啡填壓器"
+  "alt": "獅子、長頸鹿與犀牛三款動物雕塑咖啡填壓器"
  },
  "#/read/pages/ase-outstanding-supplier-trophy": {
   "src": "/assets/case-ase.webp",
-  "width": 1600,
-  "height": 1600,
+  "width": 2400,
+  "height": 2400,
   "alt": "四塊立體構件圍塑中央壓克力，光線穿透後在桌面留下投影。"
  },
  "#/read/pages/bee-figurine-proposal": {
-  "src": "/content/images/9e7843103ed884789f.webp",
-  "width": 1336,
-  "height": 1336,
-  "alt": "蜜蜂公仔提案"
+  "src": "/assets/case-bee.webp",
+  "width": 806,
+  "height": 806,
+  "alt": "蜜蜂公仔的拆件 3D 模型"
  },
  "#/read/pages/afhq-logo-business-card-holder": {
   "src": "/content/images/8934933bfec70a943f.webp",
@@ -54,16 +54,16 @@
   "alt": "台灣當代文化實驗場名片架與訂做包裝展示"
  },
  "#/read/pages/big-data-online-popularity-badge-trophy": {
-  "src": "/content/images/c94bb043e437234b85.webp",
+  "src": "/content/images/4000a780288bde7b08.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "獎牌胡桃木背面懸掛式獎牌"
+  "alt": "直立式網路人氣標章獎牌"
  },
  "#/read/pages/cavalier-king-charles-spaniel-figurine": {
-  "src": "/content/images/63a64323ce60a78811.webp",
+  "src": "/content/images/6bd9b541d8e31b077f.webp",
   "width": 1440,
-  "height": 1079,
-  "alt": "真實寵物採樣查理士王小獵犬"
+  "height": 1440,
+  "alt": "白色再生大理石查理士王小獵犬側面"
  },
  "#/read/pages/ctssf-golden-coin-trophy": {
   "src": "/content/images/4fbaf8feef3da28f7e.webp",
@@ -72,28 +72,28 @@
   "alt": "金幣獎盃側面厚度展示"
  },
  "#/read/pages/ctssf-sunflower-trophy": {
-  "src": "/content/images/7e7b8415d4af5aee29.webp",
+  "src": "/content/images/6966ff551ccded998f.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "獎盃側面把手曲線特寫，展示銜接層次"
+  "alt": "展示各種球類花蕊造型，以及多色排名"
  },
  "#/read/pages/delta-energy-award-plaque": {
-  "src": "/assets/case-delta.webp",
-  "width": 1600,
-  "height": 1200,
-  "alt": "數字50的前後層次與金色銘版細節。"
- },
- "#/read/pages/delta-energy-trophy": {
-  "src": "/content/images/dd4469ee343029f433.webp",
+  "src": "/assets/case-delta-50-plaque.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "黑金再生大理石五十週年獎盃"
+  "alt": "數字 50 造型的模範獎座，金色拉絲銘版與黑色圓形量體"
+ },
+ "#/read/pages/delta-energy-trophy": {
+  "src": "/assets/case-delta-50-senior.webp",
+  "width": 961,
+  "height": 1440,
+  "alt": "台達 50 週年資深獎盃，黑金再生大理石與金色數字 50"
  },
  "#/read/pages/delta-glass-tree-trophy": {
-  "src": "/content/images/94125ac33a2556adf2.webp",
-  "width": 1280,
-  "height": 853,
-  "alt": "異材質結合展示角度內收的不同"
+  "src": "/content/images/f9a083db8afb679a0c.webp",
+  "width": 853,
+  "height": 1280,
+  "alt": "台達電廢棄玻璃回收再生獎盃，搭配回收木橫擔底座"
  },
  "#/read/pages/delta-lighthouse-exemplary-award-trophy": {
   "src": "/content/images/9141c7df86b6bc8b7b.webp",
@@ -102,10 +102,10 @@
   "alt": "燈塔模範獎盃左側展示反光鏡面銘板"
  },
  "#/read/pages/delta-senior-service-award-plaque": {
-  "src": "/content/images/9ca61913298de17f0b.webp",
+  "src": "/content/images/1769ccc764d68aec9c.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "書頁獎盃五層邊條顏色設計特寫，展現不同年資"
+  "alt": "書頁獎盃側面書頁層次設計"
  },
  "#/read/pages/delta-retirement-trophy": {
   "src": "/content/images/05db334874f35f809a.webp",
@@ -114,9 +114,9 @@
   "alt": "盃身斜切角度金色金屬銘板"
  },
  "#/read/pages/double-dice-shaped-scented-candle": {
-  "src": "/content/images/a3501e63ef0bb03ba2.webp",
-  "width": 1440,
-  "height": 1440,
+  "src": "/assets/case-dice.webp",
+  "width": 653,
+  "height": 653,
   "alt": "雙骰子造型香氛蠟燭"
  },
  "#/read/pages/dragon-boat-trophy-–-delta": {
@@ -132,22 +132,22 @@
   "alt": "環境部提供的焚化再生粒料搭環境部提供的焚化再生粒料搭配稻殼灰製成環境部提供的焚化再生粒料搭配稻殼灰製成獎盃"
  },
  "#/read/pages/fountain-pen-–-muke-glimmer": {
-  "src": "/content/images/2edb39ed79afef91d4.webp",
-  "width": 1080,
+  "src": "/assets/case-marble-pen.webp",
+  "width": 1440,
   "height": 1440,
-  "alt": "手工車床雕磨鋼筆筆身場景"
+  "alt": "再生大理石筆身的鋼筆"
  },
  "#/read/pages/fubon-golf-—-junior-division": {
-  "src": "/content/images/b6ba53e9635b73697c.webp",
-  "width": 1440,
+  "src": "/assets/case-fubon-junior.webp",
+  "width": 1080,
   "height": 1440,
-  "alt": "轉角隱藏設計高爾夫球獎盃"
+  "alt": "RISING STAR 高爾夫球獎盃，金色球與球梯嵌於灰色再生水庫淤泥盃體"
  },
  "#/read/pages/fubon-golf-—-super-senior-division": {
-  "src": "/content/images/91348cb1e283a75b5b.webp",
-  "width": 1440,
-  "height": 1080,
-  "alt": "再生大理石製成的揮竿停格軌跡紋理特寫"
+  "src": "/content/images/7c1eb40f6270a92b09.webp",
+  "width": 1080,
+  "height": 1440,
+  "alt": "回收木橫擔結合再生大理石高爾夫球獎盃"
  },
  "#/read/pages/go-green-with-taiwan-trophy": {
   "src": "/content/images/87088444660aecaa81.webp",
@@ -156,22 +156,22 @@
   "alt": "Go Green with Taiwan獎盃側面台灣輪廓造型"
  },
  "#/read/pages/go-kart-trophy": {
-  "src": "/content/images/c8ba5683361277182d.webp",
-  "width": 1213,
-  "height": 1213,
+  "src": "/assets/case-go-kart.webp",
+  "width": 1200,
+  "height": 1471,
   "alt": "3D列印跑跑卡丁車造型跑道形象獎盃"
  },
  "#/read/pages/golden-horse-diffuser": {
   "src": "/assets/case-golden-horse.webp",
-  "width": 1600,
-  "height": 1200,
+  "width": 2400,
+  "height": 2400,
   "alt": "金馬造型擴香紙鎮的完整輪廓與桌面投影。"
  },
  "#/read/pages/international-sup-crossing-carnival-commemorative-neck-medal": {
-  "src": "/content/images/271737ceaaa1e615d0.webp",
+  "src": "/content/images/a9132c7ef60fe79da1.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "立槳橫渡嘉年華獎牌側面日期凹刻"
+  "alt": "立槳SUP橫渡嘉年華獎牌正面細節展示"
  },
  "#/read/pages/heineken-beer-trophy": {
   "src": "/content/images/8ec838855817467ba7.webp",
@@ -180,22 +180,22 @@
   "alt": "玻璃啤酒罐獎座款"
  },
  "#/read/pages/jiufen-landscape-inkstone": {
-  "src": "/content/images/97c38d91092923ef1b.webp",
+  "src": "/content/images/5d3e332f3a8dbce868.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "九份山型毛筆架特寫"
+  "alt": "九份山與陰陽海外觀設計硯台"
  },
  "#/read/pages/iron-man-desk-clock": {
-  "src": "/assets/case-marvel-hola.webp",
-  "width": 1600,
-  "height": 1200,
-  "alt": "鋼鐵人水庫淤泥桌鐘的正面造型。"
+  "src": "/assets/case-ironman-clock.webp",
+  "width": 1154,
+  "height": 1440,
+  "alt": "鋼鐵人方舟反應爐圖樣的水庫淤泥桌鐘"
  },
  "#/read/pages/johnnie-walker-wax-seal": {
-  "src": "/content/images/586c48b2a65f77ddcd.webp",
-  "width": 1356,
-  "height": 1356,
-  "alt": "約翰走路 蠟封章"
+  "src": "/assets/case-wax-seal.webp",
+  "width": 1170,
+  "height": 1170,
+  "alt": "約翰走路蠟封章印章與黑色蠟封"
  },
  "#/read/pages/kpmg-buying-power-trophy": {
   "src": "/content/images/d9f34c842f8aa44796.webp",
@@ -204,10 +204,10 @@
   "alt": "藍色煤灰獎盃搭配金銀銅三色銘版"
  },
  "#/read/pages/jsl-craft-diffuser-base": {
-  "src": "/content/images/660c87fd2f30eb059b.webp",
-  "width": 758,
-  "height": 758,
-  "alt": "擴香基座黑白雙色再生大理石上方並排特寫"
+  "src": "/assets/case-jsl-diffuser.webp",
+  "width": 1080,
+  "height": 1440,
+  "alt": "滴上精油的黑金再生大理石擴香基座"
  },
  "#/read/pages/latte-art-competition-trophy-–-tb-design": {
   "src": "/content/images/b12b2fbd1a6154e677.webp",
@@ -216,34 +216,34 @@
   "alt": "粉色咖啡師拉花獎盃"
  },
  "#/read/pages/landscape-trophy": {
-  "src": "/content/images/b25d8f64b531dd4be4.webp",
+  "src": "/content/images/dacec906fd59445b1c.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "深度營造不同光影層次變化山水獎牌側面特寫"
+  "alt": "異材質拼接環境部山水Logo造型獎牌"
  },
  "#/read/pages/mickey-desk-clock": {
   "src": "/assets/case-disney-hola.webp",
-  "width": 1600,
-  "height": 1200,
+  "width": 1000,
+  "height": 760,
   "alt": "融入書本、植物與工作桌的米奇再生大理石桌鐘。"
  },
  "#/read/pages/moosy-jewelry-tray": {
-  "src": "/content/images/be9c5637637906f4ba.webp",
+  "src": "/assets/case-moosy-stand.webp",
   "width": 1440,
-  "height": 960,
-  "alt": "目喜生活原飾品架展示圖"
+  "height": 1440,
+  "alt": "玫瑰金飾品架與黑金再生大理石底盤"
  },
  "#/read/pages/national-sustainability-award": {
   "src": "/assets/case-national-sdgs.webp",
-  "width": 1600,
-  "height": 1200,
+  "width": 1773,
+  "height": 2364,
   "alt": "十八邊形向圓形旋轉漸變的獎盃量體。"
  },
  "#/read/pages/national-sustainable-development-award-–-gift-keychain": {
-  "src": "/content/images/8b9e0375724f5dba73.webp",
-  "width": 1440,
-  "height": 1080,
-  "alt": "黑白雙色再生大理石簡約幾何設計鑰匙圈"
+  "src": "/content/images/4e9a2633ac46f33ac3.webp",
+  "width": 722,
+  "height": 722,
+  "alt": "SDGs Logo正面印刷"
  },
  "#/read/pages/new-page-7": {
   "src": "/content/images/119276212b2bf99af7.webp",
@@ -258,10 +258,10 @@
   "alt": "re.O 孔雀咖啡盤，將店家咖啡渣回收再利用製作而成"
  },
  "#/read/pages/onibus-coffee-tray": {
-  "src": "/content/images/80618df73c5f1224a1.webp",
+  "src": "/assets/case-onibus.webp",
   "width": 1440,
-  "height": 1080,
-  "alt": "層疊橢圓設計咖啡盤"
+  "height": 1440,
+  "alt": "Onibus 咖啡渣餐盤組，大小兩只托盤與咖啡豆造型夾"
  },
  "#/read/pages/peacocks-coffee-plate": {
   "src": "/content/images/e3d24e01a390ea2609.webp",
@@ -270,40 +270,40 @@
   "alt": "杯具量身定做設計咖啡托盤"
  },
  "#/read/pages/pokémon-card-stand": {
-  "src": "/content/images/15762af068a3f319a4.webp",
+  "src": "/content/images/f68253919b74a36520.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "原作破壞實驗艙造型卡牌座"
+  "alt": "隱藏式內嵌發光燈展示卡牌座"
  },
  "#/read/pages/pinkoi-trophy": {
   "src": "/assets/case-pinkoi.webp",
-  "width": 1600,
-  "height": 1200,
+  "width": 2364,
+  "height": 1773,
   "alt": "Pinkoi設計獎獎盃，藍色量體搭配金色頂部標誌。"
  },
  "#/read/pages/presidential-hackathon-trophy": {
-  "src": "/content/images/8b87c3d5a24d7ed4a1.webp",
+  "src": "/content/images/19b630249adc0c7766.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "黑客松獎盃搭配可回收環保燙金紙包裝"
+  "alt": "灰色黑客松獎盃搭配銀色金屬銘板正面展示"
  },
  "#/read/pages/rsl-hotel-towel-tray": {
-  "src": "/content/images/34deb331e863421ee5.webp",
+  "src": "/assets/case-rsl-tray.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "置物盤瓏山林商標凹刻特寫"
+  "alt": "黑金再生大理石長形置物盤"
  },
  "#/read/pages/pwc-taiwan-trophy": {
-  "src": "/assets/case-pwc.webp",
-  "width": 1600,
-  "height": 1200,
-  "alt": "黑金石紋沿環形獎盃的彎曲表面延伸。"
- },
- "#/read/pages/singleton-whisky-coaster": {
-  "src": "/content/images/fab817ca4a19f08f11.webp",
+  "src": "/content/images/007aaa8cd4b95b736d.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "灰色圓形再生大理石蘇格登杯墊"
+  "alt": "從側面觀看黑色獎盃的扭轉結構與中央留空。"
+ },
+ "#/read/pages/singleton-whisky-coaster": {
+  "src": "/content/images/3e7db9e62ce69709fb.webp",
+  "width": 1440,
+  "height": 1440,
+  "alt": "幾何簡約雙色再生大理石杯墊"
  },
  "#/read/pages/songshan-heritage-proposal": {
   "src": "/content/images/2872936551460fb787.webp",
@@ -312,10 +312,10 @@
   "alt": "松菸 古蹟提案"
  },
  "#/read/pages/songyan-365-perpetual-calendar": {
-  "src": "/content/images/0c8b3809ca42f66309.webp",
-  "width": 1440,
-  "height": 1440,
-  "alt": "松菸萬年曆包裝與內襯展示"
+  "src": "/assets/case-songyan-calendar.webp",
+  "width": 922,
+  "height": 922,
+  "alt": "松菸365萬年曆與外盒"
  },
  "#/read/pages/taipower-bathroom-set": {
   "src": "/content/images/5acf85ca90f66bc44e.webp",
@@ -342,40 +342,40 @@
   "alt": "地貌餐盤restaurant A香檳區展示現場"
  },
  "#/read/pages/the-senior-pga-of-taiwan": {
-  "src": "/content/images/0041d71afbf5d6d205.webp",
-  "width": 1440,
-  "height": 1440,
-  "alt": "勝利V字型高爾夫球獎盃側面展示"
+  "src": "/assets/case-fubon-champion.webp",
+  "width": 1080,
+  "height": 1115,
+  "alt": "環形再生大理石高爾夫球獎盃，中央是金色高爾夫球球梯"
  },
  "#/read/pages/tmall-super-one-trophy": {
   "src": "/assets/case-tmall.webp",
-  "width": 1600,
-  "height": 1200,
+  "width": 2400,
+  "height": 2400,
   "alt": "黑色上下量體之間，以金色立體結構連結。"
  },
  "#/read/pages/top-100-skills-trophy": {
-  "src": "/content/images/41b87fd31ecd9f80f1.webp",
-  "width": 904,
-  "height": 904,
-  "alt": "技職力100獎盃凹刻品牌理念"
+  "src": "/assets/case-top-100-skills.webp",
+  "width": 887,
+  "height": 887,
+  "alt": "技職力100獎盃獎盃側面展示"
  },
  "#/read/pages/uber-eats-trophy": {
   "src": "/assets/case-uber-eats.webp",
-  "width": 1600,
-  "height": 1200,
+  "width": 2400,
+  "height": 2400,
   "alt": "立體品牌介面獎座，置於專屬包裝內襯中。"
  },
  "#/read/pages/undefeated-basketball-candle": {
-  "src": "/content/images/e5cb1b2e3366318b86.webp",
-  "width": 1440,
-  "height": 1440,
-  "alt": "undefeated 籃球蠟燭"
+  "src": "/assets/case-undefeated.webp",
+  "width": 574,
+  "height": 574,
+  "alt": "undefeated 籃球蠟燭的 3D 模型"
  },
  "#/read/pages/wang-jinhua-plaster-diffuser-figurine": {
-  "src": "/content/images/7f16ac5154dc66d296.webp",
-  "width": 1440,
-  "height": 1440,
-  "alt": "王金花擴香石膏公仔"
+  "src": "/assets/case-wang-jinhua.webp",
+  "width": 1120,
+  "height": 1120,
+  "alt": "王金花擴香石膏公仔與包裝盒"
  },
  "#/read/pages/trophy": {
   "src": "/content/images/91dea233f5c316509f.webp",
@@ -384,10 +384,10 @@
   "alt": "F款 層疊獎牌。再生大理石。綠"
  },
  "#/read/pages/william-jones-cup-neck-medal": {
-  "src": "/content/images/315673f949c3d94719.webp",
+  "src": "/content/images/5b900ed687c3d050d5.webp",
   "width": 1440,
   "height": 1440,
-  "alt": "威廉瓊斯盃獎牌背面雙屆字樣"
+  "alt": "威廉瓊斯盃籃球賽獎牌經典金銀兩色對比照"
  },
  "#/read/pages/wooper": {
   "src": "/content/images/556941054ff6b8fac1.webp",

@@ -29,6 +29,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       # Project sites live under /<repo>/; a <user>.github.io repository is served from the root.
+      # pnpm build = vite build + tools/prerender.mjs, which opens every page in the runner's Chrome and saves its HTML
+      # (dist/<path>/index.html), then writes sitemap.xml. dist/404.html is the app shell for unknown addresses.
       - run: pnpm build
         env:
           BASE_PATH: ${{ endsWith(github.event.repository.name, '.github.io') && '/' || format('/{0}/', github.event.repository.name) }}

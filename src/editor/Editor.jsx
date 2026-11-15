@@ -11,11 +11,14 @@ import ProductView from './ProductView.jsx';
 import PlateStage from './PlateStage.jsx';
 import Inspector from './Inspector.jsx';
 import Icon from '../components/Icon.jsx';
+import {classicNames} from '../components/site/classics.js';
 import './editor-v4.css';
 const STORAGE='reo-preview-draft-v3',legacyStorage='reo-preview-draft-v1';
 const keyFor=(id,shape,surface)=>`${id}:${shape}:${surface}`;
 // Objects may run past the plate's outline (that part shows red and is never produced); only their
 // centre has to stay on the plate's rectangle, so nothing can be dragged out of reach.
+// v6.1 (owner, 2026-11-11): text is black by default; plates that need light ink (dark wood) keep it.
+const inkFor=s=>s.ink==='#252d28'?'#000000':s.ink;
 const settle=(o,s)=>{const x=Math.max(0,Math.min(s.width,o.x)),y=Math.max(0,Math.min(s.height,o.y));return x===o.x&&y===o.y?o:{...o,x,y}};
 function readDraft(preferLegacy=false){
   try{
@@ -37,14 +40,15 @@ function readDraft(preferLegacy=false){
 // Finishes as swatches. Every option is one of the product's verified combinations: D and F pair
 // any stone with any metal, A pairs either wood with any base, B/C come in two stones, E in two sets.
 const woods={北美黃檜:'#e0c6a0',木橫擔:'#553322'};
-function Swatch({label,colors,pressed,onClick}){return <button type="button" className="st-swatch" aria-label={label} title={label} aria-pressed={pressed} onClick={onClick}><i style={{background:colors.length>1?`linear-gradient(135deg,${colors[0]} 50%,${colors[1]} 50%)`:colors[0]}}/></button>}
+// v6 (2026-11-11): larger swatches, each named underneath, so the choice reads at a glance.
+function Swatch({label,name=label,colors,pressed,onClick}){return <button type="button" className="st-swatch" aria-label={label} title={label} aria-pressed={pressed} onClick={onClick}><i style={{background:colors.length>1?`linear-gradient(135deg,${colors[0]} 50%,${colors[1]} 50%)`:colors[0]}}/><span>{name}</span></button>}
 function Finishes({scene,onChange}){
-  // The row names the current choice, so the swatches can stay unlabelled.
+  // Each row names the part and the current choice; the swatches carry short names.
   const row=(label,items)=><div className="st-finish-row"><span className="st-label">{label}<b>{[items].flat().find(item=>item.props.pressed)?.props.label}</b></span><div className="st-swatches">{items}</div></div>;
   if(['D','F'].includes(scene.id))return <>{row('再生大理石',['白','黑','綠'].map(c=><Swatch key={c} label={c} colors={[stoneColors[c]]} pressed={scene.stone===c} onClick={()=>onChange(c+scene.metal)}/>))}{row(scene.id==='F'?'金屬層':'主銘版',['金','銀','銅'].map(c=><Swatch key={c} label={c} colors={[metalColors[c]]} pressed={scene.metal===c} onClick={()=>onChange(scene.stone+c)}/>))}</>;
-  if(scene.id==='A'){const [wood,base]=scene.finish.split('｜');return <>{row('木材',Object.keys(woods).map(w=><Swatch key={w} label={w} colors={[woods[w]]} pressed={wood===w} onClick={()=>onChange(`${w}｜${base}`)}/>))}{row('底座',['白再生大理石','黑再生大理石','水庫淤泥'].map(b=><Swatch key={b} label={b} colors={[stoneColors[b.includes('白')?'白':b.includes('黑')?'黑':'淤泥']]} pressed={base===b} onClick={()=>onChange(`${wood}｜${b}`)}/>))}</>}
-  if(scene.id==='E')return row('配色',scene.options.map(v=><Swatch key={v} label={v} colors={[stoneColors[v[0]],metalColors[v[1]]]} pressed={scene.finish===v} onClick={()=>onChange(v)}/>));
-  return row('石材',scene.options.map(v=><Swatch key={v} label={v+'色石材'} colors={[stoneColors[v]]} pressed={scene.finish===v} onClick={()=>onChange(v)}/>));
+  if(scene.id==='A'){const [wood,base]=scene.finish.split('｜');return <>{row('木材',Object.keys(woods).map(w=><Swatch key={w} label={w} colors={[woods[w]]} pressed={wood===w} onClick={()=>onChange(`${w}｜${base}`)}/>))}{row('底座',['白再生大理石','黑再生大理石','水庫淤泥'].map(b=><Swatch key={b} label={b} name={b.replace('再生大理石','石')} colors={[stoneColors[b.includes('白')?'白':b.includes('黑')?'黑':'淤泥']]} pressed={base===b} onClick={()=>onChange(`${wood}｜${b}`)}/>))}</>}
+  if(scene.id==='E')return row('配色',scene.options.map(v=><Swatch key={v} label={`${v[0]}石・${v[1]}`} colors={[stoneColors[v[0]],metalColors[v[1]]]} pressed={scene.finish===v} onClick={()=>onChange(v)}/>));
+  return row('石材',scene.options.map(v=><Swatch key={v} label={v+'色石材'} name={v} colors={[stoneColors[v]]} pressed={scene.finish===v} onClick={()=>onChange(v)}/>));
 }
 
 export default function Editor({modelId,onModelChange,onHome}){
@@ -66,7 +70,7 @@ export default function Editor({modelId,onModelChange,onHome}){
     if(model.id==='E'&&s.id==='front')seed=seed.map((o,i)=>({...o,x:s.width*[.55,.52,.47][i],y:s.height*[.36,.58,.78][i],fontSize:[62,86,40][i]}));
     if(model.id==='D'&&s.id==='lower')seed=seed.map((o,i)=>({...o,y:s.height*[.22,.5,.8][i],fontSize:[50,90,40][i]}));
     const list=history.state.documents[keyFor(model.id,shape,s.id)]||seed;
-    return [s.id,list.map(o=>settle(o.type==='text'&&o.autoColor!==false?{...o,color:s.ink,autoColor:true}:o,s))];
+    return [s.id,list.map(o=>settle(o.type==='text'&&o.autoColor!==false?{...o,color:inkFor(s),autoColor:true}:o,s))];
   })),[scene,model.id,shape,history.state.documents]);
   const objects=documents[surface.id],object=objects.find(o=>o.id===selectedId);
   const outside=useMemo(()=>new Set(objects.filter(o=>!o.hidden&&!objectFits(o,surface,measureRef.current)).map(o=>o.id)),[objects,surface]);
@@ -96,7 +100,7 @@ export default function Editor({modelId,onModelChange,onHome}){
   // Text is edited where it sits: the plate comes up large and the text opens in place.
   function editText(id=selectedId){setBig('plate');setInline(id)}
   function setFinish(value){history.change(d=>({...d,finishes:{...d.finishes,[model.id]:value}}))}
-  function currentSnapshot(){const state=history.getState(),currentScene=getModelScene(model.id,shape,state.finishes?.[model.id]||defaultFinish[model.id]);const currentDocuments=Object.fromEntries(currentScene.surfaces.map(s=>[s.id,(state.documents[keyFor(model.id,shape,s.id)]||documents[s.id]).map(o=>settle(o.type==='text'&&o.autoColor!==false?{...o,color:s.ink}:o,s))]));return {state,scene:currentScene,documents:currentDocuments}}
+  function currentSnapshot(){const state=history.getState(),currentScene=getModelScene(model.id,shape,state.finishes?.[model.id]||defaultFinish[model.id]);const currentDocuments=Object.fromEntries(currentScene.surfaces.map(s=>[s.id,(state.documents[keyFor(model.id,shape,s.id)]||documents[s.id]).map(o=>settle(o.type==='text'&&o.autoColor!==false?{...o,color:inkFor(s)}:o,s))]));return {state,scene:currentScene,documents:currentDocuments}}
   // Drafts save themselves a moment after each change, in this browser only.
   useEffect(()=>{
     const timer=setTimeout(()=>{try{const snap=currentSnapshot(),d={...snap.state,version:3,modelId:model.id,shape,documents:{...snap.state.documents,...Object.fromEntries(snap.scene.surfaces.map(s=>[keyFor(model.id,shape,s.id),snap.documents[s.id]]))}};localStorage.setItem(STORAGE,JSON.stringify(d));setSaved('草稿已自動儲存')}catch{setSaved('草稿空間不足，請縮小圖案')}},800);
@@ -143,9 +147,10 @@ export default function Editor({modelId,onModelChange,onHome}){
     </header>
     <div className={`st-layout is-${big}`}>
       <aside className="st-product" aria-label="選擇產品">
-        <div className="st-product-head"><p className="st-kicker">{model.id} 款・{model.kind}</p><h2>{model.name}</h2><p className="st-meta">{size}<span>NT${model.price}</span></p></div>
+        <div className="st-product-head"><p className="st-kicker"><span lang="en">{classicNames[model.id]}</span>{model.id} 款・{model.kind}</p><h2>{model.name}</h2><p className="st-meta">{size}<span>NT${model.price}</span></p></div>
+        {/* v6: the models as photo cards (the catalogue photos), letter and English name under each. */}
         <section className="st-step st-step-models"><h3><span>01</span>款式</h3>
-          <div className="st-models">{models.map(m=><button type="button" key={m.id} aria-label={`${m.id} 款 ${m.name}`} aria-pressed={model.id===m.id} onClick={()=>changeModel(m.id)}><img src={`/assets/product-thumb-${m.id}.webp`} alt="" loading="lazy"/><span>{m.id}</span></button>)}</div>
+          <div className="st-models">{models.map(m=><button type="button" key={m.id} aria-label={`${m.id} 款 ${classicNames[m.id]} ${m.name}`} aria-pressed={model.id===m.id} onClick={()=>changeModel(m.id)}><img src={`/assets/catalogue-${m.id}.webp`} alt="" width="1200" height="900" loading="lazy"/><span lang="en"><b>{m.id}</b>{classicNames[m.id].slice(1)}</span></button>)}</div>
           {model.id==='F'?<div className="st-finish-row"><span className="st-label">獎牌造型</span><div className="st-chips">{shapeChoices.map(v=><button type="button" key={v.id} aria-pressed={shape===v.id} onClick={()=>{setShape(v.id);setSelectedId('title')}}>{v.name}</button>)}</div></div>:null}
         </section>
         <section className="st-step st-step-finish"><h3><span>02</span>顏色與材質</h3><Finishes scene={scene} onChange={setFinish}/></section>
@@ -159,26 +164,25 @@ export default function Editor({modelId,onModelChange,onHome}){
         <div className="st-work-bar">
           <h3 className="st-work-title"><span>03</span>排版</h3>
           {scene.surfaces.length>1?<div className="st-zones" role="group" aria-label="編輯區域">{scene.surfaces.map(s=><button type="button" key={s.id} aria-pressed={surface.id===s.id} onClick={()=>pickSurface(s.id)}>{s.name}</button>)}</div>:<p className="st-zone-name">{surface.name}</p>}
+          {/* v6: adding text or a graphic lives in one place only, the settings column. */}
           <div className="st-work-tools">
-            <button type="button" className="st-btn st-btn-ghost st-btn-sm" onClick={addText}><Icon name="text" size={16}/>文字</button>
-            <button type="button" className="st-btn st-btn-ghost st-btn-sm" onClick={()=>inputRef.current.click()}><Icon name="image" size={16}/>圖案</button>
-            <span className="st-sep" aria-hidden="true"/>
             <button type="button" className="st-icon" aria-label="復原" title="復原（Ctrl+Z）" disabled={!history.canUndo} onClick={history.undo}><Icon name="undo" size={18}/></button>
             <button type="button" className="st-icon" aria-label="重做" title="重做（Ctrl+Shift+Z）" disabled={!history.canRedo} onClick={history.redo}><Icon name="redo" size={18}/></button>
           </div>
         </div>
-        {/* Picture in picture: the plate and the finished product share one stage. One fills it, the other
-            waits in the corner as a live thumbnail; a tap on the thumbnail swaps them. */}
+        {/* v6 (2026-11-11): the plate and the finished product side by side, both full height and both live
+            (replaces v5's picture in picture). Phones keep the 排版／成品預覽 switch and show one at a time. */}
         <div className={`st-canvas is-${big}`}>
-          <section className={`st-slot st-slot-plate${big==='plate'?' is-big':' is-pip'}`} aria-label="銘版排版" inert={big!=='plate'||undefined}>
+          <section className={`st-slot st-slot-plate${big==='plate'?' is-big':''}`} aria-label="銘版排版">
             <PlateStage surface={surface} objects={objects} selectedId={selectedId} measure={measureRef.current} outside={outside} inline={big==='plate'?inline:null} onInline={setInline} onSelect={setSelectedId} onPatch={patch} onCheckpoint={history.checkpoint} onDelete={remove} onDuplicate={duplicate} onCenter={center} onEditText={editText}/>
+            <p className={`st-work-note${outside.size?' is-warning':''}`} role="status">{outside.size?'紅色部分超出銘版，不會製作；可直接下載，或拖回框內。':<>拖曳移動・拉角落縮放・拉圓點旋轉・雙擊改字{surface.material==='acrylic'?'・透明壓克力以灰色襯底顯示':''}</>}</p>
           </section>
-          <section className={`st-slot st-slot-product${big==='product'?' is-big':' is-pip'}`} aria-label="成品預覽" inert={big!=='product'||undefined}>
+          <section className={`st-slot st-slot-product${big==='product'?' is-big':''}`} aria-label="成品預覽">
+            <p className="st-slot-label">成品預覽</p>
             <ProductView scene={scene} documents={documents} surface={surface} mode={mode} onMode={setMode} onSurface={pickSurface}/>
+            <p className="st-work-note">{mode==='three'?'拖曳旋轉・點銘版切換編輯區':'點銘版切換編輯區'}</p>
           </section>
-          <button type="button" className="st-pip-swap" onClick={()=>setBig(big==='plate'?'product':'plate')} aria-label={big==='plate'?'放大成品預覽':'放大銘版排版'}><span>{big==='plate'?(mode==='three'?'3D 預覽':'成品預覽'):'回到排版'}</span><Icon name="expand" size={14}/></button>
         </div>
-        <p className={`st-work-note${outside.size&&big==='plate'?' is-warning':''}`} role="status">{big==='product'?'拖曳旋轉・點銘版回到排版':outside.size?'紅色部分超出銘版，不會製作；可直接下載，或拖回框內。':<>拖曳移動・拉角落縮放・拉圓點旋轉・雙擊直接改字{surface.material==='acrylic'?'・透明壓克力以灰色襯底顯示':''}</>}</p>
       </main>
       <Inspector object={object} outside={outside.has(selectedId)} objects={objects} surface={surface} onPatch={changes=>patch(selectedId,changes)} onPatchLayer={patch} onSelect={setSelectedId} onDuplicate={duplicate} onDelete={remove} onReorder={reorder} onFit={fitSelected} onCenter={center} onAddText={addText} onUpload={()=>inputRef.current.click()}/>
     </div>

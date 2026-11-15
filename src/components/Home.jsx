@@ -5,9 +5,12 @@ import SiteFooter from './site/SiteFooter.jsx';
 import LogoWall from './site/LogoWall.jsx';
 import ShopWindow from './site/ShopWindow.jsx';
 import { siteStats } from './site/stats.js';
+import { classicNames } from './site/classics.js';
+import { materials } from './site/materials.js';
 import GoldDust from './GoldDust.jsx';
 import { setPageMeta } from '../seo.js';
-import { Arrow, ArrowLink, Button, SectionHead, Frame } from './site/ui.jsx';
+import { Arrow, ArrowLink, Button, SectionHead, Frame, ActionIcon } from './site/ui.jsx';
+import './hero-v64.css';
 import './home.css';
 import './home-v10.css';
 
@@ -45,17 +48,20 @@ const processNotes = [
   { article: '工廠步驟把關', text: '經過篩選的零件，才會送回 re.O 工作室進行最後加工。設計不因環保標籤而降低品質，從源頭把關，成品才讓客戶與我們都滿意。', points: ['篩選', '最後加工', '完成作品'], more: { id: '25d378e5481c1d60e6', w: 1440, h: 1080, caption: '篩選後送回工作室的零件' } }
 ];
 const pad = n => String(n).padStart(2, '0');
-// The hero features the D model alone (by request E stepped down): three real photographs of D, from
-// the three colours together to the gift box, under one headline. Every slide keeps its alt text (hidden
-// slides are aria-hidden, so screen readers hear only the active one while crawlers still index all three).
-// Positions keep every trophy clear of the headline column. Each panel haze is a 160px copy of its photo, so it costs next to nothing.
+// v64 (owner, 2026-11-17): the hero promotes three classic models, D, E and B, one whole-trophy photograph each
+// (supersedes the D-only hero, v39–v41). The left column follows the slide: the model's letter and English name, what
+// it is made of, its size and price, and a button that opens that model in the studio. Below, the A to E trophies
+// as photo cards (the old 44px round thumbnails were too small to read); F, a medal, stays on the 公版獎盃 page.
+// Slides keep their alt text; hidden ones are aria-hidden. Each panel haze is a 160px copy of its photo.
 const slideMs = 5000;
 const img = id => '/content/images/' + id + '.webp';
 const heroSlides = [
-  { n: '01', name: '白／黑／綠 三色', src: img('0ec85ee98fb1103204'), haze: '/assets/hero-haze-D-trio.webp', position: '41% 58%', alt: 'D 款公版獎盃，白、黑、綠三色再生大理石並列' },
-  { n: '02', name: '將榮譽賦予份量', src: img('aadb3001769fa976a7'), haze: '/assets/hero-haze-D-hand.webp', position: '62% 55%', alt: '手持 D 款公版獎盃，呈現實際大小' },
-  { n: '03', name: '黑卡浪紙盒包裝', src: img('8c9018e7d0d0ec8c4b'), haze: '/assets/hero-haze-D-box.webp', position: '45% 55%', alt: 'D 款公版獎盃收入黑卡浪紙盒' }
+  { id: 'D', src: img('0ec85ee98fb1103204'), haze: '/assets/hero-haze-D-trio.webp', position: '41% 58%', line: '大理石邊料研磨再生，白、黑、綠三色。', alt: 'D 款 DELTA 公版獎盃，白、黑、綠三色再生大理石並列' },
+  { id: 'E', src: '/assets/hero-wide.webp', haze: '/assets/hero-haze-E.webp', position: '56% 50%', line: '鋁片折面與再生大理石，設計師聯名款。', alt: 'E 款 EXCEED 公版獎盃 The way to PEAK，金與銀兩色並列' },
+  { id: 'B', src: img('e8b500fc458fa120e4'), haze: '/assets/hero-haze-B.webp', position: '50% 50%', line: '熱處理北美黃檜，嵌入再生大理石。', alt: 'B 款 BOND 公版獎盃，木質盃身與黑色再生大理石構件' }
 ];
+const heroPicks = ['A', 'B', 'C', 'D', 'E'];
+const sizeOf = m => Array.isArray(m.dimensions_mm) ? `高 ${Math.max(...m.dimensions_mm) / 10} cm` : '';
 function Hero({ onPreview }) {
   const [active, setActive] = useState(0), [paused, setPaused] = useState(false), [away, setAway] = useState(false), hero = useRef(null);
   // Off screen the slow zoom and the progress bar pause, so the hero costs nothing while you read on.
@@ -64,23 +70,30 @@ function Hero({ onPreview }) {
   // it exactly); under reduced motion a plain timer does. The pause button satisfies WCAG 2.2.2.
   const next = useCallback(() => setActive(a => (a + 1) % heroSlides.length), []), still = useRef(matchMedia('(prefers-reduced-motion: reduce)').matches);
   useEffect(() => { if (paused || away || !still.current) return; const timer = setTimeout(next, slideMs); return () => clearTimeout(timer) }, [active, paused, away, next]);
-  return <section className={`rv-hero${paused ? ' is-paused' : ''}${away ? ' is-away' : ''}`} ref={hero} aria-labelledby="rv-hero-title" aria-roledescription="輪播">
+  const slide = heroSlides[active], model = models.find(m => m.id === slide.id);
+  return <section className={`rv-hero is-v64${paused ? ' is-paused' : ''}${away ? ' is-away' : ''}`} ref={hero} aria-labelledby="rv-hero-title" aria-roledescription="輪播">
     <GoldDust gust={active} running={!paused} />
-    {/* A frosted column carries the headline; the featured trophy stays clear beside it. */}
     <div className="rv-hero-panel">
-      {heroSlides.map((s, i) => <img key={s.n} className={`rv-hero-haze${i === active ? ' is-active' : ''}`} src={s.haze} alt="" aria-hidden="true" />)}
-      <p className="rv-hero-kicker"><span>re.O</span>循環設計</p>
+      {heroSlides.map((s, i) => <img key={s.id} className={`rv-hero-haze${i === active ? ' is-active' : ''}`} src={s.haze} alt="" aria-hidden="true" />)}
+      <p className="rv-hero-kicker"><span>Classic</span>公版獎盃</p>
       <div className="rv-hero-copy">
         <h1 id="rv-hero-title"><span><span>再生大理石，</span></span><span><span>成就高雅的榮譽。</span></span></h1>
-        <p>D 款公版獎盃・大理石邊料回收再生。</p>
-        <div className="rv-hero-actions"><Button href="#classic" variant="light">探索公版獎盃</Button><Button onClick={() => onPreview('D')} variant="glass">開始 D 款排版</Button></div>
-        <div className="rv-hero-picks"><p><span>A–F</span>選一款開始排版</p><ul>{models.map(m => <li key={m.id}><button onClick={() => onPreview(m.id)} aria-label={`開始 ${m.id} 款 ${m.name} 排版`}><img src={`/assets/product-thumb-${m.id}.webp`} alt="" width="360" height="270" /><span>{m.id}</span></button></li>)}</ul></div>
+        {/* Follows the slide. key restarts its entrance on each change; aria-live reads the new model once. */}
+        <div className="rv-hero-model" key={slide.id} aria-live="polite">
+          <p className="rv-hero-name"><span lang="en" aria-label={classicNames[slide.id]}><b>{slide.id}</b>{classicNames[slide.id].slice(1)}</span><em>{slide.id} 款公版獎盃</em></p>
+          <p className="rv-hero-line">{slide.line}</p>
+          <dl><div><dt>尺寸</dt><dd>{sizeOf(model)}</dd></div><div><dt>價格</dt><dd>NT$ {model.price}</dd></div><div><dt>製作</dt><dd>3 個工作天起</dd></div></dl>
+        </div>
+        <div className="rv-hero-actions"><Button onClick={() => onPreview(slide.id)} variant="light" icon={<ActionIcon name="studio" />}>開始 {slide.id} 款排版</Button><Button href="#/explore/standard" variant="glass">全部公版獎盃</Button></div>
       </div>
-      <ul className="rv-hero-stats">{siteStats.map(([n, label, href]) => <li key={label}><a href={href}><strong>{n}</strong><span>{label}</span></a></li>)}</ul>
+      <div className="rv-hero-picks">
+        <p>A 至 E 款<span>點選款式，開啟線上排版</span></p>
+        <ul>{heroPicks.map(id => <li key={id}><button className={id === slide.id ? 'is-on' : undefined} onClick={() => onPreview(id)} aria-label={`開始 ${id} 款 ${classicNames[id]} 排版（另開新視窗）`}><img src={`/assets/catalogue-${id}.webp`} alt="" width="1200" height="900" loading="lazy" /><span aria-hidden="true"><b>{id}</b>{classicNames[id].slice(1)}</span></button></li>)}</ul>
+      </div>
     </div>
     <div className="rv-hero-stage">
-      {heroSlides.map((s, i) => <img key={s.n} className={`rv-hero-photo${i === active ? ' is-active' : ''}`} src={s.src} alt={s.alt} aria-hidden={i !== active || undefined} width="1440" height="1080" style={{ objectPosition: s.position }} fetchPriority={i ? undefined : 'high'} />)}
-      <div className="rv-hero-tabs" role="group" aria-label="D 款公版獎盃">{heroSlides.map((s, i) => <button key={s.n} aria-pressed={i === active} onClick={() => setActive(i)}><span className="rv-hero-bar">{i === active && <i key={active} onAnimationEnd={next} />}</span><strong>{s.n}</strong><span>{s.name}</span></button>)}<button className="rv-hero-toggle" onClick={() => setPaused(p => !p)} aria-label={paused ? '播放輪播' : '暫停輪播'}><svg viewBox="0 0 16 16" aria-hidden="true"><path d={paused ? 'M5 3.5v9l7.5-4.5z' : 'M5 3.5v9M11 3.5v9'} fill={paused ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></button></div>
+      {heroSlides.map((s, i) => <img key={s.id} className={`rv-hero-photo${i === active ? ' is-active' : ''}`} src={s.src} alt={s.alt} aria-hidden={i !== active || undefined} width="1440" height="1080" style={{ objectPosition: s.position }} fetchPriority={i ? undefined : 'high'} loading={i ? 'lazy' : undefined} />)}
+      <div className="rv-hero-tabs" role="group" aria-label="主打公版獎盃">{heroSlides.map((s, i) => <button key={s.id} aria-pressed={i === active} onClick={() => setActive(i)}><span className="rv-hero-bar">{i === active && <i key={active} onAnimationEnd={next} />}</span><strong>{s.id}</strong><span>{classicNames[s.id].slice(1)}</span></button>)}<button className="rv-hero-toggle" onClick={() => setPaused(p => !p)} aria-label={paused ? '播放輪播' : '暫停輪播'}><svg viewBox="0 0 16 16" aria-hidden="true"><path d={paused ? 'M5 3.5v9l7.5-4.5z' : 'M5 3.5v9M11 3.5v9'} fill={paused ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></button></div>
     </div>
   </section>;
 }
@@ -214,28 +227,25 @@ function Process() {
     </div>
   </section>;
 }
-const materials = [
-  ['再生大理石', 'material-recycled-marble', '/assets/material-powder.jpg'],
-  ['回收玻璃', 'glass', '/assets/material-glass.jpg'],
-  ['退役木橫擔', 'wooden-beam', '/assets/material-wood.jpg'],
-  ['咖啡渣', 'coffee-waste', '/content/images/16b62643e8869dd106.webp'],
-  ['水庫淤泥', 'reservoir-silt', '/content/images/b22b4e7305e255f890.webp'],
-  ['煤灰', 'fly-ash', '/content/images/790b5fdc0f89df0d7f.webp'],
-  ['木屑', 'wood-chips', '/content/images/95bd8644e4a1dcf166.webp'],
-  ['木頭拼板', 'wood-veneer-panel', '/content/images/a602a0b334820cff7d.webp'],
-  ['焚化再生粒料', 'incineration-aggergates', '/content/images/e862a0c81a178eedc0.webp']
-];
+// V49 (owner, 2026-11-08): the same photo as each material's card in the materials library (its page hero),
+// and the English name from the studio's material index (MATERIAL page; CROSSRAM corrected to Crossarm).
+// (the list lives in site/materials.js, shared with the material pages)
 // Custom trophies are their own block, apart from the A–F catalogue. Copy follows the 訂製 CUSTOM page.
 const customModes = [
   { n: '01', title: '專案訂製', line: '以品牌語彙，設計獨有的外觀。', src: '/content/images/ccf5762abffbaf5ef7.webp', alt: 'Oni Bus Coffee 品牌咖啡托盤，專案訂製案例' },
-  { n: '02', title: '專料訂製', line: '以品牌的可再利用廢料，製作專屬材質。', src: '/content/images/61b1b99657d3baca5c.webp', alt: '總統盃黑客松獎盃，以焚化再生粒料製作的專料訂製案例' },
+  { n: '02', title: '專料訂製', line: '以企業顆粒、粉末化可再利用的廢棄物料，製作專屬材質。', src: '/content/images/61b1b99657d3baca5c.webp', alt: '總統盃黑客松獎盃，以焚化再生粒料製作的專料訂製案例' },
   { n: '03', title: '訂製包裝', line: '外盒、內襯到品牌標識，一併訂製。', src: '/content/images/a39bc07b4f4aa850e6.webp', alt: '黑色訂製外盒與內襯，裝載客製獎座', className: 'is-left' }
 ];
 // D and E are the models the studio promotes; they lead the classic at a larger size.
 const featured = ['E', 'D'];
-// One spec line per model from models.json: type, height (or diameter) and price. Each item keeps
-// together when the line wraps.
-const specOf = m => { const d = m.dimensions_mm, size = Array.isArray(d) ? `高 ${d[2]} mm` : `直徑 ${d.diameter} mm`; return [m.kind, size, `NT$${m.price.replace('～', '–')}`] };
+// V48 (owner, 2026-11-08): each standard model has an English name that starts with its letter. On home the
+// card shows only the photo and that name, grown out of the letter tab; name, spec and the start button are gone.
+// The letter stays in its square; the rest of the name rises in letter by letter as the card comes into
+// view, and rolls over (each letter swaps for its copy from below) when the photo is pointed at or focused.
+function ClassicTab({ id }) {
+  const tail = classicNames[id].slice(1);
+  return <span className="rv-tab" aria-hidden="true"><b>{id}</b><span className="rv-tab-tail">{[...tail].map((ch, i) => <i key={i} style={{ '--i': i }}><span data-ch={ch}>{ch}</span></i>)}</span></span>;
+}
 // The home page keeps the essentials (hero, process, the A–F classic, custom trophies, materials,
 // partners, shop). Selected works live on the custom page, IP collaborations on the cases page, and
 // the studio, craft and awards on the About page.
@@ -255,20 +265,19 @@ export default function Home({ onPreview, section }) {
       <section className="rv-section rv-gutter" id="classic" aria-labelledby="rv-classic-title">
         <SectionHead index="01" label="公版獎盃" en="Classic" id="rv-classic-title" title={<>為榮耀，<br />找到合適的樣貌。</>} />
         <div className="rv-products">{[...models].sort((a, b) => featured.indexOf(b.id) - featured.indexOf(a.id)).map(m => <article className={`rv-product${featured.includes(m.id) ? ' is-feature' : ''}`} key={m.id} data-reveal>
-          <button className="rv-product-photo" onClick={() => onPreview(m.id)} aria-label={`開始 ${m.id} 款 ${m.name} 銘版排版`}><Frame src={`/assets/catalogue-${m.id}.webp`} alt={`${m.id} 款 ${m.name}實品`} width="1200" height="900" /><span className="rv-tab" aria-hidden="true">{m.id}</span></button>
-          <div className="rv-spec"><div><h3><span className="sr-only">{m.id} 款 </span>{m.name}</h3><p>{specOf(m).map(t => <span key={t}>{t}</span>)}</p></div><button className="rv-start" onClick={() => onPreview(m.id)} aria-label={`開始 ${m.id} 款排版`}><span className="rv-start-text">開始排版</span><Arrow /></button></div>
+          <button className="rv-product-photo" onClick={() => onPreview(m.id)} aria-label={`${m.id} 款 ${classicNames[m.id]}，開始銘版排版`}><Frame src={`/assets/catalogue-${m.id}.webp`} alt={`${m.id} 款 ${m.name}實品`} width="1200" height="900" /><ClassicTab id={m.id} /></button>
         </article>)}</div>
       </section>
 
       <section className="rv-section rv-gutter" id="custom" aria-labelledby="rv-custom-title">
-        <SectionHead index="02" label="客製化獎盃" en="Custom" id="rv-custom-title" title={<>為品牌，<br />訂製專屬的榮耀。</>} />
+        <SectionHead index="02" label="品牌訂製" en="Brand" id="rv-custom-title" title={<>為品牌，<br />訂製專屬的榮耀。</>} />
         <ol className="rv-modes">{customModes.map(m => <li key={m.n} data-reveal><a href="#/read/pages/custom"><Frame src={m.src} alt={m.alt} width="1440" height="1440" className={m.className} /><span className="rv-mode-label"><em>{m.n}</em><strong>{m.title}</strong><Arrow /></span><span className="rv-mode-line">{m.line}</span></a></li>)}</ol>
       </section>
 
       <section className="rv-section rv-materials" id="materials" aria-labelledby="rv-materials-title">
         <div className="rv-gutter">
           <SectionHead index="03" label="循環材料" en="Materials" id="rv-materials-title" title={<>材料的下一站。</>} link={['全部循環材料', '#/explore/materials']} />
-          <ul className="rv-swatches">{materials.map(([name, slug, src], i) => <li key={slug} data-reveal><a href={`#/read/pages/${slug}`}><Frame src={src} alt={`${name}原材料`} /><span className="rv-swatch-name"><em>{String(i + 1).padStart(2, '0')}</em><strong>{name}</strong><Arrow /></span></a></li>)}</ul>
+          <ul className="rv-swatches">{materials.map(([name, en, slug, src], i) => <li key={slug} data-reveal><a href={`#/read/pages/${slug}`}><Frame src={src} alt={`${name}原材料`} /><span className="rv-swatch-name"><em>{String(i + 1).padStart(2, '0')}</em><span className="rv-swatch-words"><strong>{name}</strong><small lang="en">{en}</small></span></span></a></li>)}</ul>
         </div>
       </section>
 

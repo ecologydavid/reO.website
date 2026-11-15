@@ -1,11 +1,13 @@
 import React,{useEffect,useRef,useState} from 'react';
-import {findPage,loadPage,pages,resolveHref,editorFor,isIndexPage,isBanner} from './catalogue.js';
+import {findPage,loadPage,pages,resolveHref,editorFor,isIndexPage,isBanner,classicPages,splitCase,peekPage} from './catalogue.js';
 import {categoryInfo} from '../components/site/navigation.js';
 import {SiteArrow} from '../components/site/SiteHeader.jsx';
 import {studioTab} from '../components/site/ui.jsx';
 import {ContentCard} from './ContentLibrary.jsx';
 import {justifyRows} from './justify.js';
 import {setPageMeta} from '../seo.js';
+import {edgeFill} from './edgeFill.js';
+import MaterialIntro from './MaterialIntro.jsx';
 import {arrangeArticle,flowParagraphs} from './arrange.js';
 const ratioOf=im=>im?.width&&im?.height?im.width/im.height:4/3;
 const frameStyle=im=>({aspectRatio:String(ratioOf(im))});
@@ -19,7 +21,14 @@ function Gallery({images,title,onOpen}){
  return <div className="content-justified" ref={box}>{rows.map((row,r)=><div className="content-justified-row" key={r} style={row.open?{maxWidth:row.sum*target+gap*(row.items.length-1)}:undefined}>{row.items.map(i=>{const im=images[i];return <figure key={im.src} style={{flex:`${ratioOf(im)} 1 0`}}><button style={frameStyle(im)} onClick={()=>onOpen(im)} aria-label={`放大圖片 ${i+1}：${im.caption||im.alt||title}`}><img src={im.src} alt={im.alt||`${title} 圖片 ${i+1}`} loading="lazy" width={im.width} height={im.height}/></button>{im.caption&&<figcaption>{im.caption}</figcaption>}</figure>})}</div>)}</div>;
 }
 function Section({section,index}){return <section className="content-prose-section" id={`section-${index}`}><h2>{section.heading||'內容介紹'}</h2>{flowParagraphs(section.paragraphs).map((p,i)=><p key={i}>{p}</p>)}{!!section.items.length&&<ul>{section.items.map((p,i)=><li key={i}>{p}</li>)}</ul>}</section>}
-function Photo({image,title,onOpen,eager=false,ratio}){return <button className="content-photo" style={{aspectRatio:String(ratio||ratioOf(image))}} onClick={()=>onOpen(image)} aria-label={`放大圖片：${image.alt||title}`}><img src={image.src} alt={image.alt||title} width={image.width} height={image.height} loading={eager?undefined:'lazy'}/></button>}
+// v61 (owner, 2026-11-16): a portrait photo in a fixed (square) frame is shown whole, never losing its top
+// and base; the frame's sides continue the photo's own edge colours (edgeFill), as on the case cards.
+function Photo({image,title,onOpen,eager=false,ratio}){
+ const whole=Boolean(ratio)&&ratioOf(image)<ratio*.85,[fill,setFill]=useState(null),img=useRef(null);
+ const sample=()=>{if(whole)setFill(edgeFill(img.current))};
+ useEffect(()=>{if(img.current?.complete)sample()},[image.src,whole]);
+ return <button className="content-photo" style={{aspectRatio:String(ratio||ratioOf(image)),background:fill||undefined}} onClick={()=>onOpen(image)} aria-label={`放大圖片：${image.alt||title}`}><img ref={img} className={whole?'is-whole':undefined} src={image.src} alt={image.alt||title} width={image.width} height={image.height} loading={eager?undefined:'lazy'} onLoad={sample}/></button>;
+}
 // Each text section sits beside its own photo, alternating sides, so the page reads image first.
 function Chapter({chapter,index,title,onOpen}){
  const {section,image}=chapter;
@@ -46,25 +55,39 @@ function Works({works}){
  </section>;
 }
 export default function ContentReader({path}){
- const index=findPage(path),[page,setPage]=useState(null),[error,setError]=useState(''),[gallery,setGallery]=useState(8),[lightbox,setLightbox]=useState(null);
+ const index=findPage(path),[page,setPage]=useState(()=>peekPage(index?.id)),[error,setError]=useState(''),[gallery,setGallery]=useState(8),[lightbox,setLightbox]=useState(null);
  const closeImage=useRef(null),root=useRef(null);
- useEffect(()=>{let live=true;setPage(null);setError('');setGallery(8);if(!index){setError('找不到這篇內容。');return}loadPage(index.id).then(p=>{if(live){setPage(p);setPageMeta({title:p.title.replace(/｜/g,' '),description:p.summary})}}).catch(()=>{if(live)setError('內容暫時無法載入，請重新整理。')});return()=>{live=false}},[index?.id]);
+ useEffect(()=>{let live=true;setPage(peekPage(index?.id));setError('');setGallery(8);if(!index){setError('找不到這篇內容。');return}loadPage(index.id).then(p=>{if(live){setPage(p);const cat=editorFor(p)||p.subcategory==='公版獎盃'?'standard':categoryInfo[p.category]?p.category:'about';setPageMeta({title:p.title.replace(/｜/g,' '),description:p.summary,trail:[['首頁','#/'],[categoryInfo[cat].label,`#/explore/${cat}`],[p.title,p.path]]})}}).catch(()=>{if(live)setError('內容暫時無法載入，請重新整理。')});return()=>{live=false}},[index?.id]);
  useEffect(()=>{if(!lightbox)return;const old=document.body.style.overflow,previous=document.activeElement;document.body.style.overflow='hidden';closeImage.current?.focus();const key=e=>{if(e.key==='Escape')setLightbox(null);if(e.key==='Tab'){e.preventDefault();closeImage.current?.focus()}};document.addEventListener('keydown',key);return()=>{document.body.style.overflow=old;document.removeEventListener('keydown',key);previous?.focus()}},[lightbox]);
  useEffect(()=>{if(!page||!root.current)return;const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.04});root.current.querySelectorAll('[data-reveal]:not(.is-visible)').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[page,gallery]);
  if(error)return <main className="content-not-found folio-gutter"><h1>{error}</h1><a className="folio-link" href="#/explore/cases">探索站內內容<SiteArrow/></a></main>;
  if(!page)return <main className="content-loading folio-gutter" role="status">正在讀取內容…</main>;
  const category=editorFor(page)||page.subcategory==='公版獎盃'?'standard':categoryInfo[page.category]?page.category:'about',label=categoryInfo[category].label,editor=editorFor(page);
  const metadata=[['client','客戶'],['year','年份'],['material','材質'],['service','服務'],['kind','類別']].filter(([k])=>page.metadata[k]);
- const related=pages.filter(p=>p.category===page.category&&p.id!==page.id&&!isIndexPage(p)&&(category!=='standard'||p.subcategory==='公版獎盃')).slice(0,3);
+ // v63 wayfinding: a detail page knows its place in its list. Previous and next follow the list's own order, and
+ // 繼續探索 shows the three entries after the next one (it used to repeat the list's first three on every page).
+ const siblings=classicPages(category==='standard'?'standard':page.category),at=siblings.findIndex(p=>p.id===page.id);
+ const prev=at>0?siblings[at-1]:null,next=at>=0&&at<siblings.length-1?siblings[at+1]:null;
+ const related=at>=0?[2,3,4].map(k=>siblings[(at+k)%siblings.length]).filter((p,i,a)=>p&&p.id!==page.id&&p!==prev&&p!==next&&a.indexOf(p)===i):pages.filter(p=>p.category===page.category&&p.id!==page.id&&!isIndexPage(p)).slice(0,3);
+ const short=p=>page.category==='cases'?splitCase(p.title).work:p.title.split('｜')[0];
  const {first,chapters,details,works,photos,plain}=arrangeArticle(page,findPage);
  const lead=first&&<Section section={first} index={0}/>;
- return <main className={`content-reader folio-gutter ${!page.hero?'text-only':''}`} ref={root}><nav className="content-breadcrumb" aria-label="麵包屑"><a href="#/">首頁</a><span>/</span><a href={`#/explore/${category}`}>{label}</a><span>/</span><span>{page.title}</span></nav><div className="content-article-heading"><div><h1>{page.title}</h1>{page.subcategory&&<p>{page.subcategory}</p>}</div><dl className="content-metadata">{metadata.map(([key,label])=><div key={key}><dt>{label}</dt><dd>{Array.isArray(page.metadata[key])?page.metadata[key].join('、'):String(page.metadata[key])}</dd></div>)}</dl></div>{editor&&<div className="content-product-cta"><p>選擇這款公版獎盃，編排你的專屬文字與圖案。</p><a className="folio-link" href={`#/preview/${editor}`} {...studioTab}>進入 {editor} 款排版工作室<SiteArrow/></a></div>}
-   <div className={`content-article-lead${page.hero&&ratioOf(page.hero)<.9?' is-portrait':''}`}>{page.hero&&<figure style={{'--r':ratioOf(page.hero)}}><button style={frameStyle(page.hero)} onClick={()=>setLightbox(page.hero)} aria-label={`放大圖片：${page.title}`}><img src={page.hero.src} alt={page.hero.alt||page.title} width={page.hero.width} height={page.hero.height} fetchPriority="high"/></button></figure>}<div>{page.summary&&!repeats(page.summary,first)&&<p className="content-intro">{page.summary}</p>}{lead}</div></div>
+ // v65: a material page opens with MaterialIntro (photo, name, its opening text) instead of the plain heading and lead.
+ const material=page.category==='materials'&&!isIndexPage(page)&&!!page.hero;
+ const toWorks=()=>document.getElementById('material-works')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+ return <main className={`content-reader folio-gutter ${!page.hero?'text-only':''}`} ref={root}><nav className="content-breadcrumb has-back" aria-label="麵包屑"><a className="content-back" href={`#/explore/${category}`}><span aria-hidden="true">←</span>返回{label}</a><a href="#/">首頁</a><span aria-hidden="true">/</span><a href={`#/explore/${category}`}>{label}</a><span aria-hidden="true">/</span><span aria-current="page">{page.title}</span></nav>{material?<MaterialIntro page={page} lead={flowParagraphs([...(page.summary&&!repeats(page.summary,first)?[page.summary]:[]),...(first?.paragraphs||[])])} onWorks={works||chapters.length?toWorks:null}/>:<><div className="content-article-heading"><div><h1>{page.title}</h1>{page.subcategory&&<p>{page.subcategory}</p>}</div><dl className="content-metadata">{metadata.map(([key,label])=><div key={key}><dt>{label}</dt><dd>{Array.isArray(page.metadata[key])?page.metadata[key].join('、'):String(page.metadata[key])}</dd></div>)}</dl></div>{editor&&<div className="content-product-cta"><p>選擇這款公版獎盃，編排你的專屬文字與圖案。</p><a className="folio-link" href={`#/preview/${editor}`} {...studioTab}>進入 {editor} 款排版工作室<SiteArrow/></a></div>}
+   <div className={`content-article-lead${page.hero&&ratioOf(page.hero)<.9?' is-portrait':''}`}>{page.hero&&<figure style={{'--r':ratioOf(page.hero)}}><button style={frameStyle(page.hero)} onClick={()=>setLightbox(page.hero)} aria-label={`放大圖片：${page.title}`}><img src={page.hero.src} alt={page.hero.alt||page.title} width={page.hero.width} height={page.hero.height} fetchPriority="high"/></button></figure>}<div>{page.summary&&!repeats(page.summary,first)&&<p className="content-intro">{page.summary}</p>}{lead}</div></div></>}
+   {material&&<span id="material-works" className="content-anchor"/>}
    {plain?!!chapters.length&&<div className="content-article-body"><aside className="content-toc" aria-label="本頁內容"><span>本頁內容</span>{chapters.map((c,i)=><a key={i} href={`#${page.path.slice(1)}?section=${i+1}`} onClick={e=>{e.preventDefault();document.getElementById(`section-${i+1}`)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})}}>{c.section.heading||'內容介紹'}</a>)}</aside><div className="content-prose">{chapters.map((c,i)=><Section section={c.section} index={i+1} key={i}/>)}</div></div>
    :<div className="content-chapters">{details.length>0&&<Details details={details} title={page.title} onOpen={setLightbox}/>}{chapters.map((c,i)=><Chapter chapter={c} index={i+1} title={page.title} onOpen={setLightbox} key={i}/>)}</div>}
    {works&&<Works works={works}/>}
    {!!photos.length&&<section className="content-gallery" id="article-gallery"><header className="content-gallery-head"><h2>{works?'材料與工藝':'更多照片'}</h2><span>{pad(photos.length)}</span></header><Gallery images={photos.slice(0,gallery)} title={page.title} onOpen={setLightbox}/>{photos.length>gallery&&<button className="content-load-more" onClick={()=>setGallery(gallery+12)}>查看更多照片（{photos.length-gallery}）<SiteArrow/></button>}</section>}
    {!works&&!!page.links.length&&<section className="content-local-links"><h2>延伸閱讀與相關內容</h2>{page.links.map(l=><a href={resolveHref(l.path)} key={l.path}>{l.label}<SiteArrow/></a>)}</section>}
+   {(prev||next)&&<nav className="content-pager" aria-label="同一列表的上一篇與下一篇">
+    {prev?<a className="is-prev" href={prev.path}><em><span aria-hidden="true">←</span>上一則</em><strong>{short(prev)}</strong></a>:<span/>}
+    <a className="is-all" href={`#/explore/${category}`}>回到{label}</a>
+    {next?<a className="is-next" href={next.path}><em>下一則<span aria-hidden="true">→</span></em><strong>{short(next)}</strong></a>:<span/>}
+   </nav>}
    {related.length>0&&<section className="content-related"><div><h2>繼續探索</h2><a className="folio-link" href={`#/explore/${category}`}>全部{label}<SiteArrow/></a></div><div className="content-grid">{related.map(p=><ContentCard page={p} key={p.id}/>)}</div></section>}
    {lightbox&&<div className="content-lightbox" role="dialog" aria-modal="true" aria-label="圖片放大檢視" onClick={()=>setLightbox(null)}><button ref={closeImage} className="content-lightbox-close" onClick={()=>setLightbox(null)}>關閉圖片 ×</button><img src={lightbox.src} alt={lightbox.alt||page.title}/></div>}
  </main>

@@ -1,0 +1,60 @@
+/* v65 (owner, 2026-11-18). Loaded last. */
+
+/* 1. Home hero: the big letter IS the name's first letter; the rest of the name follows at a smaller size. */
+.rv-hero-name>span[lang]{font:500 clamp(24px,2.1vw,34px)/1 var(--tx-serif);letter-spacing:.12em;color:#fff}
+.rv-hero-name>span[lang]>b{font:500 clamp(46px,4vw,64px)/.9 var(--tx-serif);letter-spacing:.02em;margin-right:.04em}
+.rv-hero.is-v64 .rv-hero-picks button>span{gap:0;font:500 13px/1.3 var(--tx-serif);letter-spacing:.12em}
+.rv-hero.is-v64 .rv-hero-picks button>span>b{font:600 19px/1 var(--tx-serif);letter-spacing:.02em;margin-right:.05em}
+.rv-hero.is-v64 .rv-hero-tabs button{gap:0;column-gap:0}
+.rv-hero.is-v64 .rv-hero-tabs strong{font:600 22px/1 var(--tx-serif);margin-right:.04em}
+.rv-hero.is-v64 .rv-hero-tabs button>span:last-child{font:500 14px/1 var(--tx-serif);letter-spacing:.12em}
+@media(max-width:760px){.rv-hero.is-v64 .rv-hero-picks button>span{font-size:11px;letter-spacing:.06em}.rv-hero.is-v64 .rv-hero-picks button>span>b{font-size:16px}}
+
+/* 2. Header panel, 公版獎盃: A to F in order, one line each. B, D and E are the featured models: an ink badge and a
+      small 主打 mark, nothing louder. */
+.site-sub ul.is-models a{padding:8px 12px 8px 10px}
+.site-sub-model{display:grid!important;grid-template-columns:30px auto auto minmax(0,1fr);align-items:center;gap:0 10px;width:100%}
+.site-sub-model>b{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(31,35,32,.28);font:600 15px/1 var(--tx-serif,serif);color:#1f2320;transition:background .25s,color .25s,box-shadow .25s}
+.site-sub-model>strong{font:500 15px/1.4 var(--tx-latin,sans-serif);letter-spacing:.12em}
+.site-sub-model>small{grid-column:4;justify-self:end;font:500 13.5px/1.4 var(--tx-latin,sans-serif);letter-spacing:.02em;color:#4a5047;font-variant-numeric:tabular-nums}
+.site-sub-model>i{font:normal 600 11px/1 var(--tx-sans,sans-serif);letter-spacing:.14em;padding:4px 6px 4px 7px;border-radius:3px;background:#ebe6d8;color:#5c4f2a}
+.site-sub-model.is-featured>b{background:#1f2320;color:#fff;box-shadow:none}
+.site-sub-model.is-featured>strong{font-weight:700}
+.site-sub a:hover .site-sub-model>b,.site-sub a:focus-visible .site-sub-model>b{background:#1f2320;color:#fff;box-shadow:none}
+.site-sub ul.is-models a .rv-icon{display:none}
+
+/* 3. Footer on ink. Text: white for values and links, 72% white for secondary lines, 60% for headings (all AA on #1c1e1c). */
+.folio-home .site-footer-v6{background:#1c1e1c;color:#fff;border-top:0}
+.folio-home .site-footer-v6 .sf-logo img{filter:invert(1)}
+.folio-home .site-footer-v6 .sf-company p,.folio-home .site-footer-v6 .sf-company address{color:rgba(255,255,255,.76)}
+.folio-home .site-footer-v6 .sf-company .sf-name{color:#fff}
+.folio-home .site-footer-v6 .sf-name span{color:rgba(255,255,255,.62)}
+.folio-home .site-footer-v6 .sf-contact a,.folio-home .site-footer-v6 nav a{color:#fff}
+.folio-home .site-footer-v6 h2{color:rgba(255,255,255,.62)}
+.folio-home .site-footer-v6 nav a{color:rgba(255,255,255,.9)}
+.folio-home .site-footer-v6 .sf-end{border-top-color:rgba(255,255,255,.16);color:rgba(255,255,255,.7)}
+.folio-home .site-footer-v6 .sf-end p:first-child,.folio-home .site-footer-v6 .sf-end button{color:#fff}
+.folio-home .site-footer-v6 .sf-end button:focus-visible,.folio-home .site-footer-v6 a:focus-visible{outline-color:#fff}
+
+/* 4. Cases: the dark band meets the photo above it (no white strip), five works in one even row. */
+.pg-cases .pg-band{margin-top:0}
+.pg-band-works.is-five{grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.pg-band-works.is-five>li:nth-child(n){margin-top:0}
+.pg-band-works.is-five .pg-band-frame{aspect-ratio:4/5}
+.pg-band-works.is-five .pg-band-frame img{width:100%;height:100%;object-fit:cover}
+.folio-home.tx .pg-band-works.is-five .pg-band-name{font-size:16px;padding-top:14px}
+.folio-home.tx .pg-band-works.is-five .pg-band-name em{color:rgba(242,240,235,.72)}
+@media(max-width:1100px) and (min-width:761px){.pg-band-works.is-five{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.folio-home.tx .site-footer-v6 h2{color:rgba(255,255,255,.74)}
+
+/* v66: no 主打 tag. A featured name (B, D, E) is bold and a soft light passes across its letters every few seconds;
+   the badge sits a little further from the name. */
+.site-sub-model{grid-template-columns:30px auto minmax(0,1fr);gap:0 16px}
+.site-sub-model>small{grid-column:3}
+.site-sub-model.is-featured>strong{font-weight:700;color:#1f2320;background:linear-gradient(100deg,#1f2320 0 38%,#b79a52 50%,#1f2320 62% 100%) 100% 0/300% 100% no-repeat;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@media(prefers-reduced-motion:no-preference){
+ .site-sub-model.is-featured>strong{animation:site-sub-glint 3.6s cubic-bezier(.4,0,.2,1) .5s infinite}
+ .site-sub ul.is-models li:nth-child(4) .site-sub-model>strong{animation-delay:.75s}
+ .site-sub ul.is-models li:nth-child(5) .site-sub-model>strong{animation-delay:1s}
+}
+@keyframes site-sub-glint{0%{background-position:100% 0}45%,100%{background-position:0 0}}

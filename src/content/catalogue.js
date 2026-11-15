@@ -10,11 +10,18 @@ export function resolveHref(path){const page=findPage(path);return page?.path||p
 export function isIndexPage(p){return ['/pages/material','/pages/case','/pages/news','/pages/trophy','/pages/recycling-design','/pages/recycle','/blog/posts','/pages/customer'].some(end=>p.path.endsWith(end))||p.category==='classics'||p.category==='archive'||p.path==='#/read/';}
 export function materialGroup(p){if(/marble|glass/.test(p.path))return '石材與礦物';if(/wood|beam|chips/.test(p.path))return '木材與纖維';if(/coffee/.test(p.path))return '生活回收';return '產業副產物';}
 export function caseGroup(p){if(/IP|聯名/.test(p.subcategory)||/Disney|Marvel|米奇|鋼鐵|金馬|LINE|Candace|8 Ball/i.test(p.title))return 'IP生活設計';if(/獎|杯|盃|獎牌/.test(p.title))return '企業獎盃';return '生活設計';}
-export function groupFor(p,category){return category==='materials'?materialGroup(p):category==='cases'?caseGroup(p):p.subcategory||p.category_label;}
+export function groupFor(p,category){return category==='materials'?materialGroup(p):['cases','custom','products'].includes(category)?caseGroup(p):p.subcategory||p.category_label;}
 export const standardSlugs=['trophy','trophy-1','trophy-1-1','trophy-2025-1','the-way-to-peak-standard-trophy','f款-層疊獎牌。再生大理石。綠'];
 export function editorFor(p){const slug=decodeURIComponent(p.path.split('/').pop());const i=standardSlugs.indexOf(slug);return i>=0?'ABCDEF'[i]:null}
 export function classicPages(category){
  if(category==='standard')return standardSlugs.map(slug=>pages.find(p=>decodeURIComponent(p.path)==='#/read/products/'+slug)).filter(Boolean);
+ // v53: 品牌訂製 (custom) lists the company trophy cases; 禮贈品訂製 (products) the non-trophy cases, lifestyle and IP.
+ // The Pinkoi-era product pages are no longer listed (their URLs still open).
+ // Newest first (by the last year a case ran); undated cases and proposals go last.
+ const latest=p=>Math.max(0,...String(p.metadata?.year||'').match(/\d{4}/g)?.map(Number)||[0]);
+ const byYear=list=>list.sort((a,b)=>latest(b)-latest(a));
+ if(category==='custom')return byYear(pages.filter(p=>p.category==='cases'&&!isIndexPage(p)&&caseGroup(p)==='企業獎盃'));
+ if(category==='products')return byYear(pages.filter(p=>p.category==='cases'&&!isIndexPage(p)&&caseGroup(p)!=='企業獎盃'));
  const result=pages.filter(p=>{if(isIndexPage(p))return false;if(category==='about')return ['about','contact'].includes(p.category);return p.category===category});
  if(category==='materials'){const order=['marble','glass','coffee','wooden','silt','chips','ash','veneer','aggergates'];result.sort((a,b)=>order.findIndex(x=>a.path.includes(x))-order.findIndex(x=>b.path.includes(x)))}return result;
 }
@@ -23,7 +30,10 @@ const cache=new Map();
 // (GitHub Pages); with the default base '/' this changes nothing. See vite.config.js.
 const base=import.meta.env?.BASE_URL||'/';
 const rebase=value=>typeof value==='string'?(base!=='/'&&/^\/(assets|content)\//.test(value)?base+value.slice(1):value):Array.isArray(value)?value.map(rebase):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([k,v])=>[k,rebase(v)])):value;
-export function loadPage(id){if(!cache.has(id))cache.set(id,fetch('/content/pages/'+id+'.json').then(r=>{if(!r.ok)throw Error('讀取失敗');return r.json()}).then(rebase).catch(e=>{cache.delete(id);throw e}));return cache.get(id)}
+// peekPage returns a page that has already been loaded, without waiting (used on first paint of a prerendered page).
+const loaded=new Map();
+export const peekPage=id=>loaded.get(id)||null;
+export function loadPage(id){if(!cache.has(id))cache.set(id,fetch('/content/pages/'+id+'.json').then(r=>{if(!r.ok)throw Error('讀取失敗');return r.json()}).then(rebase).then(p=>{loaded.set(id,p);return p}).catch(e=>{cache.delete(id);throw e}));return cache.get(id)}
 // The old-site 2:1 banners print the client's name across the photo, so case cards show a clean
 // product photo from the same page (case-photos.json, picked by hand) and name the client only on
 // hover. Other pages keep their banner or hero.
