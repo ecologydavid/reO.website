@@ -11,7 +11,9 @@ import ProductView from './ProductView.jsx';
 import PlateStage from './PlateStage.jsx';
 import Inspector from './Inspector.jsx';
 import Icon from '../components/Icon.jsx';
-import {classicNames} from '../components/site/classics.js';
+import {classicNames,offered} from '../components/site/classics.js';
+// v70: only the offered models can be picked (F is off the site for now; its scene code stays).
+const offeredModels=models.filter(m=>offered.includes(m.id));
 import './editor-v4.css';
 const STORAGE='reo-preview-draft-v3',legacyStorage='reo-preview-draft-v1';
 const keyFor=(id,shape,surface)=>`${id}:${shape}:${surface}`;
@@ -52,7 +54,7 @@ function Finishes({scene,onChange}){
 }
 
 export default function Editor({modelId,onModelChange,onHome}){
-  const model=models.find(m=>m.id===modelId)||models[1],history=useHistory(readDraft);
+  const model=offeredModels.find(m=>m.id===modelId)||offeredModels[1],history=useHistory(readDraft);
   const [shape,setShape]=useState('ridge'),[activeId,setActiveId]=useState('main'),[selectedId,setSelectedId]=useState('title'),[mode,setMode]=useState('front');
   const [notice,setNotice]=useState(''),[busy,setBusy]=useState(''),[reference,setReference]=useState(false);
   const [menu,setMenu]=useState(false),[big,setBig]=useState('plate'),[inline,setInline]=useState(null),[saved,setSaved]=useState('');
@@ -150,7 +152,7 @@ export default function Editor({modelId,onModelChange,onHome}){
         <div className="st-product-head"><p className="st-kicker"><span lang="en">{classicNames[model.id]}</span>{model.id} 款・{model.kind}</p><h2>{model.name}</h2><p className="st-meta">{size}<span>NT${model.price}</span></p></div>
         {/* v6: the models as photo cards (the catalogue photos), letter and English name under each. */}
         <section className="st-step st-step-models"><h3><span>01</span>款式</h3>
-          <div className="st-models">{models.map(m=><button type="button" key={m.id} aria-label={`${m.id} 款 ${classicNames[m.id]} ${m.name}`} aria-pressed={model.id===m.id} onClick={()=>changeModel(m.id)}><img src={`/assets/catalogue-${m.id}.webp`} alt="" width="1200" height="900" loading="lazy"/><span lang="en"><b>{m.id}</b>{classicNames[m.id].slice(1)}</span></button>)}</div>
+          <div className="st-models">{offeredModels.map(m=><button type="button" key={m.id} aria-label={`${m.id} 款 ${classicNames[m.id]} ${m.name}`} aria-pressed={model.id===m.id} onClick={()=>changeModel(m.id)}><img src={`/assets/catalogue-${m.id}.webp`} alt="" width="1200" height="900" loading="lazy"/><span lang="en"><b>{m.id}</b>{classicNames[m.id].slice(1)}</span></button>)}</div>
           {model.id==='F'?<div className="st-finish-row"><span className="st-label">獎牌造型</span><div className="st-chips">{shapeChoices.map(v=><button type="button" key={v.id} aria-pressed={shape===v.id} onClick={()=>{setShape(v.id);setSelectedId('title')}}>{v.name}</button>)}</div></div>:null}
         </section>
         <section className="st-step st-step-finish"><h3><span>02</span>顏色與材質</h3><Finishes scene={scene} onChange={setFinish}/></section>

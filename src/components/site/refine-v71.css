@@ -1,0 +1,4 @@
+/* v71 (owner, 2026-11-17). Loaded after refine-v65.css.
+   公版獎盃 header panel: room between the letter badge and the model name. header-v6.css's `.site-sub a>span`
+   (gap 2px) outranked the plain `.site-sub-model` rule, so v65/v66's 16px never applied; this selector wins. */
+.site-sub a>span.site-sub-model{column-gap:20px}

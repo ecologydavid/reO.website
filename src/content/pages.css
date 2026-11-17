@@ -466,3 +466,9 @@
 @media(max-width:600px){.pg-faq-thumb{width:60px;height:60px}.pg-faq-ways li,.pg-faq-with{gap:14px}}
 .pg-faq-group dd img.pg-faq-thumb{flex:none;width:72px;max-width:72px;height:72px;margin:0;aspect-ratio:1}
 @media(max-width:600px){.pg-faq-group dd img.pg-faq-thumb{width:60px;max-width:60px;height:60px}}
+
+/* v70: five classic models. The index runs five across; the step 01 mosaic is three over two, the lower two wider. */
+@media(min-width:1101px){.folio-home .content-works-grid.is-models{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.pg-flow-mosaic{grid-template-columns:repeat(6,1fr)}
+.pg-flow-mosaic>span{grid-column:span 2}
+.pg-flow-mosaic>span:nth-child(n+4){grid-column:span 3}

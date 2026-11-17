@@ -745,3 +745,56 @@ MaterialIntro's ring was measured against public/assets/reo-logo.png: slim ring 
 and below the dot (the logo has 8.75°; the owner asked for a little more). "re" lights up last, with a glow that
 settles. Its shape is not redrawn: public/assets/reo-re-mask.png is cut from the logo (frame 2.198 R wide, centred on
 the ring). Film length 6.2s.
+
+## Copy edits: 品牌客製化訂製, packaging at 品檢包裝 (v69, 2026-11-17, by request)
+- 品牌訂製 is now written 品牌客製化訂製 everywhere visitors see it (header label and panel, home section label,
+  landing title, closing/stat links). Route and category id stay 'custom'. Header still fits at 1150px and up.
+- Packaging is no longer split into 全客製化 / 部分客製化 terms at step 01. Step 01 (both 品牌客製化訂製 and 禮贈品訂製)
+  leads with understanding the brand's needs and concept design; packaging is only mentioned as part of that discussion.
+  The packaging options are one 客製化設計 term on 品檢包裝, ending 「依照預算規劃不同訂製包裝。」 Fact cards: 包裝 = 客製化訂製.
+- FAQ: packaging answer 「可以，依照預算規劃不同訂製包裝。」; 材質 adds 「想用品牌自己的材質有什麼限制？」.
+- Case landscape-trophy is titled 環境部 環境教育考核獎牌 (was 桃園市政府山水獎牌).
+
+## F withdrawn for now, hero follows the A–E cards (v70, 2026-11-17, by request)
+- F (FRAME, the medal) is off the site and the studio "for now". `offered` in src/components/site/classics.js (A–E) is the
+  one list read by home, menus, the 公版 page, the ordering band and the studio's model picker. F's data, geometry, masks,
+  photos and scene code stay, so it returns by adding 'F' there and undoing the items below.
+  - catalogue.js: the three F product pages are filtered out of `pages` (their URLs show 找不到這篇內容), and loadPage
+    removes F images, links and names from the old listing pages. prerender.mjs skips them (sitemap too) and writes
+    studio shells for A–E only. /studio/F/ opens home. Copy reads 五款 / A、B、C、D、E; prices list five.
+  - Home Classic: E and D tall, A and B above, C across both columns (`is-wide`); full row on tablets and phones.
+    公版 index five across; step 01 mosaic three over two.
+- Home hero: pointing at or focusing an A to E card shows that model in the hero (name, line, size, price, studio
+  button, photo); the loop waits and resumes on leave. A and C use their catalogue photos and a line from models.json.
+- Phones: the three slide tabs write the full name (DELTA, EXCEED, BOND), as on desktop.
+
+## Studio name, 公版 flow copy, material names on photos (v71, 2026-11-17, by request)
+Styles: site/refine-v71.css (site-wide, after refine-v65) and content/library-v71.css (after pages.css).
+- One name for the plaque studio: 銘版排版工作室. Changed: header panel row (navigation.js), home A to E line, 公版 fact card
+  label (Studio), article button 「以 X 款進入銘版排版工作室」, studio page title 「X 款｜銘版排版工作室」 and its loading text.
+  Do not write 線上排版工作室 or 線上排版 for it again.
+- 公版 ordering step 02 (landings.jsx flow): 10 座以上 unchanged; 低於 10 座 is one merged row in the owner's words:
+  「可以至「銘版排版工作室」自行擺放滿意版型（完成後可下載 .PDF 及 .EPS 檔案），接著再上傳「.PDF 及 .EPS 檔案」及「名單清冊」至
+  service@re-o.co，收件後我們會以實際印刷條件協助免費調整。若沒有辦法提供銘板排版範例，仍可以請我們協助設計排版，酌收排版費
+  NT$300。」 The studio name and the address are links. The fee is NT$300 (was NT$500; supersedes v39/v51).
+- Step 01 picks: 84px circles with a 26px letter (phones 44–56px, one row of five).
+- 公版 header panel: badge to name 20px. header-v6.css's `.site-sub a>span` (gap 2px) had outranked `.site-sub-model`, so the
+  v65/v66 16px never showed; refine-v71 uses `.site-sub a>span.site-sub-model`.
+- 循環材料 page: the reel (MaterialReel, now from site/materials.js) and the 全部循環材料 cards (MaterialEntry in
+  ContentLibrary.jsx) name each material on the photo like the home tiles: large Inter numeral, hairline, Chinese over
+  English. The reel photos link to their pages. Cards: group chip and the summary (15.5px, two lines at most) under the photo,
+  a glass arrow on it. Materials are listed in materials.js order, so the numerals run 01–09 and keep their number when
+  filtered. The About page reel keeps its white name tabs.
+
+## Case placement, material page order, home 訂製服務, new flow photos (v72, 2026-11-17, by request)
+- catalogue.js `groupOverride`: SDGs 鑰匙圈 and 蘇格登杯墊 list under 禮贈品訂製; 回收玻璃 x 電線杆木橫擔 (new-page-7) under
+  品牌客製化訂製. `unlisted`: tb-design-animal-sculpture-coffee-tamper duplicated 動物油土雕塑咖啡填壓器 and leaves every list
+  (63 cases; URL still opens).
+- Material pages: 材料與工藝 photos first, then Works (the intro button still jumps to the works).
+- Home section 02 is 訂製服務 (Custom): 01 品牌客製化訂製 → /pages/custom/, 02 禮贈品訂製 → /explore/products/,
+  03 IP生活設計 → cases filtered to IP.
+- Flow photos from the owner's folder (public/assets/flow-*.webp): 品牌 3D 建模 = 電表手機座三視圖, 開模 = NIK_6766;
+  禮贈品 01 = NIK_6622 sketch, 02 = whole rhino on a 4:3 ground of its own grey, 03 = NIK_6684, 04 = NIK_6761(1),
+  05 = 米奇桌鐘 211014_232, 06 = 空總名片架 GOE_1694, 07 = the same tape-and-box photo as 品牌客製化訂製.
+- v73: home 訂製服務 photos: 01 日月光獎盃260416/~29.jpg (assets/home-mode-ase.webp), 02 蘇格登杯墊 GOE_1711 (home-mode-singleton.webp).
+  Frames 4:3 instead of 3:4 (smaller); each subject checked whole in the centred crop.

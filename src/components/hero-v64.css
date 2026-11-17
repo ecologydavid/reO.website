@@ -55,3 +55,14 @@
 }
 .rv-hero.is-v64 .rv-hero-tabs .rv-hero-toggle{min-width:0}
 .rv-hero.is-v64 .rv-hero-stage::after{height:40%;background:linear-gradient(180deg,rgba(18,19,18,.6),rgba(18,19,18,0))}
+
+/* v70: pointing at an A to E card shows that model; the photo changes quickly, and A and C (catalogue photos) sit whole. */
+.rv-home .rv-hero.is-peek .rv-hero-photo{transition-duration:.45s}
+.rv-home .rv-hero-photo.is-extra{object-position:50% 50%}
+/* Phones: the three slide tabs write the full name, as on desktop (they showed the letter alone). */
+@media(max-width:760px){
+ .rv-hero.is-v64 .rv-hero-tabs{gap:12px}
+ .rv-hero.is-v64 .rv-hero-tabs button{grid-template-columns:auto auto;gap:0;min-width:0;font-size:12px;letter-spacing:.1em}
+ .rv-hero.is-v64 .rv-hero-tabs button>.rv-hero-bar{grid-column:1/-1}
+ .rv-hero.is-v64 .rv-hero-tabs button>span:last-child{display:inline;overflow:visible}
+}

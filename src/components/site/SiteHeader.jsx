@@ -57,7 +57,7 @@ function SubPanel({group,x,right,here,onPick}){
   </a></li>};
  return <div className={`site-sub${right?' is-right':''}`} style={right?{right:0}:{left:x}} role="group" aria-label={`${group.label}子頁面`}><div>
   <ul>{group.menu.filter(m=>!m[3]).map(row)}</ul>
-  {group.menu.some(m=>m[3])&&<><p>A 至 F 款</p><ul className="is-models">{group.menu.filter(m=>m[3]).map(row)}</ul></>}
+  {group.menu.some(m=>m[3])&&<><p>A 至 E 款</p><ul className="is-models">{group.menu.filter(m=>m[3]).map(row)}</ul></>}
   {group.id==='about'&&<><p>服務指南</p><ul className="is-plain">{supportLinks.map(([name,href])=>row([name,href]))}</ul></>}
  </div></div>;
 }

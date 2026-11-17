@@ -2,17 +2,25 @@ import index from '../data/content-index.json' with {type:'json'};
 import cardBanners from '../data/card-images.json' with {type:'json'};
 import casePhotos from '../data/case-photos.json' with {type:'json'};
 import caseDetails from '../data/case-details.json' with {type:'json'};
-export const pages=index.pages;
-const urls=index.aliases;
+// v70: F is off the site for now (see site/classics.js). Its three product pages are not listed, linked or opened;
+// the data files stay. `withdrawn` also cleans the old listing pages that showed them (loadPage).
 const decodePath=path=>{try{return decodeURIComponent(path)}catch{return path}};
+const withdrawn=path=>/^#\/read\/products\/f款/i.test(decodePath(String(path||'')));
+export const pages=index.pages.filter(p=>!withdrawn(p.path));
+const urls=index.aliases;
 export function findPage(path){const decoded=decodePath(path);return pages.find(p=>decodePath(p.path)===decoded)||pages.find(p=>p.path===urls['https://www.re-o.co/'+decoded.replace(/^#\/read\//,'')]);}
 export function resolveHref(path){const page=findPage(path);return page?.path||path}
 export function isIndexPage(p){return ['/pages/material','/pages/case','/pages/news','/pages/trophy','/pages/recycling-design','/pages/recycle','/blog/posts','/pages/customer'].some(end=>p.path.endsWith(end))||p.category==='classics'||p.category==='archive'||p.path==='#/read/';}
 export function materialGroup(p){if(/marble|glass/.test(p.path))return '石材與礦物';if(/wood|beam|chips/.test(p.path))return '木材與纖維';if(/coffee/.test(p.path))return '生活回收';return '產業副產物';}
-export function caseGroup(p){if(/IP|聯名/.test(p.subcategory)||/Disney|Marvel|米奇|鋼鐵|金馬|LINE|Candace|8 Ball/i.test(p.title))return 'IP生活設計';if(/獎|杯|盃|獎牌/.test(p.title))return '企業獎盃';return '生活設計';}
+// v72 (owner, 2026-11-17): placed by hand where the title words would mislead. The SDGs keychain and the Singleton coasters
+// are gifts, not trophies; the recycled glass × crossarm piece is a brand commission.
+const groupOverride={'#/read/pages/national-sustainable-development-award-–-gift-keychain':'生活設計','#/read/pages/singleton-whisky-coaster':'生活設計','#/read/pages/new-page-7':'企業獎盃'};
+// Listed once only: this page repeats 動物油土雕塑咖啡填壓器 (animal-shaped-coffee-tamper), so it leaves every list (its URL still opens).
+const unlisted=new Set(['#/read/pages/tb-design-animal-sculpture-coffee-tamper']);
+export function caseGroup(p){if(groupOverride[p.path])return groupOverride[p.path];if(/IP|聯名/.test(p.subcategory)||/Disney|Marvel|米奇|鋼鐵|金馬|LINE|Candace|8 Ball/i.test(p.title))return 'IP生活設計';if(/獎|杯|盃|獎牌/.test(p.title))return '企業獎盃';return '生活設計';}
 export function groupFor(p,category){return category==='materials'?materialGroup(p):['cases','custom','products'].includes(category)?caseGroup(p):p.subcategory||p.category_label;}
-export const standardSlugs=['trophy','trophy-1','trophy-1-1','trophy-2025-1','the-way-to-peak-standard-trophy','f款-層疊獎牌。再生大理石。綠'];
-export function editorFor(p){const slug=decodeURIComponent(p.path.split('/').pop());const i=standardSlugs.indexOf(slug);return i>=0?'ABCDEF'[i]:null}
+export const standardSlugs=['trophy','trophy-1','trophy-1-1','trophy-2025-1','the-way-to-peak-standard-trophy'];
+export function editorFor(p){const slug=decodeURIComponent(p.path.split('/').pop());const i=standardSlugs.indexOf(slug);return i>=0?'ABCDE'[i]:null}
 export function classicPages(category){
  if(category==='standard')return standardSlugs.map(slug=>pages.find(p=>decodeURIComponent(p.path)==='#/read/products/'+slug)).filter(Boolean);
  // v53: 品牌訂製 (custom) lists the company trophy cases; 禮贈品訂製 (products) the non-trophy cases, lifestyle and IP.
@@ -20,9 +28,9 @@ export function classicPages(category){
  // Newest first (by the last year a case ran); undated cases and proposals go last.
  const latest=p=>Math.max(0,...String(p.metadata?.year||'').match(/\d{4}/g)?.map(Number)||[0]);
  const byYear=list=>list.sort((a,b)=>latest(b)-latest(a));
- if(category==='custom')return byYear(pages.filter(p=>p.category==='cases'&&!isIndexPage(p)&&caseGroup(p)==='企業獎盃'));
- if(category==='products')return byYear(pages.filter(p=>p.category==='cases'&&!isIndexPage(p)&&caseGroup(p)!=='企業獎盃'));
- const result=pages.filter(p=>{if(isIndexPage(p))return false;if(category==='about')return ['about','contact'].includes(p.category);return p.category===category});
+ if(category==='custom')return byYear(pages.filter(p=>p.category==='cases'&&!unlisted.has(p.path)&&!isIndexPage(p)&&caseGroup(p)==='企業獎盃'));
+ if(category==='products')return byYear(pages.filter(p=>p.category==='cases'&&!unlisted.has(p.path)&&!isIndexPage(p)&&caseGroup(p)!=='企業獎盃'));
+ const result=pages.filter(p=>{if(isIndexPage(p)||unlisted.has(p.path))return false;if(category==='about')return ['about','contact'].includes(p.category);return p.category===category});
  if(category==='materials'){const order=['marble','glass','coffee','wooden','silt','chips','ash','veneer','aggergates'];result.sort((a,b)=>order.findIndex(x=>a.path.includes(x))-order.findIndex(x=>b.path.includes(x)))}return result;
 }
 const cache=new Map();
@@ -30,10 +38,12 @@ const cache=new Map();
 // (GitHub Pages); with the default base '/' this changes nothing. See vite.config.js.
 const base=import.meta.env?.BASE_URL||'/';
 const rebase=value=>typeof value==='string'?(base!=='/'&&/^\/(assets|content)\//.test(value)?base+value.slice(1):value):Array.isArray(value)?value.map(rebase):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([k,v])=>[k,rebase(v)])):value;
+const fName=text=>/^F款/.test(String(text||''));
+const scrub=p=>({...p,images:(p.images||[]).filter(im=>!fName(im.alt)),links:(p.links||[]).filter(l=>!withdrawn(l.path)),sections:(p.sections||[]).map(s=>({...s,paragraphs:(s.paragraphs||[]).filter(t=>!fName(t)),...(s.images?{images:s.images.filter(im=>!fName(im.alt))}:{})}))});
 // peekPage returns a page that has already been loaded, without waiting (used on first paint of a prerendered page).
 const loaded=new Map();
 export const peekPage=id=>loaded.get(id)||null;
-export function loadPage(id){if(!cache.has(id))cache.set(id,fetch('/content/pages/'+id+'.json').then(r=>{if(!r.ok)throw Error('讀取失敗');return r.json()}).then(rebase).then(p=>{loaded.set(id,p);return p}).catch(e=>{cache.delete(id);throw e}));return cache.get(id)}
+export function loadPage(id){if(!cache.has(id))cache.set(id,fetch('/content/pages/'+id+'.json').then(r=>{if(!r.ok)throw Error('讀取失敗');return r.json()}).then(rebase).then(scrub).then(p=>{loaded.set(id,p);return p}).catch(e=>{cache.delete(id);throw e}));return cache.get(id)}
 // The old-site 2:1 banners print the client's name across the photo, so case cards show a clean
 // product photo from the same page (case-photos.json, picked by hand) and name the client only on
 // hover. Other pages keep their banner or hero.

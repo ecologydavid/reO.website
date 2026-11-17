@@ -1,0 +1,62 @@
+/* v71 (owner, 2026-11-17). Loaded after pages.css by ContentLibrary.jsx. */
+
+/* 1. 公版 ordering step 01: the A to E picks are large enough to recognise each model (were 44px). */
+.folio-home .pg-flow-picks{gap:14px;margin-top:16px}
+.folio-home .pg-flow-picks a{width:84px;height:84px}
+.folio-home .pg-flow-picks span{right:0;bottom:0;width:26px;height:26px;font-size:12px;box-shadow:0 0 0 2px #fff}
+@media(max-width:760px){
+ .folio-home .pg-flow-picks{gap:8px;flex-wrap:nowrap}
+ .folio-home .pg-flow-picks a{width:clamp(44px,13vw,56px);height:clamp(44px,13vw,56px)}
+ .folio-home .pg-flow-picks span{width:22px;height:22px;font-size:11px}
+}
+
+/* 2. Step 02 terms: the studio and the e-mail address are links. */
+.folio-home .pg-flow-terms dd a{color:inherit;font-weight:600;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.folio-home .pg-flow-terms dd a:hover{color:var(--folio-ink)}
+
+/* 3. Material names on the photo, as on the home materials tiles: large numeral, hairline, Chinese over English. */
+.mt-name{position:absolute;z-index:1;left:0;right:0;bottom:0;display:flex;align-items:flex-end;gap:clamp(14px,1.4vw,18px);padding:0 clamp(16px,1.8vw,24px) clamp(16px,1.8vw,22px);color:#fff;pointer-events:none}
+.mt-name>em{flex:none;font:300 clamp(40px,3.8vw,58px)/.78 var(--tx-latin,"Inter",sans-serif);font-style:normal;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.22)}
+.mt-words{display:grid;gap:8px;min-width:0;padding-left:clamp(14px,1.4vw,18px);border-left:1px solid rgba(255,255,255,.5)}
+.mt-words strong{font:600 clamp(19px,1.6vw,25px)/1.15 var(--folio-serif,serif);letter-spacing:.1em;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.25)}
+.mt-words small{font:600 clamp(12px,.95vw,14px)/1.3 var(--tx-latin,"Inter",sans-serif);letter-spacing:.12em;text-transform:uppercase;color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.35);transition:letter-spacing .6s cubic-bezier(.2,.7,.2,1)}
+
+/* 3a. The reel on the 循環材料 page (replaces the white name tab there; the About reel keeps it). */
+.pg-reel.is-materials li a{position:relative;display:block;width:100%;height:100%;color:#fff;text-decoration:none}
+.pg-reel.is-materials li img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.pg-reel.is-materials li a::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(18,19,18,.66),rgba(18,19,18,.14) 44%,rgba(18,19,18,0) 66%);pointer-events:none}
+.pg-reel.is-materials li a:hover img{transform:scale(1.04)}
+.pg-reel.is-materials li a:hover .mt-words small,.pg-reel.is-materials li a:focus-visible .mt-words small{letter-spacing:.18em}
+
+/* 3b. The 全部循環材料 cards: the photo carries the name; below it the group and two lines of text at reading size. */
+.folio-home .content-works-grid.is-materials{gap:56px 24px}
+.mt-card{display:block;color:inherit;text-decoration:none}
+.mt-photo{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;background:#e9e8e3}
+.mt-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.mt-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(18,19,18,.64),rgba(18,19,18,.12) 46%,rgba(18,19,18,0) 70%);transition:background .5s;pointer-events:none}
+.mt-card:hover .mt-photo::after{background:linear-gradient(0deg,rgba(18,19,18,.74),rgba(18,19,18,.2) 55%,rgba(18,19,18,0) 80%)}
+.mt-card:hover .mt-words small,.mt-card:focus-visible .mt-words small{letter-spacing:.18em}
+.mt-go{position:absolute;z-index:1;right:clamp(14px,1.6vw,22px);bottom:clamp(16px,1.8vw,22px);display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 1px rgba(255,255,255,.55);color:#fff;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .3s,color .3s}
+.mt-card:hover .mt-go,.mt-card:focus-visible .mt-go{background:#fff;color:var(--folio-ink)}
+.mt-photo .mt-name{padding-right:76px}
+.mt-words strong{white-space:nowrap}
+.pg-reel.is-materials .mt-name{gap:12px;padding:0 16px 18px}
+.pg-reel.is-materials .mt-name>em{font-size:clamp(34px,2.9vw,46px)}
+.pg-reel.is-materials .mt-words{padding-left:12px}
+.pg-reel.is-materials .mt-words strong{font-size:clamp(17px,1.35vw,21px);letter-spacing:.08em}
+.mt-foot{display:flex;align-items:baseline;gap:14px;padding-top:18px}
+.mt-group{flex:none;padding:3px 11px;border:1px solid #c6c4ba;border-radius:999px;font-size:13px;line-height:1.5;letter-spacing:.08em;color:#4a5047;white-space:nowrap}
+.mt-line{min-width:0;font-size:15.5px;line-height:1.75;letter-spacing:.02em;color:#3d423b;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+@media(max-width:760px){
+ .folio-home .content-works-grid.is-materials{grid-template-columns:minmax(0,1fr);gap:40px}
+ .mt-name>em{font-size:38px}
+ .mt-words{gap:6px}
+ .mt-words strong{font-size:19px;letter-spacing:.06em}
+ .mt-words small{font-size:12px;letter-spacing:.08em}
+ .mt-foot{flex-direction:column;gap:8px;padding-top:14px}
+ .mt-line{font-size:15px}
+ .pg-reel.is-materials .mt-name>em{font-size:32px}
+ .pg-reel.is-materials .mt-words strong{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){.mt-photo img,.pg-reel.is-materials li img,.mt-words small{transition:none}}

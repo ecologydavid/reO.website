@@ -6,7 +6,7 @@ const toTop=()=>window.scrollTo({top:0,behavior:window.matchMedia('(prefers-redu
 // v63 (owner, 2026-11-16: the footer was too long and too big). One compact block, about half the old height:
 // the mark and the company facts on the left (facts first, as the reference studios do), then four short link
 // columns that follow the header's order (訂製 = the three services, 作品與材料, 關於, 服務指南), and one slim closing
-// line. The large "讓下一件作品" lead and its button are gone; 線上排版工作室 is a link in the first column.
+// line. The large "讓下一件作品" lead and its button are gone; 銘版排版工作室 is a link in the first column.
 const byId=Object.fromEntries(navigation.map(n=>[n.id,n]));
 const group=(...ids)=>[...ids.map(id=>[byId[id].label,byId[id].href]),...ids.flatMap(id=>byId[id].links.filter(l=>l!==shopLink))];
 const columns=[

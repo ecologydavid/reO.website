@@ -13,16 +13,16 @@ export async function preloadRoute(name){
  if(r.kind==='read'){const {findPage,loadPage}=await import('./content/catalogue.js'),p=findPage(r.path);if(p)await loadPage(p.id).catch(()=>{})}
 }
 // #/brands is the brand wall on the home page; the hash is kept so existing links still land on it.
-function readRoute(hash){const m=hash.match(/^#\/preview\/([A-F])$/);if(m)return {kind:'editor',modelId:m[1]};if(hash.startsWith('#/read/'))return {kind:'read',path:hash.split('?')[0]};if(hash.startsWith('#/explore/')){const [category,query='']=hash.slice(10).split('?');return {kind:'explore',category,filter:new URLSearchParams(query).get('filter')||''}}
+function readRoute(hash){const m=hash.match(/^#\/preview\/([A-E])$/);if(m)return {kind:'editor',modelId:m[1]};if(hash.startsWith('#/read/'))return {kind:'read',path:hash.split('?')[0]};if(hash.startsWith('#/explore/')){const [category,query='']=hash.slice(10).split('?');return {kind:'explore',category,filter:new URLSearchParams(query).get('filter')||''}}
 if(hash==='#/brands')return {kind:'home',section:'brands'};return {kind:'home'};}
 export default function App(){
   const name=useRoute(),route=React.useMemo(()=>readRoute(name),[name]),first=React.useRef(true);
   // A new page starts at its top (not on first load, where the browser restores the position).
   useEffect(()=>{if(first.current){first.current=false;return}window.scrollTo(0,0)},[name]);
   // Pages set their own title and description (src/seo.js); App covers the editor only.
-  useEffect(()=>{if(route.kind==='editor')setPageMeta({title:`${route.modelId} 款銘版排版預覽`,description:'線上編輯公版獎盃銘版：文字、圖片、對齊與圖層，預覽後下載排版確認 PDF。'})},[route.kind,route.modelId]);
+  useEffect(()=>{if(route.kind==='editor')setPageMeta({title:`${route.modelId} 款｜銘版排版工作室`,description:'在銘版排版工作室編輯公版獎盃銘版：文字、圖片、對齊與圖層，預覽後下載排版確認 PDF。'})},[route.kind,route.modelId]);
   const EditorView=ready.editor||LazyEditor,ContentView=ready.content||LazyContent;
   const preview=id=>navigate(`#/preview/${id}`);
-  return route.kind==='home'?<Home onPreview={openStudio} section={route.section}/>:<Suspense fallback={<div className="app-loading" style={{flexDirection:'column',gap:18}}><BrandLogo alt="" size={72} loop/>正在開啟{route.kind==='editor'?'排版工作室':'內容'}…</div>}>{route.kind==='editor'?<EditorView modelId={route.modelId} onModelChange={preview} onHome={()=>navigate('#/')}/>:<ContentView route={route}/>}</Suspense>;
+  return route.kind==='home'?<Home onPreview={openStudio} section={route.section}/>:<Suspense fallback={<div className="app-loading" style={{flexDirection:'column',gap:18}}><BrandLogo alt="" size={72} loop/>正在開啟{route.kind==='editor'?'銘版排版工作室':'內容'}…</div>}>{route.kind==='editor'?<EditorView modelId={route.modelId} onModelChange={preview} onHome={()=>navigate('#/')}/>:<ContentView route={route}/>}</Suspense>;
 }
 

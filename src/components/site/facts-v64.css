@@ -27,7 +27,7 @@
 .count-up>span:first-child{visibility:hidden}
 .count-up>span:last-child{position:absolute;left:0;top:0;white-space:nowrap}
 
-/* 公版獎盃: 款式 and 製作時程 on the left, 線上排版 and the price list on the right. */
+/* 公版獎盃: 款式 and 製作時程 on the left, 銘版排版工作室 and the price list on the right. */
 .folio-home.tx .pg-standard .pg-contact dl{grid-template-columns:minmax(0,5fr) minmax(0,6fr);grid-auto-flow:row dense;align-items:start}
 .folio-home.tx .pg-standard .pg-contact dl>div.is-left{grid-column:1}
 .folio-home.tx .pg-standard .pg-contact dl>div:not(.is-left){grid-column:2}

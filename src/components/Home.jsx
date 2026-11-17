@@ -5,7 +5,7 @@ import SiteFooter from './site/SiteFooter.jsx';
 import LogoWall from './site/LogoWall.jsx';
 import ShopWindow from './site/ShopWindow.jsx';
 import { siteStats } from './site/stats.js';
-import { classicNames } from './site/classics.js';
+import { classicNames, offered } from './site/classics.js';
 import { materials } from './site/materials.js';
 import GoldDust from './GoldDust.jsx';
 import { setPageMeta } from '../seo.js';
@@ -51,7 +51,7 @@ const pad = n => String(n).padStart(2, '0');
 // v64 (owner, 2026-11-17): the hero promotes three classic models, D, E and B, one whole-trophy photograph each
 // (supersedes the D-only hero, v39–v41). The left column follows the slide: the model's letter and English name, what
 // it is made of, its size and price, and a button that opens that model in the studio. Below, the A to E trophies
-// as photo cards (the old 44px round thumbnails were too small to read); F, a medal, stays on the 公版獎盃 page.
+// as photo cards (the old 44px round thumbnails were too small to read).
 // Slides keep their alt text; hidden ones are aria-hidden. Each panel haze is a 160px copy of its photo.
 const slideMs = 5000;
 const img = id => '/content/images/' + id + '.webp';
@@ -60,21 +60,26 @@ const heroSlides = [
   { id: 'E', src: '/assets/hero-wide.webp', haze: '/assets/hero-haze-E.webp', position: '56% 50%', line: '鋁片折面與再生大理石，設計師聯名款。', alt: 'E 款 EXCEED 公版獎盃 The way to PEAK，金與銀兩色並列' },
   { id: 'B', src: img('e8b500fc458fa120e4'), haze: '/assets/hero-haze-B.webp', position: '50% 50%', line: '熱處理北美黃檜，嵌入再生大理石。', alt: 'B 款 BOND 公版獎盃，木質盃身與黑色再生大理石構件' }
 ];
-const heroPicks = ['A', 'B', 'C', 'D', 'E'];
+const heroPicks = offered;
+// v70 (owner, 2026-11-17): pointing at (or focusing) one of the A to E cards shows that model in the hero: its name,
+// line, size, price, studio button and photo. A and C are not slides, so they bring their catalogue photo and a line
+// written from models.json's materials. The loop waits meanwhile and resumes when the pointer leaves.
+const peekLines = { A: '北美黃檜或木橫擔，立於再生大理石底座。', C: '熱處理北美黃檜，立於再生大理石底座。' };
+const heroExtras = heroPicks.filter(id => !heroSlides.some(s => s.id === id)).map(id => ({ id, src: `/assets/catalogue-${id}.webp`, line: peekLines[id], alt: `${id} 款 ${classicNames[id]} 公版獎盃實品` }));
 const sizeOf = m => Array.isArray(m.dimensions_mm) ? `高 ${Math.max(...m.dimensions_mm) / 10} cm` : '';
 function Hero({ onPreview }) {
-  const [active, setActive] = useState(0), [paused, setPaused] = useState(false), [away, setAway] = useState(false), hero = useRef(null);
+  const [active, setActive] = useState(0), [peek, setPeek] = useState(null), [paused, setPaused] = useState(false), [away, setAway] = useState(false), hero = useRef(null);
   // Off screen the slow zoom and the progress bar pause, so the hero costs nothing while you read on.
   useEffect(() => { const observer = new IntersectionObserver(([entry]) => setAway(!entry.isIntersecting)); observer.observe(hero.current); return () => observer.disconnect() }, []);
   // Endless loop, 5s per slide. With motion the progress bar drives the change (so pausing freezes
   // it exactly); under reduced motion a plain timer does. The pause button satisfies WCAG 2.2.2.
   const next = useCallback(() => setActive(a => (a + 1) % heroSlides.length), []), still = useRef(matchMedia('(prefers-reduced-motion: reduce)').matches);
-  useEffect(() => { if (paused || away || !still.current) return; const timer = setTimeout(next, slideMs); return () => clearTimeout(timer) }, [active, paused, away, next]);
-  const slide = heroSlides[active], model = models.find(m => m.id === slide.id);
-  return <section className={`rv-hero is-v64${paused ? ' is-paused' : ''}${away ? ' is-away' : ''}`} ref={hero} aria-labelledby="rv-hero-title" aria-roledescription="輪播">
+  useEffect(() => { if (paused || peek || away || !still.current) return; const timer = setTimeout(next, slideMs); return () => clearTimeout(timer) }, [active, paused, peek, away, next]);
+  const slide = (peek && [...heroSlides, ...heroExtras].find(s => s.id === peek)) || heroSlides[active], model = models.find(m => m.id === slide.id);
+  return <section className={`rv-hero is-v64${peek ? ' is-peek' : ''}${paused || peek ? ' is-paused' : ''}${away ? ' is-away' : ''}`} ref={hero} aria-labelledby="rv-hero-title" aria-roledescription="輪播">
     <GoldDust gust={active} running={!paused} />
     <div className="rv-hero-panel">
-      {heroSlides.map((s, i) => <img key={s.id} className={`rv-hero-haze${i === active ? ' is-active' : ''}`} src={s.haze} alt="" aria-hidden="true" />)}
+      {heroSlides.map((s, i) => <img key={s.id} className={`rv-hero-haze${s.id === (heroSlides.some(h => h.id === slide.id) ? slide.id : heroSlides[active].id) ? ' is-active' : ''}`} src={s.haze} alt="" aria-hidden="true" />)}
       <p className="rv-hero-kicker"><span>Classic</span>公版獎盃</p>
       <div className="rv-hero-copy">
         <h1 id="rv-hero-title"><span><span>再生大理石，</span></span><span><span>成就高雅的榮譽。</span></span></h1>
@@ -82,18 +87,19 @@ function Hero({ onPreview }) {
         <div className="rv-hero-model" key={slide.id} aria-live="polite">
           <p className="rv-hero-name"><span lang="en" aria-label={classicNames[slide.id]}><b>{slide.id}</b>{classicNames[slide.id].slice(1)}</span><em>{slide.id} 款公版獎盃</em></p>
           <p className="rv-hero-line">{slide.line}</p>
-          <dl><div><dt>尺寸</dt><dd>{sizeOf(model)}</dd></div><div><dt>價格</dt><dd>NT$ {model.price}</dd></div><div><dt>製作</dt><dd>3 個工作天起</dd></div></dl>
+          <dl><div><dt>尺寸</dt><dd>{sizeOf(model)}</dd></div><div><dt>價格</dt><dd>NT$ {model.price.includes('～') ? model.price.split('～')[0] + ' 起' : model.price}</dd></div><div><dt>製作</dt><dd>3 個工作天起</dd></div></dl>
         </div>
         <div className="rv-hero-actions"><Button onClick={() => onPreview(slide.id)} variant="light" icon={<ActionIcon name="studio" />}>開始 {slide.id} 款排版</Button><Button href="#/explore/standard" variant="glass">全部公版獎盃</Button></div>
       </div>
       <div className="rv-hero-picks">
-        <p>A 至 E 款<span>點選款式，開啟線上排版</span></p>
-        <ul>{heroPicks.map(id => <li key={id}><button className={id === slide.id ? 'is-on' : undefined} onClick={() => onPreview(id)} aria-label={`開始 ${id} 款 ${classicNames[id]} 排版（另開新視窗）`}><img src={`/assets/catalogue-${id}.webp`} alt="" width="1200" height="900" loading="lazy" /><span aria-hidden="true"><b>{id}</b>{classicNames[id].slice(1)}</span></button></li>)}</ul>
+        <p>A 至 E 款<span>點選款式，開啟銘版排版工作室</span></p>
+        <ul onMouseLeave={() => setPeek(null)} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setPeek(null) }}>{heroPicks.map(id => <li key={id}><button className={id === slide.id ? 'is-on' : undefined} onMouseEnter={() => setPeek(id)} onFocus={() => setPeek(id)} onClick={() => onPreview(id)} aria-label={`開始 ${id} 款 ${classicNames[id]} 排版（另開新視窗）`}><img src={`/assets/catalogue-${id}.webp`} alt="" width="1200" height="900" loading="lazy" /><span aria-hidden="true"><b>{id}</b>{classicNames[id].slice(1)}</span></button></li>)}</ul>
       </div>
     </div>
     <div className="rv-hero-stage">
-      {heroSlides.map((s, i) => <img key={s.id} className={`rv-hero-photo${i === active ? ' is-active' : ''}`} src={s.src} alt={s.alt} aria-hidden={i !== active || undefined} width="1440" height="1080" style={{ objectPosition: s.position }} fetchPriority={i ? undefined : 'high'} loading={i ? 'lazy' : undefined} />)}
-      <div className="rv-hero-tabs" role="group" aria-label="主打公版獎盃">{heroSlides.map((s, i) => <button key={s.id} aria-pressed={i === active} onClick={() => setActive(i)}><span className="rv-hero-bar">{i === active && <i key={active} onAnimationEnd={next} />}</span><strong>{s.id}</strong><span>{classicNames[s.id].slice(1)}</span></button>)}<button className="rv-hero-toggle" onClick={() => setPaused(p => !p)} aria-label={paused ? '播放輪播' : '暫停輪播'}><svg viewBox="0 0 16 16" aria-hidden="true"><path d={paused ? 'M5 3.5v9l7.5-4.5z' : 'M5 3.5v9M11 3.5v9'} fill={paused ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></button></div>
+      {heroSlides.map((s, i) => <img key={s.id} className={`rv-hero-photo${s.id === slide.id ? ' is-active' : ''}`} src={s.src} alt={s.alt} aria-hidden={s.id !== slide.id || undefined} width="1440" height="1080" style={{ objectPosition: s.position }} fetchPriority={i ? undefined : 'high'} loading={i ? 'lazy' : undefined} />)}
+      {heroExtras.map(s => <img key={s.id} className={`rv-hero-photo is-extra${s.id === slide.id ? ' is-active' : ''}`} src={s.src} alt={s.alt} aria-hidden={s.id !== slide.id || undefined} width="1200" height="900" loading="lazy" />)}
+      <div className="rv-hero-tabs" role="group" aria-label="主打公版獎盃">{heroSlides.map((s, i) => <button key={s.id} aria-pressed={i === active} onClick={() => { setPeek(null); setActive(i) }}><span className="rv-hero-bar">{i === active && <i key={active} onAnimationEnd={next} />}</span><strong>{s.id}</strong><span>{classicNames[s.id].slice(1)}</span></button>)}<button className="rv-hero-toggle" onClick={() => setPaused(p => !p)} aria-label={paused ? '播放輪播' : '暫停輪播'}><svg viewBox="0 0 16 16" aria-hidden="true"><path d={paused ? 'M5 3.5v9l7.5-4.5z' : 'M5 3.5v9M11 3.5v9'} fill={paused ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></button></div>
     </div>
   </section>;
 }
@@ -231,10 +237,11 @@ function Process() {
 // and the English name from the studio's material index (MATERIAL page; CROSSRAM corrected to Crossarm).
 // (the list lives in site/materials.js, shared with the material pages)
 // Custom trophies are their own block, apart from the A–F catalogue. Copy follows the 訂製 CUSTOM page.
+// v72 (owner, 2026-11-17): the three ways to work with re.O, each linking to its own page.
 const customModes = [
-  { n: '01', title: '專案訂製', line: '以品牌語彙，設計獨有的外觀。', src: '/content/images/ccf5762abffbaf5ef7.webp', alt: 'Oni Bus Coffee 品牌咖啡托盤，專案訂製案例' },
-  { n: '02', title: '專料訂製', line: '以企業顆粒、粉末化可再利用的廢棄物料，製作專屬材質。', src: '/content/images/61b1b99657d3baca5c.webp', alt: '總統盃黑客松獎盃，以焚化再生粒料製作的專料訂製案例' },
-  { n: '03', title: '訂製包裝', line: '外盒、內襯到品牌標識，一併訂製。', src: '/content/images/a39bc07b4f4aa850e6.webp', alt: '黑色訂製外盒與內襯，裝載客製獎座', className: 'is-left' }
+  { n: '01', title: '品牌客製化訂製', line: '以品牌語彙與專屬材質，訂製獨有的獎座。', href: '#/read/pages/custom', src: '/assets/home-mode-ase.webp', alt: '日月光 ASE 傑出供應商獎盃與黑色訂製禮盒，品牌客製化訂製案例' },
+  { n: '02', title: '禮贈品訂製', line: '品牌禮贈、器物與場域紀念，從材質開始設計。', href: '#/explore/products', src: '/assets/home-mode-singleton.webp', alt: '蘇格登威士忌再生大理石杯墊，禮贈品訂製案例' },
+  { n: '03', title: 'IP生活設計', line: 'Disney、Marvel 等授權角色，走進日常。', href: '#/explore/cases?filter=IP生活設計', src: '/assets/case-disney-hola.webp', alt: '米奇再生大理石桌鐘，IP 授權生活設計案例' }
 ];
 // D and E are the models the studio promotes; they lead the classic at a larger size.
 const featured = ['E', 'D'];
@@ -264,14 +271,14 @@ export default function Home({ onPreview, section }) {
 
       <section className="rv-section rv-gutter" id="classic" aria-labelledby="rv-classic-title">
         <SectionHead index="01" label="公版獎盃" en="Classic" id="rv-classic-title" title={<>為榮耀，<br />找到合適的樣貌。</>} />
-        <div className="rv-products">{[...models].sort((a, b) => featured.indexOf(b.id) - featured.indexOf(a.id)).map(m => <article className={`rv-product${featured.includes(m.id) ? ' is-feature' : ''}`} key={m.id} data-reveal>
+        <div className="rv-products">{models.filter(m => offered.includes(m.id)).sort((a, b) => featured.indexOf(b.id) - featured.indexOf(a.id)).map(m => <article className={`rv-product${featured.includes(m.id) ? ' is-feature' : m.id === 'C' ? ' is-wide' : ''}`} key={m.id} data-reveal>
           <button className="rv-product-photo" onClick={() => onPreview(m.id)} aria-label={`${m.id} 款 ${classicNames[m.id]}，開始銘版排版`}><Frame src={`/assets/catalogue-${m.id}.webp`} alt={`${m.id} 款 ${m.name}實品`} width="1200" height="900" /><ClassicTab id={m.id} /></button>
         </article>)}</div>
       </section>
 
       <section className="rv-section rv-gutter" id="custom" aria-labelledby="rv-custom-title">
-        <SectionHead index="02" label="品牌訂製" en="Brand" id="rv-custom-title" title={<>為品牌，<br />訂製專屬的榮耀。</>} />
-        <ol className="rv-modes">{customModes.map(m => <li key={m.n} data-reveal><a href="#/read/pages/custom"><Frame src={m.src} alt={m.alt} width="1440" height="1440" className={m.className} /><span className="rv-mode-label"><em>{m.n}</em><strong>{m.title}</strong><Arrow /></span><span className="rv-mode-line">{m.line}</span></a></li>)}</ol>
+        <SectionHead index="02" label="訂製服務" en="Custom" id="rv-custom-title" title={<>為品牌，<br />訂製專屬的榮耀。</>} />
+        <ol className="rv-modes">{customModes.map(m => <li key={m.n} data-reveal><a href={m.href}><Frame src={m.src} alt={m.alt} width="1440" height="1440" className={m.className} /><span className="rv-mode-label"><em>{m.n}</em><strong>{m.title}</strong><Arrow /></span><span className="rv-mode-line">{m.line}</span></a></li>)}</ol>
       </section>
 
       <section className="rv-section rv-materials" id="materials" aria-labelledby="rv-materials-title">
