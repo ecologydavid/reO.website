@@ -1,6 +1,5 @@
 import {defineConfig} from 'vite';
 import adminDev from './admin-service/dev-plugin.mjs';
-import {execSync} from 'node:child_process';
 
 // GitHub Pages serves the site under /<repo>/. Source code keeps root paths such as '/assets/x.webp'
 // and '/content/images/x.webp'; for a sub-path build (BASE_PATH=/repo/) this plugin prefixes those
@@ -32,9 +31,7 @@ const seo={
  }
 };
 // JSX goes through src/h.js (reoH), which renders route names as real addresses; see src/router.js.
-// v76: the build date (Taipei) and commit shown with the version in the footer (src/version.js). GITHUB_SHA is set on
-// GitHub's builder; a local build reads it from git, or shows no commit.
-const commit=(process.env.GITHUB_SHA||(()=>{try{return execSync('git rev-parse HEAD',{stdio:['ignore','pipe','ignore']}).toString().trim()}catch{return ''}})()).slice(0,7);
-const buildInfo={date:new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Taipei'}).format(new Date()).replace(/-/g,'.'),commit};
+// The build date (Taipei) shown with the version in the footer (src/version.js).
+const buildInfo={date:new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Taipei'}).format(new Date()).replace(/-/g,'.')};
 // adminDev: the case admin's local back end, dev server only (admin-service/dev-plugin.mjs).
 export default defineConfig({base,define:{__BUILD__:JSON.stringify(buildInfo)},plugins:[rebase,seo,adminDev],esbuild:{jsxFactory:'reoH',jsxInject:"import {reoH} from '/src/h.js'"}});

@@ -869,3 +869,12 @@ The owner asked for a back office to change photos and text himself, signed in w
   messages (the 58433f1 deploy failed because Chrome on GitHub's runner did not answer within the old 20s).
 - Local builds from Git Bash: set MSYS_NO_PATHCONV=1, or BASE_PATH=/reO.website/ is rewritten to
   C:/Program Files/Git/reO.website/ and no page renders (the prerender then waits ~8s per page and looks hung).
+
+## Version format v1.0.0 (2026-11-18, by request; supersedes the v76 footer format)
+- The footer reads 「v1.0.0 · 2026.11.18」: major.minor.patch, then the build date (Taipei). No commit any more.
+  src/version.js `siteVersion` is set by hand and raised with every release: patch for fixes and copy (1.0.1), minor for
+  new features or sections (1.1.0), major for a redesign (2.0.0). The date updates by itself on every build, admin saves
+  included. The "vNN" headings in this file are the old internal numbering up to v76; this release is 1.0.0.
+- Why an admin save takes a few minutes: the site is static. A save is a commit; GitHub's workflow then installs, tests,
+  builds and prerenders all ~156 pages (about 2–3 minutes), publishes to gh-pages, and GitHub Pages serves pages with a
+  cache of up to 10 minutes, so a browser may need a hard refresh (Ctrl+F5).
