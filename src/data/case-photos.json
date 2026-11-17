@@ -6,10 +6,10 @@
   "alt": "2025 Shawn Coffee Latte Art Competition 字體設計外觀獎盃"
  },
  "#/read/pages/8-ball-shaped-scented-candle": {
-  "src": "/assets/case-8-ball.webp",
-  "width": 480,
-  "height": 480,
-  "alt": "點燃的八號球造型香氛蠟燭"
+  "src": "/content/images/9450f7a9f3339db273.webp",
+  "width": 640,
+  "height": 640,
+  "alt": "點燃的 Stussy 八號球造型香氛蠟燭"
  },
  "#/read/pages/adi-forum-trophy": {
   "src": "/content/images/9686e933d371e1f0a2.webp",
@@ -114,10 +114,10 @@
   "alt": "盃身斜切角度金色金屬銘板"
  },
  "#/read/pages/double-dice-shaped-scented-candle": {
-  "src": "/assets/case-dice.webp",
-  "width": 653,
-  "height": 653,
-  "alt": "雙骰子造型香氛蠟燭"
+  "src": "/content/images/90b5d5638c1000a582.webp",
+  "width": 958,
+  "height": 958,
+  "alt": "點燃的 Stussy 雙骰子造型香氛蠟燭"
  },
  "#/read/pages/dragon-boat-trophy-–-delta": {
   "src": "/content/images/261ebe77e2b63bf469.webp",
@@ -276,10 +276,10 @@
   "alt": "隱藏式內嵌發光燈展示卡牌座"
  },
  "#/read/pages/pinkoi-trophy": {
-  "src": "/assets/case-pinkoi.webp",
-  "width": 2364,
-  "height": 1773,
-  "alt": "Pinkoi設計獎獎盃，藍色量體搭配金色頂部標誌。"
+  "src": "/content/images/d0aa85f7fe77687fff.webp",
+  "width": 811,
+  "height": 1440,
+  "alt": "Pinkoi 設計獎獎盃，藍色石紋量體頂端是金色的品牌標誌"
  },
  "#/read/pages/presidential-hackathon-trophy": {
   "src": "/content/images/19b630249adc0c7766.webp",
@@ -366,10 +366,10 @@
   "alt": "立體品牌介面獎座，置於專屬包裝內襯中。"
  },
  "#/read/pages/undefeated-basketball-candle": {
-  "src": "/assets/case-undefeated.webp",
-  "width": 574,
-  "height": 574,
-  "alt": "undefeated 籃球蠟燭的 3D 模型"
+  "src": "/content/images/91217c1af190c28451.webp",
+  "width": 855,
+  "height": 819,
+  "alt": "橄欖綠的 undefeated 籃球造型蠟燭"
  },
  "#/read/pages/wang-jinhua-plaster-diffuser-figurine": {
   "src": "/assets/case-wang-jinhua.webp",
@@ -394,5 +394,59 @@
   "width": 1440,
   "height": 1440,
   "alt": "招財水庫淤泥青蛙造型雙色卡片架"
+ },
+ "#/read/pages/torna-trophy": {
+  "src": "/content/images/0e9c8781dacc934e89.webp",
+  "width": 1440,
+  "height": 1440,
+  "alt": "TORNA獎盃，灰綠與淺灰兩款圓柱並排"
+ },
+ "#/read/pages/delta-esports-racing-trophy": {
+  "src": "/content/images/7390bb5fa6257c437c.webp",
+  "width": 1057,
+  "height": 1440,
+  "alt": "台達電競傳奇巔峰賽獎盃，金、銀、銅三座方向盤造型獎座"
+ },
+ "#/read/pages/hakka-music-note-trophy": {
+  "src": "/content/images/5e5a257c19131b210a.webp",
+  "width": 1047,
+  "height": 1440,
+  "alt": "客家音符比賽獎杯，五座音符造型的實木獎座"
+ },
+ "#/read/pages/mingdao-service-trophy": {
+  "src": "/content/images/1b928683cfc8873893.webp",
+  "width": 1440,
+  "height": 1440,
+  "alt": "明道獎盃，白色石紋量體上有金色數字 40、藍色星球與金色銘版"
+ },
+ "#/read/pages/victor-branch-handle-bag": {
+  "src": "/content/images/d884e28793ec93f193.webp",
+  "width": 1440,
+  "height": 1440,
+  "alt": "黑色皮革手提包，提把是樹枝造型"
+ },
+ "#/read/pages/lucys-ring-cone": {
+  "src": "/content/images/e801e458b606f5190c.webp",
+  "width": 750,
+  "height": 750,
+  "alt": "Lucy's 客製圓錐戒台，白色石紋錐體上掛著手鍊"
+ },
+ "#/read/pages/kinmen-broadcast-wall-speaker": {
+  "src": "/content/images/831eba2ad44c1f8d53.webp",
+  "width": 1070,
+  "height": 1402,
+  "alt": "金門戰地音箱，白色方塊上排列圓孔的播音牆造型擴音座"
+ },
+ "#/read/pages/popsicle-exhibition": {
+  "src": "/content/images/670f1b661839b4f7fd.webp",
+  "width": 1080,
+  "height": 1440,
+  "alt": "枝仔冰展覽現場，黃色長廊上方吊掛成片的冰棒物件"
+ },
+ "#/read/pages/glass-vessel-base": {
+  "src": "/content/images/e6539b6e95bde74b0c.webp",
+  "width": 1080,
+  "height": 1440,
+  "alt": "玻璃器皿斜靠在黑底金紋的底座上"
  }
 }

@@ -145,15 +145,15 @@ export const landings={
   actions:[['開始排版','#/preview/A'],['寄信洽詢','mailto:service@re-o.co','ghost'],['來電洽詢','tel:+886289665369','ghost'],['訂製常見問題','#/read/pages/faq','ghost']],
   // No full-bleed photo here: the ordering steps and the six models come straight after the facts.
   band:StudioBand,indexEn:'Models',indexTitle:'五款公版',grid:'is-models',
-  closing:['需要專屬造型，或品牌自己的材料？',['品牌客製化訂製','#/read/pages/custom'],['禮贈品訂製','#/explore/products']]},
+  closing:['需要專屬造型，或品牌自己的材料？',['品牌獎盃訂製','#/read/pages/custom'],['禮贈品訂製','#/explore/products']]},
  // v60 (owner, 2026-11-16): the cases summary shows the owner's headline figures instead of the per-group counts
  // (the index below still filters by group).
  cases:{en:'Works',title:'企業與IP案例',card:'groups',unit:'件作品',
-  stats:[['合作企業','100+','家'],['企業獎盃','90+','件作品'],['品牌客製化訂製','80+','件作品']],
+  stats:[['合作企業','100+','家'],['企業獎盃','90+','件作品'],['品牌獎盃訂製','80+','件作品']],
   actions:[['聯絡合作','mailto:service@re-o.co'],['合作品牌牆','#/brands','ghost']],
   hero:{src:'/assets/case-ase.webp',alt:'日月光 ASE 最佳供應獎盃',width:2400,height:2400,position:'50% 42%'},
   band:CollaborationBand,indexEn:'Works',indexTitle:'全部合作案例',grid:'is-works',
-  closing:['合作領域涵蓋電子金控、政府單位與商業品牌。',['合作品牌牆','#/brands'],['品牌客製化訂製','#/read/pages/custom']]},
+  closing:['合作領域涵蓋電子金控、政府單位與商業品牌。',['合作品牌牆','#/brands'],['品牌獎盃訂製','#/read/pages/custom']]},
  materials:{en:'Materials',title:'循環材料',card:'groups',
   actions:[['專料訂製','#/read/pages/custom'],['寄信洽詢','mailto:service@re-o.co','ghost']],
   hero:{src:'/content/images/8a959cd06cce7ed889.webp',alt:'re.O 工作室分類保存的回收材料',width:1440,height:1080,position:'50% 50%'},unit:'種材料',
@@ -161,7 +161,7 @@ export const landings={
   closing:['企業有顆粒、粉末化可再利用的廢棄物料，由 re.O 評估製作專屬材質。',['專料訂製','#/read/pages/custom'],['工藝與工作室文章','#/explore/journal']]},
  // v53 (owner, 2026-11-09): 品牌訂製 (the former 客製化獎盃, #/read/pages/custom) and 禮贈品訂製 (#/explore/products)
  // follow the 公版 page: facts card, the 一條龍 process, an image-led explanation, then the cases.
- custom:{en:'Brand',title:'品牌客製化訂製',
+ custom:{en:'Brand',title:'品牌獎盃訂製',
   card:[['Modes','訂製方式','專案訂製・專料訂製'],['Packaging','包裝','客製化訂製'],['Email','電子郵件',<a href="mailto:service@re-o.co">service@re-o.co</a>],['Phone','電話',<a href="tel:+886289665369">+886-2-8966-5369</a>]],
   actions:[['寄信洽詢','mailto:service@re-o.co'],['來電洽詢','tel:+886289665369','ghost'],['訂製常見問題','#/read/pages/faq','ghost']],
   band:BrandBand,indexEn:'Works',indexTitle:'企業獎盃案例',grid:'is-works',meta:'year',
@@ -170,7 +170,7 @@ export const landings={
   card:[['Range','品項','品牌禮贈・品牌器物・IP 聯名'],['Packaging','包裝','客製化訂製'],['Email','電子郵件',<a href="mailto:service@re-o.co">service@re-o.co</a>],['Phone','電話',<a href="tel:+886289665369">+886-2-8966-5369</a>]],
   actions:[['寄信洽詢','mailto:service@re-o.co'],['來電洽詢','tel:+886289665369','ghost'],['訂製常見問題','#/read/pages/faq','ghost']],
   band:GiftBand,indexEn:'Works',indexTitle:'禮贈品案例',grid:'is-works',
-  closing:['需要專屬造型，或品牌自己的材料？',['品牌客製化訂製','#/read/pages/custom'],['循環材料','#/explore/materials']]},
+  closing:['需要專屬造型，或品牌自己的材料？',['品牌獎盃訂製','#/read/pages/custom'],['循環材料','#/explore/materials']]},
  journal:{en:'Journal',title:'設計與工藝'},
  about:{en:'Studio',title:'品牌與工藝內容'}
 };

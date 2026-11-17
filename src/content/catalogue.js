@@ -2,6 +2,8 @@ import index from '../data/content-index.json' with {type:'json'};
 import cardBanners from '../data/card-images.json' with {type:'json'};
 import casePhotos from '../data/case-photos.json' with {type:'json'};
 import caseDetails from '../data/case-details.json' with {type:'json'};
+import caseCards from '../data/case-cards.json' with {type:'json'};
+import {groupOf} from '../admin/model.mjs';
 // v70: F is off the site for now (see site/classics.js). Its three product pages are not listed, linked or opened;
 // the data files stay. `withdrawn` also cleans the old listing pages that showed them (loadPage).
 const decodePath=path=>{try{return decodeURIComponent(path)}catch{return path}};
@@ -12,12 +14,11 @@ export function findPage(path){const decoded=decodePath(path);return pages.find(
 export function resolveHref(path){const page=findPage(path);return page?.path||path}
 export function isIndexPage(p){return ['/pages/material','/pages/case','/pages/news','/pages/trophy','/pages/recycling-design','/pages/recycle','/blog/posts','/pages/customer'].some(end=>p.path.endsWith(end))||p.category==='classics'||p.category==='archive'||p.path==='#/read/';}
 export function materialGroup(p){if(/marble|glass/.test(p.path))return '石材與礦物';if(/wood|beam|chips/.test(p.path))return '木材與纖維';if(/coffee/.test(p.path))return '生活回收';return '產業副產物';}
-// v72 (owner, 2026-11-17): placed by hand where the title words would mislead. The SDGs keychain and the Singleton coasters
-// are gifts, not trophies; the recycled glass × crossarm piece is a brand commission.
-const groupOverride={'#/read/pages/national-sustainable-development-award-–-gift-keychain':'生活設計','#/read/pages/singleton-whisky-coaster':'生活設計','#/read/pages/new-page-7':'企業獎盃'};
-// Listed once only: this page repeats 動物油土雕塑咖啡填壓器 (animal-shaped-coffee-tamper), so it leaves every list (its URL still opens).
-const unlisted=new Set(['#/read/pages/tb-design-animal-sculpture-coffee-tamper']);
-export function caseGroup(p){if(groupOverride[p.path])return groupOverride[p.path];if(/IP|聯名/.test(p.subcategory)||/Disney|Marvel|米奇|鋼鐵|金馬|LINE|Candace|8 Ball/i.test(p.title))return 'IP生活設計';if(/獎|杯|盃|獎牌/.test(p.title))return '企業獎盃';return '生活設計';}
+// v75: a case's group and whether it is listed are data now (`group`, `hidden` in content-index.json), so the admin page
+// can change them. A case without `group` is still placed by its title (groupOf in admin/model.mjs). Hidden cases leave
+// every list; their URL still opens (v72: the page that repeats 動物油土雕塑咖啡填壓器 is hidden this way).
+const unlisted={has:path=>Boolean(pages.find(p=>p.path===path)?.hidden)};
+export const caseGroup=groupOf;
 export function groupFor(p,category){return category==='materials'?materialGroup(p):['cases','custom','products'].includes(category)?caseGroup(p):p.subcategory||p.category_label;}
 export const standardSlugs=['trophy','trophy-1','trophy-1-1','trophy-2025-1','the-way-to-peak-standard-trophy'];
 export function editorFor(p){const slug=decodeURIComponent(p.path.split('/').pop());const i=standardSlugs.indexOf(slug);return i>=0?'ABCDE'[i]:null}
@@ -48,7 +49,9 @@ export function loadPage(id){if(!cache.has(id))cache.set(id,fetch('/content/page
 // product photo from the same page (case-photos.json, picked by hand) and name the client only on
 // hover. Other pages keep their banner or hero.
 export const isBanner=im=>Boolean(im)&&Math.abs(im.width/im.height-2)<.03;
-export function cardImage(p){return casePhotos[p.path]||cardBanners[p.path]||p.hero}
+// v74: lists load a 720px copy of each cover (case-cards.json, written by tools/cases/import.py) instead of the
+// 1440–2400px original; width and height stay the original's, so frames keep their proportions.
+export function cardImage(p){const im=casePhotos[p.path]||cardBanners[p.path]||p.hero;return im&&caseCards[im.src]?{...im,src:caseCards[im.src]}:im}
 // Two hand-checked detail shots per case (480px, case-details.json) and how many more photos the page has.
 export const detailsFor=p=>caseDetails[p.path]||{details:[],more:0};
 // Case titles name the client on either side of ｜: "作品｜T.B. Design x re.O", "作品｜快點行銷委製"

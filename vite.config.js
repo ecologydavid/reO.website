@@ -1,4 +1,5 @@
 import {defineConfig} from 'vite';
+import adminDev from './admin-service/dev-plugin.mjs';
 
 // GitHub Pages serves the site under /<repo>/. Source code keeps root paths such as '/assets/x.webp'
 // and '/content/images/x.webp'; for a sub-path build (BASE_PATH=/repo/) this plugin prefixes those
@@ -25,9 +26,10 @@ const seo={
  transformIndexHtml:{order:'pre',handler:html=>html.replaceAll('%SITE_URL%',site||'http://localhost')},
  generateBundle(){
   const today=new Date().toISOString().slice(0,10);
-  this.emitFile({type:'asset',fileName:'robots.txt',source:`User-agent: *\nAllow: /\n${site?`\nSitemap: ${site}/sitemap.xml\n`:''}`});
+  this.emitFile({type:'asset',fileName:'robots.txt',source:`User-agent: *\nAllow: /\nDisallow: /admin/\n${site?`\nSitemap: ${site}/sitemap.xml\n`:''}`});
   if(site)this.emitFile({type:'asset',fileName:'sitemap.xml',source:`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n <url><loc>${site}/</loc><lastmod>${today}</lastmod></url>\n</urlset>\n`});
  }
 };
 // JSX goes through src/h.js (reoH), which renders route names as real addresses; see src/router.js.
-export default defineConfig({base,plugins:[rebase,seo],esbuild:{jsxFactory:'reoH',jsxInject:"import {reoH} from '/src/h.js'"}});
+// adminDev: the case admin's local back end, dev server only (admin-service/dev-plugin.mjs).
+export default defineConfig({base,plugins:[rebase,seo,adminDev],esbuild:{jsxFactory:'reoH',jsxInject:"import {reoH} from '/src/h.js'"}});

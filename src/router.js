@@ -9,6 +9,7 @@
 //   #/explore/<category>    /explore/<category>/
 //   #/preview/<A–F>         /studio/<A–F>/
 //   #/brands                /brands/
+//   #/admin                 /admin/             (the case admin, v75; never prerendered or indexed)
 // Links are converted where they are rendered (src/h.js). Old #/… links still open: they are rewritten on arrival.
 import {useSyncExternalStore} from 'react';
 const base=import.meta.env?.BASE_URL||'/';
@@ -29,6 +30,7 @@ export function fromLocation(loc){
  const query=loc.search||'';
  if(!path)return '#/';
  if(path==='brands')return '#/brands';
+ if(path==='admin')return '#/admin'+query;
  if(path.startsWith('explore/'))return '#/'+path+query;
  if(path.startsWith('studio/'))return '#/preview/'+path.slice(7);
  return '#/read/'+path+query;

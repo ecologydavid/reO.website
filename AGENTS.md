@@ -798,3 +798,63 @@ Styles: site/refine-v71.css (site-wide, after refine-v65) and content/library-v7
   05 = 米奇桌鐘 211014_232, 06 = 空總名片架 GOE_1694, 07 = the same tape-and-box photo as 品牌客製化訂製.
 - v73: home 訂製服務 photos: 01 日月光獎盃260416/~29.jpg (assets/home-mode-ase.webp), 02 蘇格登杯墊 GOE_1711 (home-mode-singleton.webp).
   Frames 4:3 instead of 3:4 (smaller); each subject checked whole in the centred crop.
+
+## 品牌獎盃訂製, owner photo import, card-sized covers (v74, 2026-11-18, by request)
+- 品牌客製化訂製 is now written 品牌獎盃訂製 everywhere (header, panel, home 訂製服務 card 01, landing title, closing and
+  stat links). Route and category id stay 'custom'. Supersedes the v69 wording.
+- Owner photo folders: C:\Users\ecolo\Desktop\東陽整理照片\客製獎盃 (品牌獎盃訂製 cases) and \品牌禮贈品訂製 (禮贈品訂製 cases);
+  each subfolder is one case and the folder names are the owner's correct names.
+- tools/cases/import.py + tools/cases/batch-2026-11-18.json: the importer. Per case it adds photos to an existing page
+  (appended, so they land in 更多照片) or creates the page, index entry, cover and hover details. Photos become ≤1440px
+  WebP named by content hash. Re-running changes nothing. Run with the PIL python:
+  `python -I -X utf8 tools/cases/import.py tools/cases/<batch>.json`. To add cases later, write a new batch file.
+  The importer's same-shot check (dhash) misses photos the old site stored with a wordmark or a different crop, so
+  compare a page's photos by eye after importing; 13 repeats were removed by hand in this batch.
+- This batch: 9 new cases (72 listed cases, 150 pages) and about 100 photos added to 36 existing cases.
+  New, 品牌獎盃訂製: TORNA獎盃, 客家音符比賽獎杯, 明道獎盃, 台達 電競傳奇巔峰賽獎盃 (folder 台達卡丁車電競獎盃; title from its plaque).
+  New, 禮贈品訂製: Victor 樹枝提把包, 克洛 Lucy's 客製戒台, 枝仔冰展覽, 樂玻璃底座, 金門戰地音箱.
+  Their text is a first draft written only from what the photos show (inscriptions, plaques, the exhibition label);
+  year/material are filled only where a photo shows them. The owner still has to confirm them.
+- Pinkoi: cover and page hero = 202361_230601_318.jpg; the chapter 02 photo = IMG_0410.JPG; IMG_0415.JPG in 更多照片.
+  亞太: GOE_2903 and GOE_2914 in 更多照片.
+- Titles: 「Stussy 8 Ball 八號球造型香氛蠟燭」 and 「Stussy 雙骰子造型香氛蠟燭」 (folder names). Dice and undefeated covers
+  and heroes are now the owner's originals (the v62 screenshot cuts are no longer used).
+- catalogue.js cardImage(): lists load a 720px copy of each cover (src/data/case-cards.json → public/assets/case-cards,
+  written by the importer). All covers together went from 6.4 MB to 1.4 MB. A cover changed by hand needs the importer
+  re-run (or its entry removed from case-cards.json) or the list keeps showing the old small copy.
+
+## Case admin at /admin/ (v75, 2026-11-18, by request)
+The owner asked for a back office to change photos and text himself, signed in with Google, in the site's own look.
+- Screens: src/admin/AdminSite.jsx (+ admin.css, all under `.adm`). Sign-in → case list (tabs 品牌獎盃訂製 / 禮贈品訂製 /
+  IP 生活設計 / 已隱藏, search, 新增案例) → editor. The editor's left column is the form (01 基本資料, 02 文字, 03 照片,
+  04 列表封面); the right column is the real public page (ContentReader with `draft`) at desktop width, scaled to fit,
+  updating as he types. Photo order decides placement and each photo is labelled with where it lands (頁首大圖,
+  配第 N 段文字, 細節圖, 更多照片). Route `#/admin` → /admin/ (own chunk; noindex; robots.txt Disallow; prerender writes the
+  plain shell there; not in the sitemap, not linked from the site).
+- Rules for what a save writes: src/admin/model.mjs (no browser APIs; tests/admin.test.mjs). A case = its page JSON, its
+  content-index entry, case-photos (cover), case-details (hover photos), case-cards (720px cover). Photos are resized in
+  the browser (src/admin/images.js: ≤1440px WebP, hash-named like the importer; JPEG where the browser cannot write WebP).
+  Nothing is ever deleted from the repository by the admin; a removed photo just leaves the page.
+- `group` and `hidden` are data now (content-index.json): catalogue.js caseGroup = groupOf (admin/model.mjs; a case
+  without `group` is still placed by its title), and hidden cases leave every list (URL still opens). This replaces the
+  v72 groupOverride / unlisted tables in code. The admin always writes `group` when it saves a case.
+- Two back ends, one rule file (admin-service/rules.mjs: only those content files, images named by their own hash):
+  - local: `pnpm dev` → admin-service/dev-plugin.mjs, /__admin routes that read and write the project files. No sign-in;
+    127.0.0.1 only, custom header required. Vite reloads the page after a save.
+  - online: admin-service/server.mjs (Cloud Run, no dependencies). Verifies the Google ID token (signature, audience,
+    expiry, verified e-mail on ALLOWED_EMAILS), accepts requests only from ALLOWED_ORIGINS, and writes one commit through
+    the GitHub API; the Pages workflow then publishes. Setup steps: admin-service/README.md.
+  - src/admin/config.js holds the service URL and the OAuth client ID (neither is a secret). Empty = the published
+    /admin/ says 後台尚未啟用.
+  - Deployed 2026-11-18: Cloud Run `reo-site-admin` (project adept-voltage-509816-a6, asia-east1, 0–2 instances, 256Mi),
+    own service account reo-site-admin@… that can read only the secret `reo-site-admin-github` (the owner's fine-grained
+    token: this repository only, Contents read/write, Actions read; renew before it expires). OAuth client 「re.O 網站後台」,
+    origin https://ecologydavid.github.io. ALLOWED_EMAILS = ecologydavid@gmail.com. Add the new origin to the OAuth client
+    and ALLOWED_ORIGINS when the site moves to its own domain.
+  - Budget: 「re.O 每月預算 NT$100」 on the billing account, alerts at 50/90/100% and forecast 100%, e-mailed to
+    ecologydavid@gmail.com (monitoring channel 「re.O 預算提醒」) and the billing admins.
+- Tests no longer pin the number of pages or cases (≥ 150 / ≥ 72) and stats.js counts cases from the data, so a case
+  added in the admin cannot fail the deploy. Home.jsx no longer imports stats.js (it was unused and would pull the
+  catalogue into the home bundle).
+- Checked locally in headless Chrome: create a case with three uploads and a square cover, save, reopen, open its public
+  page; saving five existing cases unchanged left every data file identical apart from the added `group`.

@@ -54,10 +54,11 @@ function Works({works}){
   </a></li>)}</ol>
  </section>;
 }
-export default function ContentReader({path}){
- const index=findPage(path),[page,setPage]=useState(()=>peekPage(index?.id)),[error,setError]=useState(''),[gallery,setGallery]=useState(8),[lightbox,setLightbox]=useState(null);
+// `draft` (admin preview): a page object shown as it is, without loading, page meta or list position.
+export default function ContentReader({path,draft}){
+ const index=draft||findPage(path),[loaded,setPage]=useState(()=>draft?null:peekPage(index?.id)),page=draft||loaded,[error,setError]=useState(''),[gallery,setGallery]=useState(8),[lightbox,setLightbox]=useState(null);
  const closeImage=useRef(null),root=useRef(null);
- useEffect(()=>{let live=true;setPage(peekPage(index?.id));setError('');setGallery(8);if(!index){setError('找不到這篇內容。');return}loadPage(index.id).then(p=>{if(live){setPage(p);const cat=editorFor(p)||p.subcategory==='公版獎盃'?'standard':categoryInfo[p.category]?p.category:'about';setPageMeta({title:p.title.replace(/｜/g,' '),description:p.summary,trail:[['首頁','#/'],[categoryInfo[cat].label,`#/explore/${cat}`],[p.title,p.path]]})}}).catch(()=>{if(live)setError('內容暫時無法載入，請重新整理。')});return()=>{live=false}},[index?.id]);
+ useEffect(()=>{if(draft)return;let live=true;setPage(peekPage(index?.id));setError('');setGallery(8);if(!index){setError('找不到這篇內容。');return}loadPage(index.id).then(p=>{if(live){setPage(p);const cat=editorFor(p)||p.subcategory==='公版獎盃'?'standard':categoryInfo[p.category]?p.category:'about';setPageMeta({title:p.title.replace(/｜/g,' '),description:p.summary,trail:[['首頁','#/'],[categoryInfo[cat].label,`#/explore/${cat}`],[p.title,p.path]]})}}).catch(()=>{if(live)setError('內容暫時無法載入，請重新整理。')});return()=>{live=false}},[index?.id,Boolean(draft)]);
  useEffect(()=>{if(!lightbox)return;const old=document.body.style.overflow,previous=document.activeElement;document.body.style.overflow='hidden';closeImage.current?.focus();const key=e=>{if(e.key==='Escape')setLightbox(null);if(e.key==='Tab'){e.preventDefault();closeImage.current?.focus()}};document.addEventListener('keydown',key);return()=>{document.body.style.overflow=old;document.removeEventListener('keydown',key);previous?.focus()}},[lightbox]);
  useEffect(()=>{if(!page||!root.current)return;const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.04});root.current.querySelectorAll('[data-reveal]:not(.is-visible)').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[page,gallery]);
  if(error)return <main className="content-not-found folio-gutter"><h1>{error}</h1><a className="folio-link" href="#/explore/cases">探索站內內容<SiteArrow/></a></main>;
