@@ -48,10 +48,17 @@ const origin = `http://127.0.0.1:${server.address().port}`;
 const chromePath = process.env.CHROME_PATH || ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', '/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium-browser', '/usr/bin/chromium', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'].find(p => fs.existsSync(p));
 if (!chromePath) { console.error('prerender: no Chrome found; set CHROME_PATH'); process.exit(1); }
 const port = 9400 + Math.floor(Math.random() * 400), profile = fs.mkdtempSync(path.join(dist, '.prerender-'));
-const chrome = spawn(chromePath, ['--headless=new', '--no-sandbox', '--disable-gpu', '--remote-debugging-port=' + port, '--user-data-dir=' + profile, '--hide-scrollbars', '--window-size=1440,900', 'about:blank'], {stdio: 'ignore'});
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-let targets;
-for (let i = 0; i < 80 && !targets?.length; i++) { await sleep(250); try { targets = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); } catch {} }
+// Chrome on a busy build machine can take a while to open its debugging port (2026-11-18: the 20s wait ran out on
+// GitHub's runner). Wait up to 60s, and start it once more if it never answers; its own messages are shown on failure.
+let chrome, targets, chromeLog = '';
+for (let attempt = 1; attempt <= 2 && !targets?.length; attempt++) {
+  chrome = spawn(chromePath, ['--headless=new', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--no-first-run', '--remote-debugging-port=' + port, '--user-data-dir=' + profile, '--hide-scrollbars', '--window-size=1440,900', 'about:blank'], {stdio: ['ignore', 'ignore', 'pipe']});
+  chrome.stderr.on('data', d => { chromeLog = (chromeLog + d).slice(-4000); });
+  for (let i = 0; i < 240 && !targets?.length; i++) { await sleep(250); try { targets = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); } catch {} }
+  if (!targets?.length) { console.error(`prerender: Chrome did not answer (attempt ${attempt})`); chrome.kill(); await sleep(1000); }
+}
+if (!targets?.length) { console.error('prerender: giving up. Chrome said:\n' + chromeLog); process.exit(1); }
 const ws = new WebSocket(targets.find(t => t.type === 'page').webSocketDebuggerUrl);
 await new Promise(r => ws.onopen = r);
 let id = 0;

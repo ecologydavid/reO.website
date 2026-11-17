@@ -1,4 +1,5 @@
 import React from 'react';
+import {versionLabel} from '../../version.js';
 import {navigation,supportLinks,shopLink,isExternal} from './navigation.js';
 import {BrandLogo,studioTab} from './ui.jsx';
 import './footer-v6.css';
@@ -33,7 +34,7 @@ export default function SiteFooter(){return <footer className="site-footer-v6">
  </div>
  <div className="sf-end folio-gutter">
   <p><span lang="en">re.O</span>材質再生 循環設計</p>
-  <p className="sf-legal">© {new Date().getFullYear()} 或心國際設計有限公司</p>
+  <p className="sf-legal">© {new Date().getFullYear()} 或心國際設計有限公司<small className="sf-version" title="網站版本">{versionLabel}</small></p>
   <button type="button" onClick={toTop}>回到頂部<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 13V3M4 7l4-4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></button>
  </div>
 </footer>}

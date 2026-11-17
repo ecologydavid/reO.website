@@ -19,6 +19,8 @@
 .sf-end p:first-child{font-family:var(--tx-serif,serif);font-weight:600;letter-spacing:.12em;color:#1f2320}
 .sf-end p:first-child span{margin-right:10px;font-family:var(--tx-latin,sans-serif);font-size:16px;font-weight:500;letter-spacing:.01em}
 .sf-legal{margin-left:auto!important;font-variant-numeric:tabular-nums}
+/* v76: the release name, build date and commit after the copyright, small and quiet. */
+.sf-version{margin-left:14px;font:400 12px/1 var(--tx-latin,"Inter",sans-serif);letter-spacing:.04em;opacity:.62;white-space:nowrap}
 .sf-end button{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 4px;border:0;background:none;color:#1f2320;font:inherit;font-weight:600;letter-spacing:.06em;cursor:pointer}
 .sf-end button svg{width:14px;height:14px;transition:transform .3s}
 .sf-end button:hover svg{transform:translateY(-3px)}

@@ -858,3 +858,14 @@ The owner asked for a back office to change photos and text himself, signed in w
   catalogue into the home bundle).
 - Checked locally in headless Chrome: create a case with three uploads and a square cover, save, reopen, open its public
   page; saving five existing cases unchanged left every data file identical apart from the added `group`.
+
+## Version in the footer, prerender on the builder (v76, 2026-11-18, by request)
+- Every page's footer ends the copyright line with the version: 「v76 · 2026.11.18 · 58433f1」 (release · build date in
+  Taipei · commit). src/version.js holds `siteVersion`; RAISE IT (v77, v78, …) with every release pushed, matching the
+  heading of that release's note here. Date and commit come from vite.config.js (`__BUILD__`; GITHUB_SHA on the builder,
+  git locally), so a save from the case admin shows its own commit.
+- The footer's studio link reads 銘版排版工作室 (was 線上排版工作室; v71 rule).
+- tools/prerender.mjs waits up to 60s for Chrome and starts it a second time before giving up, printing Chrome's own
+  messages (the 58433f1 deploy failed because Chrome on GitHub's runner did not answer within the old 20s).
+- Local builds from Git Bash: set MSYS_NO_PATHCONV=1, or BASE_PATH=/reO.website/ is rewritten to
+  C:/Program Files/Git/reO.website/ and no page renders (the prerender then waits ~8s per page and looks hung).
