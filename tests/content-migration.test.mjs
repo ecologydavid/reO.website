@@ -1,12 +1,39 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
-import {pages,findPage,classicPages,editorFor} from '../src/content/catalogue.js';
+import {pages,findPage,classicPages,editorFor,isIndexPage} from '../src/content/catalogue.js';
 import {navigation,supportLinks,contentHref} from '../src/components/site/navigation.js';
+import {arrangeArticle} from '../src/content/arrange.js';
 const root=new URL('../',import.meta.url);
-test('all migrated pages and local related links resolve without old-site redirects',()=>{assert(pages.length>=150);assert.equal(new Set(pages.map(p=>p.path)).size,pages.length);assert.equal(new Set(pages.map(p=>p.id)).size,pages.length);for(const p of pages){const data=JSON.parse(readFileSync(new URL('public/content/pages/'+p.id+'.json',root),'utf8'));assert.equal(data.path,p.path);assert(data.sections.length||data.images.length,p.title);for(const l of data.links.filter(l=>!/f款/i.test(decodeURIComponent(l.path))))assert(findPage(l.path),p.title+' -> '+l.path);for(const im of [data.hero,...data.images].filter(Boolean))assert(existsSync(new URL('public'+im.src,root)),im.src);}});
+test('the two Delta glass tree entries share one case and keep the light-and-shadow cover',async()=>{
+ const {cardImage,splitCase}=await import('../src/content/catalogue.js');
+ const canonical='#/read/pages/delta-glass-tree-trophy',legacy='#/read/pages/new-page-7';
+ const entry=findPage(canonical);
+ assert.deepEqual(splitCase(entry.title),{work:'台達 玻璃樹模範獎盃',client:'Delta'});
+ assert.equal(findPage(legacy),entry);
+ assert.equal(findPage(contentHref('https://www.re-o.co/pages/new-page-7')),entry);
+ assert(!pages.some(page=>page.path===legacy));
+ assert.equal(classicPages('custom').filter(page=>page===entry).length,1);
+ assert.match(cardImage(entry).src,/119276212b2bf99af7\.webp$/);
+ assert(existsSync(new URL('public'+cardImage(entry).src,root)));
+ const page=JSON.parse(readFileSync(new URL('public/content/pages/'+entry.id+'.json',root),'utf8'));
+ assert.equal(page.title,entry.title);
+ assert.deepEqual(page.hero,entry.hero);
+ const {chapters}=arrangeArticle(page,findPage);
+ assert.deepEqual(chapters.map(chapter=>chapter.image.src.split('/').pop()),[
+  '26e4f9262d65e63e15.webp','bc6f73c905e5d02660.webp','f9a083db8afb679a0c.webp','76a09f1578f03bcfc1.webp',
+ ]);
+ const redirect=readFileSync(new URL('public/pages/new-page-7/index.html',root),'utf8');
+ assert(redirect.includes('url=../delta-glass-tree-trophy/'));
+});
+test('all migrated pages and local related links resolve without old-site redirects',()=>{assert(pages.length>0);assert.equal(new Set(pages.map(p=>p.path)).size,pages.length);assert.equal(new Set(pages.map(p=>p.id)).size,pages.length);for(const p of pages){const data=JSON.parse(readFileSync(new URL('public/content/pages/'+p.id+'.json',root),'utf8'));assert.equal(data.path,p.path);assert(data.sections.length||data.images.length,p.title);for(const l of data.links.filter(l=>!/f款/i.test(decodeURIComponent(l.path))))assert(findPage(l.path),p.title+' -> '+l.path);for(const im of [data.hero,...data.images].filter(Boolean))assert(existsSync(new URL('public'+im.src,root)),im.src);}});
 test('six navigation groups keep standard and custom trophies apart and lead to valid internal pages',()=>{assert.equal(navigation.length,6);assert.deepEqual(navigation.slice(0,2).map(n=>n.href),['#/explore/standard','#/read/pages/custom']);const hrefs=[...navigation.flatMap(n=>[n.href,...n.links.map(([,href])=>href)]),...supportLinks.map(([,href])=>href)];for(const href of hrefs.filter(h=>!h.startsWith('https://www.pinkoi.com/'))){assert(href.startsWith('#/'));if(href.startsWith('#/read/'))assert(findPage(href),href);if(href.startsWith('#/explore/'))assert(classicPages(href.slice(10).split('?')[0]).length>0,href);}});
-test('nine material pages and 72 case details (one duplicate unlisted, v72; nine added from the owner photos, v74) exclude old listing indexes',()=>{assert.equal(classicPages('materials').length,9);assert(classicPages('cases').length>=72);});
+test('material and case listings exclude old listing indexes and hidden cases',()=>{
+ assert.equal(classicPages('materials').length,9);
+ const visibleCases=pages.filter(page=>page.category==='cases'&&!page.hidden&&!isIndexPage(page));
+ assert.deepEqual(classicPages('cases'),visibleCases);
+ assert.deepEqual(new Set([...classicPages('custom'),...classicPages('products')]),new Set(visibleCases));
+});
 test('five standard products keep one-click access to every offered editor model (F withdrawn, v70)',()=>{assert.deepEqual(classicPages('standard').map(editorFor),['A','B','C','D','E']);assert(!pages.some(p=>/f款/i.test(decodeURIComponent(p.path))));});
 test('39 logo entries (one per case; 行政院國家永續發展委員會 folded into 行政院, 2026-11-08) retain valid local destinations and source artwork',()=>{const logos=JSON.parse(readFileSync(new URL('src/data/logo-wall.json',root),'utf8'));assert.equal(logos.length,39);for(const l of logos){assert(existsSync(new URL('public'+l.image.src,root)));if(l.href)assert(findPage(l.href),l.name);}});
 test('canonical old source URLs resolve to new internal paths',()=>{assert(findPage(contentHref('https://www.re-o.co/pages/ase-outstanding-supplier-trophy')));assert(findPage(contentHref('https://www.re-o.co/products/trophy-1')));});
