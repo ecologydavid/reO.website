@@ -28,28 +28,48 @@ const origami=[
 // tapping an entry brings its photograph into the print. A year shows once, on the first row it covers.
 // Entries share photos, so each photo is loaded once; a stand-in photo is marked 示意照片. Data: record.js.
 const srcOf=p=>p.src||img(p.img),prints=[...new Map(record.map(p=>[srcOf(p),p])).values()];
+function RecordCaption({item}){
+ return <figcaption><em>{item.outlet||item.title}</em>{item.year&&<span>{item.year}</span>}{item.generic?<small>示意照片</small>:null}</figcaption>;
+}
 function Record(){
  const [kind,setKind]=useState(''),[active,setActive]=useState(0),item=record[active];
+ const ownerPhoto=item.src?.startsWith('/assets/about-events/');
+ const printShape=ownerPhoto?(item.w<item.h?' is-portrait':item.w/item.h>1.7?' is-wide':''):'';
  const shown=record.map((p,i)=>[p,i]).filter(([p])=>!kind||p.kind===kind);
  const choose=k=>{setKind(k);setActive(record.findIndex(p=>!k||p.kind===k))};
- return <section className="pg-press" id="about-awards" aria-labelledby="pg-press-title">
+ return <section className="pg-press" id="about-awards" aria-labelledby="pg-press-title" tabIndex={-1}>
   <div className="pg-press-grid folio-gutter">
    <div className="pg-press-side" data-reveal>
     <p className="pg-kicker"><span>04</span>Awards · Exhibitions · Talks · Press</p><h2 id="pg-press-title">設計講座與產業報導</h2>
-    <figure className="pg-press-print">{prints.map(p=>{const on=srcOf(p)===srcOf(item);return <img key={srcOf(p)} className={on?'is-on':undefined} src={srcOf(p)} alt={on?item.alt:''} aria-hidden={!on||undefined} width={p.w} height={p.h} loading="lazy" style={p.pos?{objectPosition:p.pos}:undefined}/>})}<figcaption><em>{item.outlet||item.title}</em>{item.year||''}{item.generic?<small>示意照片</small>:null}</figcaption></figure>
+    <figure className={`pg-press-print${printShape}`}>{prints.map(p=>{const on=srcOf(p)===srcOf(item),position=on?item.pos:p.pos;return <img key={srcOf(p)} className={on?'is-on':undefined} src={srcOf(p)} alt={on?item.alt:''} aria-hidden={!on||undefined} width={p.w} height={p.h} loading="lazy" style={position?{objectPosition:position}:undefined}/>})}<RecordCaption item={item}/></figure>
    </div>
    <div className="pg-press-index" data-reveal>
     <div className="pg-press-filters" role="group" aria-label="依類別篩選"><button type="button" aria-pressed={!kind} onClick={()=>choose('')}>全部<span>{record.length}</span></button>{kinds.map(k=><button key={k} type="button" aria-pressed={kind===k} onClick={()=>choose(k)}>{k}<span>{record.filter(p=>p.kind===k).length}</span></button>)}</div>
-    <ol>{shown.map(([p,i],n)=>{const same=n>0&&(shown[n-1][0].year||'—')===(p.year||'—');return <li key={p.outlet+p.title} className={i===active?'is-on':undefined} onPointerEnter={()=>setActive(i)}>
+    <ol>{shown.map(([p,i],n)=>{const same=n>0&&(shown[n-1][0].year||'—')===(p.year||'—');return <li key={p.outlet+p.title} className={i===active?'is-on':undefined} onPointerEnter={()=>{if(matchMedia('(min-width: 1101px) and (hover: hover)').matches)setActive(i)}}>
      {React.createElement(p.href?'a':'button',{className:'pg-press-row',...(p.href?{href:p.href,target:'_blank',rel:'noreferrer'}:{type:'button'}),onFocus:()=>setActive(i),onClick:p.href?undefined:()=>setActive(i)},<><span className={`pg-press-year${same?' is-same':''}`}>{p.year||'—'}</span><span className="pg-press-main"><em><b>{p.kind}</b>{p.outlet?<span>{p.outlet}</span>:null}</em><strong>{p.title}</strong>{p.line?<small>{p.line}</small>:null}</span><span className="pg-press-go" aria-hidden="true">{p.href?'↗':''}</span></>)}
+     {i===active&&<figure className="pg-press-inline"><img src={srcOf(p)} alt={p.alt} width={p.w} height={p.h} loading="lazy"/><RecordCaption item={p}/></figure>}
     </li>})}</ol>
    </div>
   </div>
  </section>;
 }
+function focusRecord(sectionId,behavior='instant'){
+ const section=document.getElementById(sectionId);
+ if(!section)return;
+ section.focus({preventScroll:true});
+ section.scrollIntoView({block:'start',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':behavior});
+}
 export default function AboutPage({focus}){
  const root=useRef(null);
- useEffect(()=>{setPageMeta({title:'關於 re.O',description:'re.O 由李東陽創辦，以再生材質開發為起點，整合品牌語彙、立體建模、排版、灌模與工作室組裝。聯絡方式、創辦人、設計獎項與工作室介紹。',trail:[['首頁','#/'],['關於 re.O','#/read/pages/about']]});const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.08});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));if(focus)document.getElementById(focus)?.scrollIntoView();return()=>observer.disconnect()},[focus]);
+ useEffect(()=>{setPageMeta({title:'關於 re.O',description:'re.O 由李東陽創辦，以再生材質開發為起點，整合品牌語彙、立體建模、排版、灌模與工作室組裝。聯絡方式、創辦人、設計獎項與工作室介紹。',trail:[['首頁','#/'],['關於 re.O','#/read/pages/about']]});const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.08});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
+ useEffect(()=>{
+  if(!focus)return;
+  let frame;
+  const position=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>focusRecord(focus))};
+  position();
+  window.addEventListener('route-revisit',position);
+  return()=>{cancelAnimationFrame(frame);window.removeEventListener('route-revisit',position)};
+ },[focus]);
  return <main className="pg pg-about" ref={root}>
   <div className="folio-gutter"><nav className="content-breadcrumb" aria-label="麵包屑"><a href="#/">首頁</a><span>/</span><span>關於 re.O</span></nav></div>
   <header className="pg-top folio-gutter" id="about-contact">
@@ -64,9 +84,9 @@ export default function AboutPage({focus}){
 
   {/* v64 (owner, 2026-11-17): the founder. Only facts with a source on file: the company's responsible person and
       designer (TISDC talk deck 2026, 東森新聞 2019), the two Golden Pin awards and the talks listed in the record below.
-      The portrait is the owner's own (個人照230829). A fuller biography waits for the owner's text. */}
+      The portrait is the owner's own. A fuller biography waits for the owner's text. */}
   <section className="pg-founder folio-gutter" id="about-founder" aria-labelledby="pg-founder-title">
-   <figure data-reveal><img src="/assets/founder-dong.webp" alt="re.O 創辦人李東陽" width="1001" height="1500" loading="lazy"/></figure>
+   <figure data-reveal><img src="/assets/founder-dong-profile.webp" alt="re.O 創辦人李東陽的側面肖像" width="900" height="900" loading="lazy"/></figure>
    <div data-reveal>
     <p className="pg-kicker"><span>01</span>Founder</p>
     <h2 id="pg-founder-title">李東陽<span lang="en">Dong</span></h2>
@@ -77,7 +97,7 @@ export default function AboutPage({focus}){
      <div><dt>講座分享</dt><dd>TISDC 校園循環經濟講座「從實踐到未來：永續設計」（2025–2026）</dd></div>
      <div><dt>媒體報導</dt><dd>東森新聞〈復刻天然石紋 環保藝術「再生」商機〉（2019）</dd></div>
     </dl>
-    <p className="pg-founder-more"><a href="#about-awards" onClick={e=>{e.preventDefault();document.getElementById('about-awards')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}}>完整的獲獎、展覽與講座紀錄<span aria-hidden="true"> ↓</span></a></p>
+    <p className="pg-founder-more"><a href="#about-awards" onClick={event=>{if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();focusRecord('about-awards','smooth')}}>完整的獲獎、展覽與講座紀錄<span aria-hidden="true"> ↓</span></a></p>
    </div>
   </section>
 

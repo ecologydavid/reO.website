@@ -8,7 +8,7 @@
 .sf-name span{margin-left:14px;font-family:var(--tx-sans,sans-serif);font-size:13px;font-weight:400;letter-spacing:.04em;color:#686d65;font-variant-numeric:tabular-nums;white-space:nowrap}
 .sf-contact{display:flex;flex-wrap:wrap;gap:4px 24px;margin-top:10px!important;font-variant-numeric:tabular-nums}
 .sf-contact a{color:#1f2320;font-weight:500}
-.folio-home .site-footer-v6 h2{margin:0 0 12px;font-family:var(--tx-sans,sans-serif);font-size:13px;font-weight:600;letter-spacing:.12em;color:#686d65}
+.folio-home .site-footer-v6 h2{margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid currentColor;border-bottom-color:color-mix(in srgb,currentColor 22%,transparent);font-family:var(--tx-sans,sans-serif);font-size:17px;font-weight:700;line-height:1.5;letter-spacing:.06em;color:#343932}
 .site-footer-v6 ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 .site-footer-v6 nav a{color:#1f2320}
 .site-footer-v6 a{text-decoration:none;background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .3s cubic-bezier(.2,.7,.2,1)}
@@ -33,3 +33,7 @@
  .sf-end{flex-wrap:wrap;padding-top:16px;padding-bottom:16px}.sf-legal{margin-left:0!important;order:3;flex-basis:100%}.sf-end button{margin-left:auto}
 }
 @media(prefers-reduced-motion:reduce){.site-footer-v6 a,.sf-end button svg{transition:none}}
+.site-footer-v6 .sf-social{display:flex;gap:4px;margin:5px 0 0 -8px}
+.site-footer-v6 .sf-social a{display:grid;place-items:center;width:40px;height:40px;border-radius:8px}
+.site-footer-v6 .sf-social a:hover{background:rgba(255,255,255,.1)}
+.site-footer-v6 .sf-social img{display:block;width:24px;height:24px;object-fit:contain}

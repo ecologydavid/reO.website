@@ -36,7 +36,7 @@ function SiteMenu({onClose,onDismiss,current,home}){
    <a className="site-sheet-home" href="#/" onClick={onClose} aria-current={home?'page':undefined}>首頁</a>
    {navigation.map(group=><section key={group.id}>
     <h2><a href={group.href} onClick={onClose} aria-current={current===group.id?'page':undefined}>{group.short}<ArrowIcon/></a></h2>
-    <ul>{group.links.map(([name,href])=><li key={href}><SubLink name={name} href={href} onClick={onClose}/></li>)}</ul>
+    <ul>{(group.id==='custom'||group.id==='gifts'?group.menu.slice(1):group.links).map(([name,href])=><li key={href}><SubLink name={name} href={href} onClick={onClose}/></li>)}</ul>
    </section>)}
    <section><h2 className="is-label">服務指南</h2><ul>{supportLinks.map(([name,href])=><li key={href}><a href={href} onClick={onClose}>{name}</a></li>)}</ul></section>
   </nav>

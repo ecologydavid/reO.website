@@ -8,6 +8,7 @@ import {justifyRows} from './justify.js';
 import {setPageMeta} from '../seo.js';
 import {edgeFill} from './edgeFill.js';
 import MaterialIntro from './MaterialIntro.jsx';
+import ShippingPolicy from './ShippingPolicy.jsx';
 import {arrangeArticle,flowParagraphs} from './arrange.js';
 const ratioOf=im=>im?.width&&im?.height?im.width/im.height:4/3;
 const frameStyle=im=>({aspectRatio:String(ratioOf(im))});
@@ -72,7 +73,7 @@ export default function ContentReader({path,draft}){
  const related=at>=0?[2,3,4].map(k=>siblings[(at+k)%siblings.length]).filter((p,i,a)=>p&&p.id!==page.id&&p!==prev&&p!==next&&a.indexOf(p)===i):pages.filter(p=>p.category===page.category&&p.id!==page.id&&!isIndexPage(p)).slice(0,3);
  const short=p=>page.category==='cases'?splitCase(p.title).work:p.title.split('｜')[0];
  const {first,chapters,details,works,photos,plain}=arrangeArticle(page,findPage);
- const lead=first&&<Section section={first} index={0}/>;
+ const lead=first&&(page.path==='#/read/about/delivery-policy'?<ShippingPolicy section={first}/>:<Section section={first} index={0}/>);
  // v65: a material page opens with MaterialIntro (photo, name, its opening text) instead of the plain heading and lead.
  const material=page.category==='materials'&&!isIndexPage(page)&&!!page.hero;
  const toWorks=()=>document.getElementById('material-works')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});

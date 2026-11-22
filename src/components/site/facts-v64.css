@@ -59,8 +59,8 @@
 .folio-home.tx .pg-prices strong{grid-row:1}
 
 /* About: the founder (v64). Portrait left, text right; one column on phones. */
-.pg-founder{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:40px clamp(40px,6vw,112px);align-items:center;padding-top:clamp(72px,8vw,128px);padding-bottom:clamp(72px,8vw,128px)}
-.pg-founder figure{margin:0;max-width:440px;background:#e9e7e1}
+.pg-founder{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);gap:40px clamp(40px,6vw,112px);align-items:center;padding-top:clamp(72px,8vw,128px);padding-bottom:clamp(72px,8vw,128px)}
+.pg-founder figure{margin:0;max-width:500px;background:#e9e7e1}
 .pg-founder img{display:block;width:100%;height:auto}
 .folio-home.tx .pg-founder h2{display:flex;align-items:baseline;gap:18px;margin:14px 0 0;font:600 var(--tx-h1)/1.3 var(--tx-serif);letter-spacing:.1em}
 .folio-home.tx .pg-founder h2 span{font:400 clamp(20px,1.6vw,26px)/1 var(--tx-latin);letter-spacing:.02em;color:var(--tx-muted)}
@@ -72,4 +72,4 @@
 .folio-home.tx .pg-founder dd{margin:0;font:400 15px/1.7 var(--tx-sans);letter-spacing:.03em;color:var(--tx-ink)}
 .folio-home.tx .pg-founder-more{margin:20px 0 0;font:600 14px/1.6 var(--tx-sans);letter-spacing:.06em}
 .pg-founder-more a{background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat;padding-bottom:3px}
-@media(max-width:860px){.pg-founder{grid-template-columns:1fr}.pg-founder figure{max-width:300px}.pg-founder dl>div{grid-template-columns:1fr}}
+@media(max-width:860px){.pg-founder{grid-template-columns:1fr}.pg-founder figure{max-width:440px}.pg-founder dl>div{grid-template-columns:1fr}}

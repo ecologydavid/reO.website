@@ -39,11 +39,19 @@ const browser=typeof window!=='undefined';
 let current=browser?fromLocation(window.location):'#/';
 const listeners=new Set();
 const emit=()=>{const next=fromLocation(window.location);if(next===current)return;current=next;listeners.forEach(f=>f(current))};
+const revisit=()=>window.dispatchEvent(new Event('route-revisit'));
 export const currentRoute=()=>current;
 export function subscribe(f){listeners.add(f);return()=>listeners.delete(f)}
 export function useRoute(){return useSyncExternalStore(subscribe,currentRoute,currentRoute)}
-export function navigate(name,{replace=false}={}){if(offline){window.location.hash=name.slice(1);return}window.history[replace?'replaceState':'pushState'](null,'',toPath(name));emit()}
-if(offline)window.addEventListener('hashchange',emit);
+export function navigate(name,{replace=false}={}){if(name===current){revisit();return}if(offline){window.location.hash=name.slice(1);return}window.history[replace?'replaceState':'pushState'](null,'',toPath(name));emit()}
+if(offline){
+ window.addEventListener('hashchange',emit);
+ document.addEventListener('click',event=>{
+  if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+  const link=event.target.closest?.('a[href]');
+  if(link?.getAttribute('href')===current&&(!link.target||link.target==='_self')&&!link.hasAttribute('download')){event.preventDefault();revisit()}
+ });
+}
 else if(browser){
  // An old hash link (#/read/…) arrives: show the same page at its new address.
  if(window.location.hash.startsWith('#/'))window.history.replaceState(null,'',toPath(window.location.hash));
@@ -57,6 +65,7 @@ else if(browser){
   if(!a.pathname.startsWith(base)||/\.[a-z0-9]{2,5}$/i.test(a.pathname))return;
   if(a.pathname===window.location.pathname&&a.search===window.location.search&&a.hash)return;
   e.preventDefault();
+  if(a.pathname===window.location.pathname&&a.search===window.location.search){revisit();return}
   window.history.pushState(null,'',a.pathname+a.search);
   emit();
  });

@@ -878,3 +878,9 @@ The owner asked for a back office to change photos and text himself, signed in w
 - Why an admin save takes a few minutes: the site is static. A save is a commit; GitHub's workflow then installs, tests,
   builds and prerenders all ~156 pages (about 2–3 minutes), publishes to gh-pages, and GitHub Pages serves pages with a
   cache of up to 10 minutes, so a browser may need a hard refresh (Ctrl+F5).
+## Works links, delivery marks and About (2026-11-23)
+The service menus target their own Works sections via `?section=works`. Gift links also select a filter;
+the public label IP聯名設計 maps to the stored group IP生活設計 so legacy URLs and case data still work.
+The gift menu no longer links to Pinkoi; its standalone header, footer and shipping links remain.
+Delivery uses the owner's carrier marks and clear channel icons. About keeps the six origami photos
+in a compact stage, and the footer links to the studio's Facebook and Instagram accounts.

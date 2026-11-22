@@ -13,12 +13,12 @@ export async function preloadRoute(name){
  if(r.kind==='read'){const {findPage,loadPage}=await import('./content/catalogue.js'),p=findPage(r.path);if(p)await loadPage(p.id).catch(()=>{})}
 }
 // #/brands is the brand wall on the home page; the hash is kept so existing links still land on it.
-function readRoute(hash){const m=hash.match(/^#\/preview\/([A-E])$/);if(m)return {kind:'editor',modelId:m[1]};if(hash.startsWith('#/read/'))return {kind:'read',path:hash.split('?')[0]};if(hash.startsWith('#/explore/')){const [category,query='']=hash.slice(10).split('?');return {kind:'explore',category,filter:new URLSearchParams(query).get('filter')||''}}
+function readRoute(hash){const m=hash.match(/^#\/preview\/([A-E])$/);if(m)return {kind:'editor',modelId:m[1]};const [path,query='']=hash.split('?'),params=new URLSearchParams(query),section=params.get('section')==='works'?'works':'';if(path.startsWith('#/read/'))return {kind:'read',path,section:path==='#/read/pages/custom'?section:''};if(path.startsWith('#/explore/')){const category=path.slice(10);return {kind:'explore',category,filter:params.get('filter')||'',section:category==='products'?section:''}}
 if(hash==='#/brands')return {kind:'home',section:'brands'};if(hash.split('?')[0]==='#/admin')return {kind:'admin',open:new URLSearchParams(hash.split('?')[1]||'').get('case')||''};return {kind:'home'};}
 export default function App(){
   const name=useRoute(),route=React.useMemo(()=>readRoute(name),[name]),first=React.useRef(true);
   // A new page starts at its top (not on first load, where the browser restores the position).
-  useEffect(()=>{if(first.current){first.current=false;return}window.scrollTo(0,0)},[name]);
+  useEffect(()=>{if(first.current){first.current=false;return}if(route.section!=='works'&&route.path!=='#/read/pages/awards')window.scrollTo(0,0)},[name,route.section,route.path]);
   // Pages set their own title and description (src/seo.js); App covers the editor only.
   useEffect(()=>{if(route.kind==='editor')setPageMeta({title:`${route.modelId} 款｜銘版排版工作室`,description:'在銘版排版工作室編輯公版獎盃銘版：文字、圖片、對齊與圖層，預覽後下載排版確認 PDF。'})},[route.kind,route.modelId]);
   const EditorView=ready.editor||LazyEditor,ContentView=ready.content||LazyContent;

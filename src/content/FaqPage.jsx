@@ -46,7 +46,7 @@ export default function FaqPage(){
   <section className="pg-faq-contact folio-gutter" aria-labelledby="faq-contact">
    <div><h2 id="faq-contact">還有其他問題？</h2><p>歡迎來信或來電，我們會盡快回覆。</p></div>
    <div className="pg-actions"><Button href="mailto:service@re-o.co">service@re-o.co</Button><Button variant="ghost" href="tel:+886289665369">+886-2-8966-5369</Button></div>
-   <nav className="pg-faq-more" aria-label="更多服務說明"><ArrowLink href="#/read/about/delivery-policy">運送說明</ArrowLink><ArrowLink href="#/read/about/policy">退換貨說明</ArrowLink></nav>
+   <nav className="pg-faq-more" aria-label="更多服務說明"><ArrowLink href="#/read/about/delivery-policy">運送說明</ArrowLink></nav>
   </section>
  </main>;
 }

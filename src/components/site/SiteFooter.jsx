@@ -16,6 +16,10 @@ const columns=[
  ['關於',[...group('about'),shopLink]],
  ['服務指南',supportLinks]
 ];
+const socialLinks=[
+ ['Facebook','facebook','https://www.facebook.com/re.O.upcycle/'],
+ ['Instagram','instagram','https://www.instagram.com/re.o_upcycle/']
+];
 const Link=({name,href})=>isExternal(href)
  ?<a href={href} target="_blank" rel="noopener noreferrer">{name}<span aria-hidden="true"> ↗</span><span className="sr-only">（另開新視窗）</span></a>
  :<a href={href} {...(href.startsWith('#/preview/')?studioTab:{})}>{name}</a>;
@@ -28,6 +32,7 @@ export default function SiteFooter(){return <footer className="site-footer-v6">
     <address>新北市板橋區實踐路93巷43弄1號1樓</address>
     <p>週一至週五 10:30–18:00・來訪請事先預約</p>
     <p className="sf-contact"><a href="mailto:service@re-o.co">service@re-o.co</a><a href="tel:+886289665369">+886-2-8966-5369</a></p>
+    <div className="sf-social">{socialLinks.map(([name,icon,href])=><a key={name} href={href} target="_blank" rel="noopener noreferrer" aria-label={`${name}（另開新視窗）`}><img src={`/assets/social-${icon}.png`} alt="" width="24" height="24" loading="lazy"/></a>)}</div>
    </div>
   </section>
   {columns.map(([title,links])=><nav key={title} aria-label={title}><h2>{title}</h2><ul>{links.map(([name,href])=><li key={href}><Link name={name} href={href}/></li>)}</ul></nav>)}

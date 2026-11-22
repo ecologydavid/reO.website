@@ -240,7 +240,7 @@ function Process() {
 const customModes = [
   { n: '01', title: '品牌獎盃訂製', line: '以品牌語彙與專屬材質，訂製獨有的獎座。', href: '#/read/pages/custom', src: '/assets/home-mode-ase.webp', alt: '日月光 ASE 傑出供應商獎盃與黑色訂製禮盒，品牌獎盃訂製案例' },
   { n: '02', title: '禮贈品訂製', line: '品牌禮贈、器物與場域紀念，從材質開始設計。', href: '#/explore/products', src: '/assets/home-mode-singleton.webp', alt: '蘇格登威士忌再生大理石杯墊，禮贈品訂製案例' },
-  { n: '03', title: 'IP生活設計', line: 'Disney、Marvel 等授權角色，走進日常。', href: '#/explore/cases?filter=IP生活設計', src: '/assets/case-disney-hola.webp', alt: '米奇再生大理石桌鐘，IP 授權生活設計案例' }
+  { n: '03', title: 'IP聯名設計', line: 'Disney、Marvel 等授權角色，走進日常。', href: '#/explore/cases?filter=IP聯名設計', src: '/assets/case-disney-hola.webp', alt: '米奇再生大理石桌鐘，IP聯名設計案例' }
 ];
 // D and E are the models the studio promotes; they lead the classic at a larger size.
 const featured = ['E', 'D'];

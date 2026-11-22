@@ -45,7 +45,7 @@
 .folio-home.tx .pg-band-works.is-five .pg-band-name{font-size:16px;padding-top:14px}
 .folio-home.tx .pg-band-works.is-five .pg-band-name em{color:rgba(242,240,235,.72)}
 @media(max-width:1100px) and (min-width:761px){.pg-band-works.is-five{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.folio-home.tx .site-footer-v6 h2{color:rgba(255,255,255,.74)}
+.folio-home.tx .site-footer-v6 h2{color:#f2f0eb}
 
 /* v66: no 主打 tag. A featured name (B, D, E) is bold and a soft light passes across its letters every few seconds;
    the badge sits a little further from the name. */

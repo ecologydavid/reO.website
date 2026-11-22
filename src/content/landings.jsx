@@ -19,7 +19,7 @@ const flow=[
  {title:'銘板排版及提供資料',terms:[
   ['10 座以上','可以請我們協助免費設計排版。'],
   // v71 (owner, 2026-11-17): one merged row; the layout-help fee is NT$300.
-  ['低於 10 座',<>可以至「<a href="#/preview/D" {...studioTab}>銘版排版工作室</a>」自行擺放滿意版型（完成後可下載 .PDF 及 .EPS 檔案），接著再上傳「.PDF 及 .EPS 檔案」及「名單清冊」至 <a href="mailto:service@re-o.co">service@re-o.co</a>，收件後我們會以實際印刷條件協助免費調整。若沒有辦法提供銘板排版範例，仍可以請我們協助設計排版，酌收排版費 NT$300。</>]
+  ['低於 10 座',<>可以至「<a href="#/preview/D" {...studioTab}>銘版排版工作室</a>」自行擺放滿意版型（完成後可下載 .PDF 及 .EPS 檔案），上傳至 <a href="mailto:service@re-o.co">service@re-o.co</a>，收件後會依實際印刷條件協助免費調整。可以請我們協助設計排版，會酌收排版費 。</>]
  ],src:'/assets/studio-preview.webp',width:1600,height:1000,position:'50% 0',alt:'re.O 銘版排版工作室畫面'},
  {title:'手工生產',line:'製作工期依訂購數量而定。',src:'/assets/flow-casting.webp',width:1800,height:1202,position:'50% 50%',alt:'再生大理石漿料灌注入模'}
 ];
@@ -167,7 +167,7 @@ export const landings={
   band:BrandBand,indexEn:'Works',indexTitle:'企業獎盃案例',grid:'is-works',meta:'year',
   closing:['想先看看公版款式，或為品牌準備禮贈品？',['公版獎盃','#/explore/standard'],['禮贈品訂製','#/explore/products']]},
  products:{en:'Gifts',title:'禮贈品訂製',
-  card:[['Range','品項','品牌禮贈・品牌器物・IP 聯名'],['Packaging','包裝','客製化訂製'],['Email','電子郵件',<a href="mailto:service@re-o.co">service@re-o.co</a>],['Phone','電話',<a href="tel:+886289665369">+886-2-8966-5369</a>]],
+  card:[['Range','品項','品牌禮贈・品牌器物・IP聯名設計'],['Packaging','包裝','客製化訂製'],['Email','電子郵件',<a href="mailto:service@re-o.co">service@re-o.co</a>],['Phone','電話',<a href="tel:+886289665369">+886-2-8966-5369</a>]],
   actions:[['寄信洽詢','mailto:service@re-o.co'],['來電洽詢','tel:+886289665369','ghost'],['訂製常見問題','#/read/pages/faq','ghost']],
   band:GiftBand,indexEn:'Works',indexTitle:'禮贈品案例',grid:'is-works',
   closing:['需要專屬造型，或品牌自己的材料？',['品牌獎盃訂製','#/read/pages/custom'],['循環材料','#/explore/materials']]},

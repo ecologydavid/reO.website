@@ -4,7 +4,35 @@ import {readFileSync,existsSync} from 'node:fs';
 import {pages,findPage,classicPages,editorFor,isIndexPage} from '../src/content/catalogue.js';
 import {navigation,supportLinks,contentHref} from '../src/components/site/navigation.js';
 import {arrangeArticle} from '../src/content/arrange.js';
+import {record} from '../src/content/record.js';
 const root=new URL('../',import.meta.url);
+test('About shows the owner’s event photos and keeps the new activities under the correct years',()=>{
+ const newEvents=[
+  ['文博會','展覽活動','2021','creative-expo'],
+  ['澳洲墨爾本設計週展覽','展覽活動','2019','melbourne'],
+  ['水水文創沙龍','講座課程','2019','creative-salon'],
+ ];
+ for(const [title,kind,year,photo] of newEvents){
+  const entry=record.find(event=>event.title===title);
+  assert.equal(entry.kind,kind);
+  assert.equal(entry.year,year);
+  assert.equal(entry.src,`/assets/about-events/${photo}.webp`);
+ }
+ const ownerPhotos=record.filter(event=>event.src?.startsWith('/assets/about-events/'));
+ assert.equal(ownerPhotos.length,12);
+ for(const entry of ownerPhotos){
+  assert(!entry.generic&&entry.alt&&entry.w&&entry.h,entry.title);
+  assert(existsSync(new URL('public'+entry.src,root)),entry.src);
+ }
+ assert(existsSync(new URL('public/assets/founder-dong-profile.webp',root)));
+});
+test('the retired policy is absent from navigation and the catalogue while shipping stays available',()=>{
+ assert.equal(findPage('#/read/about/policy'),undefined);
+ assert.equal(findPage(contentHref('https://www.re-o.co/about/policy')),undefined);
+ assert(!supportLinks.some(([,href])=>href==='#/read/about/policy'));
+ assert(!existsSync(new URL('public/content/pages/8483b3136d6494.json',root)));
+ assert(findPage('#/read/about/delivery-policy'));
+});
 test('the two Delta glass tree entries share one case and keep the light-and-shadow cover',async()=>{
  const {cardImage,splitCase}=await import('../src/content/catalogue.js');
  const canonical='#/read/pages/delta-glass-tree-trophy',legacy='#/read/pages/new-page-7';

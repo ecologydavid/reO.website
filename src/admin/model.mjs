@@ -5,7 +5,7 @@
 //   src/data/case-photos.json        the card cover
 //   src/data/case-details.json       the two hover photos on the card
 //   src/data/case-cards.json         cover → its 720px copy for lists
-export const groups = [['企業獎盃', '品牌獎盃訂製', '企業與賽事獎盃'], ['生活設計', '禮贈品訂製', '品牌禮品與生活器物'], ['IP生活設計', 'IP 生活設計', 'IP與角色']];
+export const groups = [['企業獎盃', '品牌獎盃訂製', '企業與賽事獎盃'], ['生活設計', '禮贈品訂製', '品牌禮品與生活器物'], ['IP生活設計', 'IP聯名設計', 'IP與角色']];
 export const files = {index: 'src/data/content-index.json', covers: 'src/data/case-photos.json', details: 'src/data/case-details.json', cards: 'src/data/case-cards.json'};
 export const pageFile = id => `public/content/pages/${id}.json`;
 export const slugOf = path => decodeURIComponent(String(path).split('/').pop());
