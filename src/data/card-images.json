@@ -1,4 +1,16 @@
 {
+ "#/read/about/delivery-policy": {
+  "src": "/assets/guide-delivery.webp",
+  "width": 1280,
+  "height": 800,
+  "alt": "石材工作桌上的牛皮紙運送箱、蜂巢紙防護包材與炭黑硬質禮盒"
+ },
+ "#/read/pages/faq": {
+  "src": "/assets/guide-custom-faq.webp",
+  "width": 1280,
+  "height": 800,
+  "alt": "設計桌上的再生石材獎盃、材質色樣方塊與銘版比例草稿"
+ },
  "#/read/pages/ase-outstanding-supplier-trophy": {
   "src": "/content/images/4ca589dbac2cf8f56f.webp",
   "width": 1440,

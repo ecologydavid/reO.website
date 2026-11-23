@@ -34,7 +34,18 @@
     <!-- Company facts as shown on the About page. -->
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"re.O","legalName":"或心國際設計有限公司","founder":{"@type":"Person","name":"李東陽","alternateName":"Dong","jobTitle":"負責人・設計師"},"alternateName":"或心","url":"%SITE_URL%/","logo":"%SITE_URL%/assets/reo-logo.png","email":"service@re-o.co","telephone":"+886-2-8966-5369","taxID":"83502057","address":{"@type":"PostalAddress","postalCode":"220","addressRegion":"新北市","addressLocality":"板橋區","streetAddress":"實踐路93巷43弄1號1樓","addressCountry":"TW"}}</script>
     <!-- The home hero photo is the largest paint; fetch it alongside the script, on the home route only. -->
-    <script>var hero='%BASE_URL%assets/hero-wide.webp';if(location.pathname+'assets/hero-wide.webp'===hero&&location.hash.length<3){var l=document.createElement('link');l.rel='preload';l.as='image';l.href=hero;l.fetchPriority='high';document.head.appendChild(l)}</script>
+    <script>
+      if (location.pathname === '%BASE_URL%' && location.hash.length < 3) {
+        const photo = document.createElement('link');
+        photo.rel = 'preload';
+        photo.as = 'image';
+        photo.href = '%BASE_URL%content/images/0ec85ee98fb1103204.webp';
+        photo.imageSrcset = '%BASE_URL%assets/hero-d-720.webp 720w, ' + photo.href + ' 1440w';
+        photo.imageSizes = '(max-width: 760px) 100vw, 65vw';
+        photo.fetchPriority = 'high';
+        document.head.appendChild(photo);
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

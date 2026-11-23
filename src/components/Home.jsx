@@ -96,7 +96,10 @@ function Hero({ onPreview }) {
       </div>
     </div>
     <div className="rv-hero-stage">
-      {heroSlides.map((s, i) => <img key={s.id} className={`rv-hero-photo${s.id === slide.id ? ' is-active' : ''}`} src={s.src} alt={s.alt} aria-hidden={s.id !== slide.id || undefined} width="1440" height="1080" style={{ objectPosition: s.position }} fetchPriority={i ? undefined : 'high'} loading={i ? 'lazy' : undefined} />)}
+      {heroSlides.map((s, i) => <img key={s.id} className={`rv-hero-photo${s.id === slide.id ? ' is-active' : ''}`} src={s.src}
+        srcSet={i === 0 ? `${import.meta.env.BASE_URL}assets/hero-d-720.webp 720w, ${s.src} 1440w` : undefined}
+        sizes={i === 0 ? '(max-width: 760px) 100vw, 65vw' : undefined}
+        alt={s.alt} aria-hidden={s.id !== slide.id || undefined} width="1440" height="1080" style={{ objectPosition: s.position }} fetchPriority={i ? 'low' : 'high'} loading={i ? 'lazy' : undefined} />)}
       {heroExtras.map(s => <img key={s.id} className={`rv-hero-photo is-extra${s.id === slide.id ? ' is-active' : ''}`} src={s.src} alt={s.alt} aria-hidden={s.id !== slide.id || undefined} width="1200" height="900" loading="lazy" />)}
       <div className="rv-hero-tabs" role="group" aria-label="主打公版獎盃">{heroSlides.map((s, i) => <button key={s.id} aria-pressed={i === active} onClick={() => { setPeek(null); setActive(i) }}><span className="rv-hero-bar">{i === active && <i key={active} onAnimationEnd={next} />}</span><strong>{s.id}</strong><span>{classicNames[s.id].slice(1)}</span></button>)}<button className="rv-hero-toggle" onClick={() => setPaused(p => !p)} aria-label={paused ? '播放輪播' : '暫停輪播'}><svg viewBox="0 0 16 16" aria-hidden="true"><path d={paused ? 'M5 3.5v9l7.5-4.5z' : 'M5 3.5v9M11 3.5v9'} fill={paused ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></button></div>
     </div>
@@ -257,7 +260,7 @@ function ClassicTab({ id }) {
 // the studio, craft and awards on the About page.
 export default function Home({ onPreview, section }) {
   const root = useRef(null);
-  useEffect(() => setPageMeta(), []);
+  useEffect(() => setPageMeta(), [section]);
   // A route that names a section (#/brands) opens the home page at it, after the hash change has scrolled to the top.
   useEffect(() => { if (section) requestAnimationFrame(() => document.getElementById(section)?.scrollIntoView()) }, [section]);
   useEffect(() => { const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target) } }), { threshold: .04 }); root.current.querySelectorAll('[data-reveal]').forEach(e => observer.observe(e)); return () => observer.disconnect() }, []);

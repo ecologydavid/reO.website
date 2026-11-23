@@ -9,8 +9,14 @@ const LazyEditor=lazy(loaders.editor),LazyContent=lazy(loaders.content),LazyAdmi
 // code and, for an article, its data), so the first render is the page itself and not a loading screen.
 export async function preloadRoute(name){
  const r=readRoute(name);if(r.kind==='home'||r.kind==='admin')return;
- const key=r.kind==='editor'?'editor':'content';ready[key]=(await loaders[key]()).default;
- if(r.kind==='read'){const {findPage,loadPage}=await import('./content/catalogue.js'),p=findPage(r.path);if(p)await loadPage(p.id).catch(()=>{})}
+ const key=r.kind==='editor'?'editor':'content';
+ const module=await loaders[key]();
+ ready[key]=module.default;
+ if(r.kind==='read'&&module.needsArticleData(r.path)){
+  const {findPage,isIndexPage,loadPage}=await import('./content/catalogue.js');
+  const page=findPage(r.path);
+  if(page&&!isIndexPage(page))await loadPage(page.id).catch(()=>{});
+ }
 }
 // #/brands is the brand wall on the home page; the hash is kept so existing links still land on it.
 function readRoute(hash){const m=hash.match(/^#\/preview\/([A-E])$/);if(m)return {kind:'editor',modelId:m[1]};const [path,query='']=hash.split('?'),params=new URLSearchParams(query),section=params.get('section')==='works'?'works':'';if(path.startsWith('#/read/'))return {kind:'read',path,section:path==='#/read/pages/custom'?section:''};if(path.startsWith('#/explore/')){const category=path.slice(10);return {kind:'explore',category,filter:params.get('filter')||'',section:category==='products'?section:''}}

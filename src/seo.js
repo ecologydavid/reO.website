@@ -1,4 +1,5 @@
 import {toPath} from './router.js';
+import {recordPage} from './analytics.js';
 // One place sets the document title, description and their social-card copies, so every route reads
 // as its own page to search engines and link previews. Routes call setPageMeta from their own effect;
 // App only handles the editor, so a parent effect never overwrites a page's title.
@@ -30,4 +31,5 @@ export function setPageMeta({title,description,trail}={}){
  document.title=t;
  meta('name','description',d);meta('property','og:title',t);meta('property','og:description',d);
  meta('name','twitter:title',t);meta('name','twitter:description',d);
+ recordPage();
 }
