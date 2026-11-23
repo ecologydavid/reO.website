@@ -13,10 +13,8 @@ const decode=hash=>{try{return decodeURIComponent(hash)}catch{return hash}};
 const activeGroup=hash=>{const h=decode(hash);if(h.startsWith('#/read/products/')&&!['trophy','the-way-to-peak','f款'].some(k=>h.slice(16).toLowerCase().startsWith(k)))return 'gifts';return navigation.find(n=>n.match.some(prefix=>hash.startsWith(prefix)))?.id};
 // Home (and #/brands, which opens home at the wall) marks the 首頁 link as current.
 const isHome=hash=>['','#','#/'].includes(hash)||hash.startsWith('#/brands');
-// v63 (owner, 2026-11-16): the overlay menu repeated the header links on desktop, so there were two maps of the site.
-// Desktop now has one: the header links, each opening a short panel of its own sub-pages (SubPanel). This sheet is the
-// same map for phones and tablets (≤1100px), where the links do not fit: every group with its sub-pages, then 服務指南.
-function SiteMenu({onClose,onDismiss,current,home}){
+const sheetGroups=[{name:'首頁',href:'#/'},...navigation.map(group=>({name:group.short,href:group.href,links:group.id==='custom'||group.id==='gifts'?group.menu.slice(1):group.links})),{name:'服務指南',links:supportLinks}];
+function SiteMenu({onClose,onDismiss,route}){
  const panel=useRef(null);
  useEffect(()=>{
   const old=document.body.style.overflow;document.body.style.overflow='hidden';
@@ -30,22 +28,18 @@ function SiteMenu({onClose,onDismiss,current,home}){
   document.addEventListener('keydown',key);
   return()=>{document.body.style.overflow=old;document.removeEventListener('keydown',key)};
  },[onDismiss]);
+ const link=(name,href)=>{const separate=isExternal(href)||href.startsWith('#/preview/');return <a href={href} {...(separate?studioTab:{})} onClick={onClose} aria-current={decode(route)===decode(href)?'page':undefined}>{name}{separate&&<span className="sr-only">（另開新視窗）</span>}</a>};
  return <div className="site-sheet" id="site-menu" role="dialog" aria-modal="true" aria-label="網站選單" ref={panel}>
   <div className="site-sheet-bar folio-gutter"><HomeMark onClick={onClose}/><Button variant="ghost" className="site-sheet-close" onClick={onDismiss} icon={<MenuIcon open/>}>關閉</Button></div>
   <nav className="site-sheet-list folio-gutter" aria-label="主要導覽">
-   <a className="site-sheet-home" href="#/" onClick={onClose} aria-current={home?'page':undefined}>首頁</a>
-   {navigation.map(group=><section key={group.id}>
-    <h2><a href={group.href} onClick={onClose} aria-current={current===group.id?'page':undefined}>{group.short}<ArrowIcon/></a></h2>
-    <ul>{(group.id==='custom'||group.id==='gifts'?group.menu.slice(1):group.links).map(([name,href])=><li key={href}><SubLink name={name} href={href} onClick={onClose}/></li>)}</ul>
-   </section>)}
-   <section><h2 className="is-label">服務指南</h2><ul>{supportLinks.map(([name,href])=><li key={href}><a href={href} onClick={onClose}>{name}</a></li>)}</ul></section>
+   <ul>{sheetGroups.map(({name,href,links})=><li key={name}>
+    {href?link(name,href):<span className="site-sheet-caption">{name}</span>}
+    {!!links?.length&&<ul aria-label={name}>{links.map(([label,target])=><li key={target}>{link(label,target)}</li>)}</ul>}
+   </li>)}</ul>
   </nav>
   <div className="site-sheet-foot folio-gutter"><a href="mailto:service@re-o.co">service@re-o.co</a><a href="tel:+886289665369">+886-2-8966-5369</a></div>
  </div>;
 }
-function SubLink({name,href,onClick}){return isExternal(href)
- ?<a href={href} target="_blank" rel="noopener noreferrer" onClick={onClick}>{name}<span aria-hidden="true"> ↗</span><span className="sr-only">（另開新視窗）</span></a>
- :<a href={href} {...(href.startsWith('#/preview/')?studioTab:{})} onClick={onClick}>{name}</a>}
 // The panel under a header link (v64): the group's pages, each with a one-line note; 關於 re.O also carries 服務指南.
 // The current page is marked. align keeps the last panels inside the header's right edge.
 function SubPanel({group,x,right,here,onPick}){
@@ -106,6 +100,6 @@ export default function SiteHeader(){
    <Button href={shopLink[1]} target="_blank" rel="noopener noreferrer" variant="ghost" className="site-shop" icon={<ArrowIcon/>} aria-label="Pinkoi 選購（另開新視窗）"><img className="site-shop-logo" src="/assets/pinkoi-logo.png" alt="Pinkoi" width="213" height="64"/><span className="site-shop-label">選購</span></Button>
    <Button variant="ghost" className="site-menu-button" ref={trigger} aria-expanded={open} aria-controls="site-menu" onClick={()=>setOpen(true)} icon={<MenuIcon/>}>選單</Button>
   </div>
-  {open&&<SiteMenu onClose={close} onDismiss={dismiss} current={current} home={isHome(hash)}/>}
+  {open&&<SiteMenu onClose={close} onDismiss={dismiss} route={hash}/>}
  </header>;
 }

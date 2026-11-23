@@ -13,13 +13,26 @@ import Icon from '../components/Icon.jsx';
 // and angle as on the plate; dragging snaps to the plate's centre lines and to other objects' centres
 // (hold Alt to place freely), with a guide line shown. The plate is drawn at the screen's density.
 const HANDLES=['nw','ne','se','sw'],SPILL=.5,SPILL_RES=.5,SNAP=7;
-export default function PlateStage({surface,objects,selectedId,measure,outside,inline,onInline,onSelect,onPatch,onCheckpoint,onDelete,onDuplicate,onCenter,onEditText}){
+function OtherFace({surface,objects,position,onPick}){
+  const canvas=useRef(null);
+  useEffect(()=>{let current=true;
+    renderCanonicalSurface(surface,objects).then(result=>{if(!current)return;const target=canvas.current;target.width=result.canvas.width;target.height=result.canvas.height;target.getContext('2d').drawImage(result.canvas,0,0)}).catch(()=>{});
+    return()=>{current=false};
+  },[surface,objects]);
+  return <button type="button" aria-label={`切換至${surface.name}`} style={{...position,position:'absolute',zIndex:1,padding:0,border:0,background:'transparent',cursor:'pointer',clipPath:`polygon(${surface.polygon.map(([u,v])=>`${u*100}% ${v*100}%`).join(',')})`}} onPointerDown={event=>event.stopPropagation()} onDoubleClick={event=>event.stopPropagation()} onClick={()=>onPick(surface.id)}><canvas ref={canvas} style={{display:'block',width:'100%',height:'100%'}}/></button>;
+}
+export default function PlateStage({pair,documents,onPick,surface,objects,selectedId,measure,outside,inline,onInline,onSelect,onPatch,onCheckpoint,onDelete,onDuplicate,onCenter,onEditText}){
   const box=useRef(null),plate=useRef(null),canvas=useRef(null),spill=useRef(null),drag=useRef(null),sequence=useRef(0),shown=useRef(null),field=useRef(null);
   const [size,setSize]=useState({w:0,h:0}),[loading,setLoading]=useState(true),[hover,setHover]=useState(null),[error,setError]=useState(''),[guides,setGuides]=useState(null);
   useLayoutEffect(()=>{const observer=new ResizeObserver(([entry])=>setSize({w:entry.contentRect.width,h:entry.contentRect.height}));observer.observe(box.current);return()=>observer.disconnect()},[]);
   // Margin around the plate (in surface units) where spilled parts can still be seen.
   const margin=Math.max(surface.width,surface.height)*SPILL;
-  const pad=Math.round(Math.max(18,Math.min(56,size.w*.08))),scale=Math.max(.05,Math.min((size.w-pad*2)/surface.width,(size.h-pad*2)/surface.height));
+  const pad=Math.round(Math.max(18,Math.min(56,size.w*.08)));
+  const bounds=pair&&{left:Math.min(...pair.map(face=>face.x)),top:Math.min(...pair.map(face=>face.y)),right:Math.max(...pair.map(face=>face.x+face.displayWidth)),bottom:Math.max(...pair.map(face=>face.y+face.displayHeight))};
+  const width=bounds&&bounds.right-bounds.left,height=bounds&&bounds.bottom-bounds.top;
+  const zoom=pair&&Math.max(.001,Math.min((size.w-2*pad)/width,(size.h-2*pad)/height));
+  const position=face=>({left:(size.w-width*zoom)/2+(face.x-bounds.left)*zoom,top:(size.h-height*zoom)/2+(face.y-bounds.top)*zoom,width:face.displayWidth*zoom,height:face.displayHeight*zoom});
+  const scale=pair?surface.displayWidth*zoom/surface.width:Math.max(.05,Math.min((size.w-pad*2)/surface.width,(size.h-pad*2)/surface.height));
   // Pixels per surface unit on this screen, in steps so resizing does not redraw on every frame.
   const density=Math.max(1,Math.min(3,Math.ceil(scale*(window.devicePixelRatio||1)*2)/2));
   const editing=objects.find(o=>o.id===inline&&o.type==='text');
@@ -99,7 +112,7 @@ export default function PlateStage({surface,objects,selectedId,measure,outside,i
     const b=objectBounds(selected,measure),gap=6/scale,a=selected.rotation*Math.PI/180,w=(b.width+gap*2)*scale,h=(b.height+gap*2)*scale;
     frame={left:selected.x*scale,top:selected.y*scale,width:w,height:h,transform:`translate(-50%,-50%) rotate(${selected.rotation}deg)`};
     // The toolbar sits above the object's upright extent (clear of the rotate knob), or below it near the top.
-    const half=(Math.abs(Math.sin(a))*w+Math.abs(Math.cos(a))*h)/2,off=(size.w-surface.width*scale)/2,cx=Math.max(176-off,Math.min(size.w-176-off,selected.x*scale)),above=selected.y*scale-half-58>-pad+8;
+    const half=(Math.abs(Math.sin(a))*w+Math.abs(Math.cos(a))*h)/2,off=pair?position(surface).left:(size.w-surface.width*scale)/2,cx=Math.max(176-off,Math.min(size.w-176-off,selected.x*scale)),above=selected.y*scale-half-58>-pad+8;
     bar={left:cx,top:above?selected.y*scale-half-52:selected.y*scale+half+14};
   }
   // Sizes step in whole px, at least 1px per press.
@@ -108,7 +121,8 @@ export default function PlateStage({surface,objects,selectedId,measure,outside,i
   const finish=()=>onInline(null);
   return <div className={`st-stage${hover?' is-'+hover:''}`} ref={box} onPointerDown={e=>begin(e,'move')} onPointerMove={move} onPointerUp={end} onPointerCancel={end} onPointerLeave={()=>{if(!drag.current)setHover(null)}}
     onDoubleClick={e=>{if(e.target.closest('.st-float,.st-inline'))return;const o=topAt(point(e));if(o?.type==='text'&&!o.locked){onSelect(o.id);onEditText(o.id)}}}>
-    <div className={`st-plate${outside.size?' is-over':''}`} ref={plate} style={{width:surface.width*scale,height:surface.height*scale}} tabIndex={0} onKeyDown={keyDown}
+    {pair?.filter(face=>face.id!==surface.id).map(face=><OtherFace key={face.id} surface={face} objects={documents[face.id]} position={position(face)} onPick={onPick}/>)}
+    <div className={`st-plate${outside.size?' is-over':''}`} ref={plate} style={pair?{position:'absolute',...position(surface)}:{width:surface.width*scale,height:surface.height*scale}} tabIndex={0} onKeyDown={keyDown}
       role="application" aria-label={`${surface.name}排版區：點選物件後拖曳移動，拉角落縮放，拉圓點旋轉；方向鍵微調，Enter 直接編輯文字，Delete 刪除。拖曳時會對齊中線，按住 Alt 可自由放置。超出銘版的部分以紅色顯示，不會製作。`}>
       <canvas ref={canvas} aria-hidden="true"/>
       <canvas ref={spill} className="st-spill" aria-hidden="true" style={{left:-margin*scale,top:-margin*scale,width:(surface.width+margin*2)*scale,height:(surface.height+margin*2)*scale}}/>

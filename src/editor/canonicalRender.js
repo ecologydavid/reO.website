@@ -49,7 +49,7 @@ export function drawObject(ctx,o,images){
 }
 // scale renders the same plate at a higher pixel density (3D textures, a large stage); 1 is the canonical size.
 export async function renderCanonicalSurface(surface,objects,{selection=null,withBackground=true,scale=1}={}){
-  await ensureMaterialMaps();
+  if(withBackground)await ensureMaterialMaps(surface);
   const c=makeCanvas(surface.width*scale,surface.height*scale),ctx=c.getContext('2d'),W=c.width/scale,H=c.height/scale;ctx.scale(scale,scale);
   const images=new Map(await Promise.all(objects.filter(o=>o.type==='image').map(async o=>[o.src,await loadImage(o.src)])));
   const overflow=objects.some(o=>!objectFits(o,surface,ctx));
@@ -70,7 +70,7 @@ export async function fDecoration(scene){
 }
 export function frontPlacement(scene,width,height,padding=60){const scale=Math.min((width-padding*2)/scene.width,(height-padding*2)/scene.height);return {scale,x:(width-scene.width*scale)/2,y:(height-scene.height*scale)/2}}
 export async function renderCanonicalProduct(scene,documents,{width=800,height=1100,activeSurface=null,selection=null}={}){
-  await ensureMaterialMaps();
+  await ensureMaterialMaps(scene);
   const c=makeCanvas(width,height),ctx=c.getContext('2d'),placement=frontPlacement(scene,c.width,c.height);
   ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);ctx.save();ctx.translate(placement.x,placement.y);ctx.scale(placement.scale,placement.scale);
   const shadow=ctx.createRadialGradient(scene.width*.5,scene.height+12,0,scene.width*.5,scene.height+12,scene.width*.6);shadow.addColorStop(0,'#252d281c');shadow.addColorStop(1,'#252d2800');ctx.save();ctx.translate(0,scene.height*.86);ctx.scale(1,.15);ctx.fillStyle=shadow;ctx.fillRect(-scene.width,0,scene.width*3,scene.height);ctx.restore();

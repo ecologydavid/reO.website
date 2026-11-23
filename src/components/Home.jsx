@@ -129,9 +129,9 @@ const flowEase = x => .6 * x + .4 * (1 - Math.cos(Math.PI * x)) / 2;
 // V45 (owner, 2026-11-08): the stroke that runs round the ring lights each photo as it passes under it, so
 // it is drawn here frame by frame (a CSS animation cannot tell the photos when it reaches them). It runs only
 // on screen, hides while a step is open, and stays off for reduced motion.
-function useCycleFlow(stage, flow, dot, nodes) {
+function useCycleFlow(stage, flow, dot, nodes, compact) {
   useEffect(() => {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (compact || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const span = 360 - 2 * gap, half = Math.asin(nodeD / 2 / ringR) * 180 / Math.PI / span, centres = sequence.map((_, i) => (90 - gap - stepAngle(i)) / span);
     // On screen is kept here, not as a class: React rewrites the stage's className whenever a step opens or
     // closes, which would wipe a class added from outside and freeze the loop.
@@ -152,31 +152,51 @@ function useCycleFlow(stage, flow, dot, nodes) {
     };
     raf = requestAnimationFrame(frame);
     return () => { cancelAnimationFrame(raf); observer.disconnect(); light(-1) };
-  }, []);
+  }, [compact]);
 }
 function Process() {
-  const [compact, setCompact] = useState(() => matchMedia('(max-width: 760px)').matches);
-  useEffect(() => { const query = matchMedia('(max-width: 760px)'), change = () => setCompact(query.matches); query.addEventListener('change', change); return () => query.removeEventListener('change', change) }, []);
-  const [active, setActive] = useState(null), [phaseHover, setPhaseHover] = useState(null), stage = useRef(null), intent = useRef(0), flow = useRef(null), dot = useRef(null), nodes = useRef([]), shown = active ?? (compact ? 0 : null);
-  useCycleFlow(stage, flow, dot, nodes);
+  const [compact, setCompact] = useState(() => matchMedia('(max-width: 1100px)').matches);
+  useEffect(() => { const query = matchMedia('(max-width: 1100px)'), change = () => setCompact(query.matches); query.addEventListener('change', change); return () => query.removeEventListener('change', change) }, []);
+  const [mobileStep, setMobileStep] = useState(0), [paused, setPaused] = useState(false);
+  const [active, setActive] = useState(null), [phaseHover, setPhaseHover] = useState(null), stage = useRef(null), intent = useRef(0), flow = useRef(null), dot = useRef(null), nodes = useRef([]), shown = compact ? mobileStep : active;
+  useCycleFlow(stage, flow, dot, nodes, compact);
+  useEffect(() => {
+    if (!compact || paused) return;
+    const motion = matchMedia('(prefers-reduced-motion: reduce)');
+    let visible = false, timer;
+    const refresh = () => {
+      clearInterval(timer);
+      if (visible && !document.hidden && !motion.matches) timer = setInterval(() => setMobileStep(step => (step + 1) % sequence.length), 4500);
+    };
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; refresh() });
+    observer.observe(stage.current.querySelector('.rv-cycle-ring'));
+    motion.addEventListener('change', refresh);
+    document.addEventListener('visibilitychange', refresh);
+    return () => { clearInterval(timer); observer.disconnect(); motion.removeEventListener('change', refresh); document.removeEventListener('visibilitychange', refresh) };
+  }, [compact, paused]);
+  const pick = index => { if (compact) { setMobileStep(index); setPaused(true) } else setActive(index) };
   useEffect(() => () => clearTimeout(intent.current), []);
   // A short hover intent, so sweeping the pointer across the ring to the side text does not flick through steps.
   const point = i => { clearTimeout(intent.current); if (!compact) intent.current = setTimeout(() => setActive(i), 110) };
   const step = shown == null ? null : sequence[shown], note = shown == null ? null : processNotes[shown], lit = shown != null ? shown >> 1 : phaseHover;
+  const extraPhoto = note && <figure className="rv-cycle-layer rv-cycle-more" key={'more' + shown}>
+            {(note.more.pair ? ['a', 'b'].map(k => ({ src: `/assets/process/${note.more.id}-${k}.webp`, w: 696, h: 521 })) : [{ src: img(note.more.id), w: note.more.w, h: note.more.h }]).map((p, k) => <img key={p.src} src={p.src} alt={k ? '' : note.more.caption} width={p.w} height={p.h} loading="lazy" />)}
+            <figcaption><span>{note.more.caption}</span><small>出自〈{note.article}〉</small></figcaption>
+          </figure>;
   return <section className="rv-section rv-process" id="process" aria-labelledby="rv-process-title">
     <div className="rv-gutter"><SectionHead index="00" label="再生工藝" en="Process" id="rv-process-title" title={<>從邊料開始，<br />讓榮耀成形。</>} /></div>
     <div className="rv-gutter">
       <div className={`rv-cycle${shown != null ? ' has-active' : ''}${lit != null ? ' has-lit' : ''}`} ref={stage} onMouseLeave={() => { clearTimeout(intent.current); if (!compact) setActive(null) }} onBlur={e => { if (!compact && !e.currentTarget.contains(e.relatedTarget)) setActive(null) }} onKeyDown={e => { if (e.key === 'Escape') setActive(null) }}>
-        <div className="rv-cycle-side is-left">
+        {!compact && <div className="rv-cycle-side is-left">
           <div className="rv-cycle-layer rv-cycle-index" aria-hidden={shown != null || undefined}>
             <p className="rv-cycle-kicker">四個階段・從圓點出發，逆時針</p>
-            <ol>{phases.map((p, q) => <li key={p.en}><button type="button" tabIndex={shown != null ? -1 : undefined} className={phaseHover === q ? 'is-on' : undefined} onMouseEnter={() => setPhaseHover(q)} onMouseLeave={() => setPhaseHover(null)} onClick={() => setActive(q * 2)}>
+            <ol>{phases.map((p, q) => <li key={p.en}><button type="button" tabIndex={shown != null ? -1 : undefined} className={phaseHover === q ? 'is-on' : undefined} onMouseEnter={() => setPhaseHover(q)} onMouseLeave={() => setPhaseHover(null)} onClick={() => pick(q * 2)}>
               <span className="rv-cycle-range">{pad(q * 2 + 1)}–{pad(q * 2 + 2)}</span>
               <span className="rv-cycle-name"><strong>{p.name}</strong><em>{p.en}</em></span>
               <span className="rv-cycle-steps-of">{sequence[q * 2].label}・{sequence[q * 2 + 1].label}</span>
             </button></li>)}</ol>
           </div>
-          {note && <div className="rv-cycle-layer rv-cycle-detail" key={shown} aria-live="polite">
+          {note && <div className="rv-cycle-layer rv-cycle-detail" key={shown} aria-live={compact && !paused ? 'off' : 'polite'}>
             <p className="rv-cycle-count"><b>{pad(shown + 1)}</b><span>/ 08</span><i>{phases[shown >> 1].name}・{phases[shown >> 1].en}</i></p>
             <h3>{step.label}</h3>
             <p className="rv-cycle-lead">{step.line}</p>
@@ -186,7 +206,7 @@ function Process() {
               <ArrowLink href={`#/read/blog/posts/${note.article}`}>閱讀〈{note.article}〉</ArrowLink>
             </div>
           </div>}
-        </div>
+        </div>}
         <div className="rv-cycle-ring">
           {/* V47: the quadrants as four blocks; their gutters are the cuts between phases. */}
           <div className="rv-cycle-tiles" aria-hidden="true">{phases.map((p, q) => <div key={p.en} className={`rv-cycle-tile is-q${q}${lit === q ? ' is-current' : ''}`}><p className="rv-cycle-phase"><strong>{p.name}</strong><em>{p.en}</em></p></div>)}</div>
@@ -209,14 +229,25 @@ function Process() {
             const [x, y] = onRing(stepAngle(i)), t = stepAngle(i) * Math.PI / 180;
             return <li key={s.label} style={{ '--dx': Math.sin(t), '--dy': -Math.cos(t) }} className={shown == null && phaseHover != null && i >> 1 !== phaseHover ? 'is-dim' : undefined}>
               <button type="button" ref={n => { nodes.current[i] = n }} className={`rv-cycle-node${shown === i ? ' is-active' : ''}`} style={{ left: `${x}%`, top: `${y}%` }} aria-pressed={shown === i} aria-label={`${pad(i + 1)} ${phases[i >> 1].name}・${s.label}：${s.line}`}
-                onMouseEnter={() => point(i)} onMouseLeave={() => clearTimeout(intent.current)} onFocus={() => setActive(i)} onClick={() => setActive(i)}>
+                onMouseEnter={() => point(i)} onMouseLeave={() => clearTimeout(intent.current)} onFocus={() => pick(i)} onClick={() => pick(i)}>
                 <img src={s.src} alt="" width={s.width} height={s.height} loading="lazy" style={crop(s)} />
               </button>
               <span className="rv-cycle-no" aria-hidden="true">{pad(i + 1)}</span>
             </li>
           })}</ol>
         </div>
-        <div className="rv-cycle-side is-right">
+        {compact ? <div className="rv-cycle-brief">
+          <p className="rv-cycle-count"><b>{pad(shown + 1)}</b><span>/ 08</span><i>{phases[shown >> 1].name}・{phases[shown >> 1].en}</i></p>
+          <h3>{step.label}</h3><p className="rv-cycle-lead">{step.line}</p>
+          <details key={shown} onToggle={event => { if (event.currentTarget.open) setPaused(true) }}>
+            <summary>工序說明與現場照片</summary>
+            <p className="rv-cycle-text">{note.text}</p>
+            <ul className="rv-cycle-points">{note.points.map(point => <li key={point}>{point}</li>)}</ul>
+            {extraPhoto}
+            <ArrowLink href={`#/read/blog/posts/${note.article}`}>閱讀〈{note.article}〉</ArrowLink>
+          </details>
+          <ArrowLink href="#/read/pages/material-recycled-marble">認識再生大理石</ArrowLink>
+        </div> : <div className="rv-cycle-side is-right">
           <figure className="rv-cycle-layer rv-cycle-material" aria-hidden={shown != null || undefined}>
             <img src={img('55069d17278e6fd5db')} alt="再生大理石的材質樣本" width="1440" height="961" loading="lazy" />
             <figcaption>
@@ -225,12 +256,10 @@ function Process() {
               <ArrowLink href="#/read/pages/material-recycled-marble">認識再生大理石</ArrowLink>
             </figcaption>
           </figure>
-          {note && <figure className="rv-cycle-layer rv-cycle-more" key={'more' + shown}>
-            {(note.more.pair ? ['a', 'b'].map(k => ({ src: `/assets/process/${note.more.id}-${k}.webp`, w: 696, h: 521 })) : [{ src: img(note.more.id), w: note.more.w, h: note.more.h }]).map((p, k) => <img key={p.src} src={p.src} alt={k ? '' : note.more.caption} width={p.w} height={p.h} loading="lazy" />)}
-            <figcaption><span>{note.more.caption}</span><small>出自〈{note.article}〉</small></figcaption>
-          </figure>}
-        </div>
+          {extraPhoto}
+        </div>}
       </div>
+      {compact && <button type="button" className="rv-cycle-playback" onClick={() => setPaused(value => !value)}>{paused ? '繼續自動播放' : '暫停自動播放'}</button>}
       <p className="rv-process-source">依 re.O 材料頁與工作室文章〈實驗再生材質〉〈重新定義「廢料」〉〈強化材質脫氣升級〉〈工廠步驟把關〉整理</p>
     </div>
   </section>;

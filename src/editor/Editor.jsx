@@ -43,14 +43,14 @@ function readDraft(preferLegacy=false){
 // any stone with any metal, A pairs either wood with any base, B/C come in two stones, E in two sets.
 const woods={北美黃檜:'#e0c6a0',木橫擔:'#553322'};
 // v6 (2026-11-11): larger swatches, each named underneath, so the choice reads at a glance.
-function Swatch({label,name=label,colors,pressed,onClick}){return <button type="button" className="st-swatch" aria-label={label} title={label} aria-pressed={pressed} onClick={onClick}><i style={{background:colors.length>1?`linear-gradient(135deg,${colors[0]} 50%,${colors[1]} 50%)`:colors[0]}}/><span>{name}</span></button>}
+function Swatch({label,name=label,colors,sample,pressed,onClick}){return <button type="button" className="st-swatch" aria-label={label} title={label} aria-pressed={pressed} onClick={onClick}><i style={{background:sample?`${colors[0]} url(/assets/models/finishes/${sample}.webp) center / cover`:colors.length>1?`linear-gradient(135deg,${colors[0]} 50%,${colors[1]} 50%)`:colors[0]}}/><span>{name}</span></button>}
 function Finishes({scene,onChange}){
   // Each row names the part and the current choice; the swatches carry short names.
   const row=(label,items)=><div className="st-finish-row"><span className="st-label">{label}<b>{[items].flat().find(item=>item.props.pressed)?.props.label}</b></span><div className="st-swatches">{items}</div></div>;
-  if(['D','F'].includes(scene.id))return <>{row('再生大理石',['白','黑','綠'].map(c=><Swatch key={c} label={c} colors={[stoneColors[c]]} pressed={scene.stone===c} onClick={()=>onChange(c+scene.metal)}/>))}{row(scene.id==='F'?'金屬層':'主銘版',['金','銀','銅'].map(c=><Swatch key={c} label={c} colors={[metalColors[c]]} pressed={scene.metal===c} onClick={()=>onChange(scene.stone+c)}/>))}</>;
-  if(scene.id==='A'){const [wood,base]=scene.finish.split('｜');return <>{row('木材',Object.keys(woods).map(w=><Swatch key={w} label={w} colors={[woods[w]]} pressed={wood===w} onClick={()=>onChange(`${w}｜${base}`)}/>))}{row('底座',['白再生大理石','黑再生大理石','水庫淤泥'].map(b=><Swatch key={b} label={b} name={b.replace('再生大理石','石')} colors={[stoneColors[b.includes('白')?'白':b.includes('黑')?'黑':'淤泥']]} pressed={base===b} onClick={()=>onChange(`${wood}｜${b}`)}/>))}</>}
+  if(['D','F'].includes(scene.id))return <>{row('再生大理石',['白','黑','綠'].map(c=><Swatch key={c} label={c} sample={scene.id==='D'&&({白:'D-white',綠:'D-green'})[c]} colors={[stoneColors[c]]} pressed={scene.stone===c} onClick={()=>onChange(c+scene.metal)}/>))}{row(scene.id==='F'?'金屬層':'主銘版',['金','銀','銅'].map(c=><Swatch key={c} label={c} colors={[metalColors[c]]} pressed={scene.metal===c} onClick={()=>onChange(scene.stone+c)}/>))}</>;
+  if(scene.id==='A'){const [wood,base]=scene.finish.split('｜');return <>{row('木材',Object.keys(woods).map(w=><Swatch key={w} label={w} sample={w==='北美黃檜'?'A-cypress':'A-crossbar'} colors={[woods[w]]} pressed={wood===w} onClick={()=>onChange(`${w}｜${base}`)}/>))}{row('底座',['白再生大理石','黑再生大理石','水庫淤泥'].map(b=><Swatch key={b} label={b} sample={b.startsWith('白')?'A-white':null} name={b.replace('再生大理石','石')} colors={[stoneColors[b.includes('白')?'白':b.includes('黑')?'黑':'淤泥']]} pressed={base===b} onClick={()=>onChange(`${wood}｜${b}`)}/>))}</>}
   if(scene.id==='E')return row('配色',scene.options.map(v=><Swatch key={v} label={`${v[0]}石・${v[1]}`} colors={[stoneColors[v[0]],metalColors[v[1]]]} pressed={scene.finish===v} onClick={()=>onChange(v)}/>));
-  return row('石材',scene.options.map(v=><Swatch key={v} label={v+'色石材'} name={v} colors={[stoneColors[v]]} pressed={scene.finish===v} onClick={()=>onChange(v)}/>));
+  return row('石材',scene.options.map(v=><Swatch key={v} label={v+'色石材'} sample={v==='白'?`${scene.id}-white`:null} name={v} colors={[stoneColors[v]]} pressed={scene.finish===v} onClick={()=>onChange(v)}/>));
 }
 
 export default function Editor({modelId,onModelChange,onHome}){
@@ -58,6 +58,8 @@ export default function Editor({modelId,onModelChange,onHome}){
   const [shape,setShape]=useState('ridge'),[activeId,setActiveId]=useState('main'),[selectedId,setSelectedId]=useState('title'),[mode,setMode]=useState('front');
   const [notice,setNotice]=useState(''),[busy,setBusy]=useState(''),[reference,setReference]=useState(false);
   const [menu,setMenu]=useState(false),[big,setBig]=useState('plate'),[inline,setInline]=useState(null),[saved,setSaved]=useState('');
+  const [singleFace,setSingleFace]=useState(false);
+  const [previewFocus,setPreviewFocus]=useState(false);
   const [hasLegacy]=useState(()=>{try{return !!localStorage.getItem(legacyStorage)}catch{return false}});
   const inputRef=useRef(null),noticeTimer=useRef(null),measureRef=useRef(null),menuRef=useRef(null);
   if(!measureRef.current)measureRef.current=document.createElement('canvas').getContext('2d');
@@ -80,7 +82,7 @@ export default function Editor({modelId,onModelChange,onHome}){
   useEffect(()=>()=>clearTimeout(noticeTimer.current),[]);
   function changeModel(id){onModelChange(id);setActiveId('main');setSelectedId('title')}
   // Picking a plate on the finished product (front or 3D) brings that plate up large to edit.
-  function pickSurface(id){setActiveId(id);setSelectedId('title');setBig('plate')}
+  function pickSurface(id){setInline(null);setActiveId(id);setSelectedId('title');setBig('plate')}
   function updateObjects(updater,{record=true,surfaceId=surface.id}={}){history.change(d=>{const key=keyFor(model.id,shape,surfaceId),s=scene.surfaces.find(s=>s.id===surfaceId);const current=(d.documents[key]||documents[surfaceId]||[]).map(o=>settle(o,s));return {...d,documents:{...d.documents,[key]:updater(current)}}},{record})}
   function patch(id,changes,record=true){
     updateObjects(list=>list.map(o=>{if(o.id!==id||o.locked&&!('locked' in changes))return o;return settle({...o,...changes,...('color' in changes&&!('autoColor' in changes)?{autoColor:false}:{})},surface)}),{record});
@@ -174,15 +176,17 @@ export default function Editor({modelId,onModelChange,onHome}){
         </div>
         {/* v6 (2026-11-11): the plate and the finished product side by side, both full height and both live
             (replaces v5's picture in picture). Phones keep the 排版／成品預覽 switch and show one at a time. */}
-        <div className={`st-canvas is-${big}`}>
-          <section className={`st-slot st-slot-plate${big==='plate'?' is-big':''}`} aria-label="銘版排版">
-            <PlateStage surface={surface} objects={objects} selectedId={selectedId} measure={measureRef.current} outside={outside} inline={big==='plate'?inline:null} onInline={setInline} onSelect={setSelectedId} onPatch={patch} onCheckpoint={history.checkpoint} onDelete={remove} onDuplicate={duplicate} onCenter={center} onEditText={editText}/>
-            <p className={`st-work-note${outside.size?' is-warning':''}`} role="status">{outside.size?'紅色部分超出銘版，不會製作；可直接下載，或拖回框內。':<>拖曳移動・拉角落縮放・拉圓點旋轉・雙擊改字{surface.material==='acrylic'?'・透明壓克力以灰色襯底顯示':''}</>}</p>
-          </section>
+        <div className={`st-canvas is-${big}${previewFocus?' is-preview-focus':''}`}>
           <section className={`st-slot st-slot-product${big==='product'?' is-big':''}`} aria-label="成品預覽">
             <p className="st-slot-label">成品預覽</p>
+            <button type="button" className="st-preview-focus" aria-pressed={previewFocus} onClick={()=>setPreviewFocus(value=>!value)}>{previewFocus?'還原並排':'放大成品'}</button>
             <ProductView scene={scene} documents={documents} surface={surface} mode={mode} onMode={setMode} onSurface={pickSurface}/>
             <p className="st-work-note">{mode==='three'?'拖曳旋轉・點銘版切換編輯區':'點銘版切換編輯區'}</p>
+          </section>
+          <section className={`st-slot st-slot-plate${big==='plate'?' is-big':''}`} aria-label="銘版排版">
+            {model.id==='E'&&<div className="st-zones" style={{alignSelf:'center'}}><button type="button" aria-pressed={singleFace} onClick={()=>setSingleFace(value=>!value)}>{singleFace?'顯示上下兩面':'放大目前鋁片'}</button></div>}
+            <PlateStage key={model.id==='E'?surface.id:model.id} pair={model.id==='E'&&!singleFace?scene.surfaces:null} documents={documents} onPick={pickSurface} surface={surface} objects={objects} selectedId={selectedId} measure={measureRef.current} outside={outside} inline={big==='plate'?inline:null} onInline={setInline} onSelect={setSelectedId} onPatch={patch} onCheckpoint={history.checkpoint} onDelete={remove} onDuplicate={duplicate} onCenter={center} onEditText={editText}/>
+            <p className={`st-work-note${outside.size?' is-warning':''}`} role="status">{outside.size?'紅色部分超出銘版，不會製作；可直接下載，或拖回框內。':model.id==='E'&&!singleFace?`正在編輯${surface.name}・點另一片切換，兩面分別裁切。`:<>拖曳移動・拉角落縮放・拉圓點旋轉・雙擊改字{surface.material==='acrylic'?'・透明壓克力以灰色襯底顯示':''}</>}</p>
           </section>
         </div>
       </main>

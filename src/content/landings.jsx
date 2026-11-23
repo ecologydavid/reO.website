@@ -1,3 +1,4 @@
+import {casePreview} from './casePreviews.js';
 import React,{useEffect,useRef,useState} from 'react';
 import cases from '../data/brand-cases.json';
 import {contentHref} from '../components/site/navigation.js';
@@ -112,7 +113,7 @@ function CollaborationBand(){
  ];
  return <section className="pg-band is-gallery" aria-labelledby="pg-band-title">
   <div className="pg-split folio-gutter" data-reveal><p className="pg-kicker"><span>01</span>Collaborations</p><div><h2 id="pg-band-title">讓材料與角色，走進日常。</h2></div></div>
-  <ul className="pg-band-works is-five folio-gutter">{works.map(([href,brand,name,photo,alt],i)=><li key={href} style={{'--i':i}} data-reveal><a href={href}><span className="pg-band-frame"><img src={photo} alt={alt} width="1440" height="1440" loading="lazy"/></span><span className="pg-band-name"><em>{brand}</em>{name}</span></a></li>)}</ul>
+  <ul className="pg-band-works is-five folio-gutter">{works.map(([href,brand,name,photo,alt],i)=><li key={href} style={{'--i':i}} data-reveal><a href={href}><span className="pg-band-frame"><img {...casePreview(photo,'(max-width: 760px) 72vw, (max-width: 1100px) 33vw, 20vw')} alt={alt} width="1440" height="1440" loading={i===0?'eager':'lazy'}/></span><span className="pg-band-name"><em>{brand}</em>{name}</span></a></li>)}</ul>
  </section>;
 }
 

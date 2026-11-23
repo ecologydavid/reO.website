@@ -380,7 +380,7 @@
 .st-chips button{min-height:36px}
 
 /* Centre: two panes. */
-.st-canvas{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:12px;border-radius:0;background:none;overflow:visible}
+.st-canvas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.55fr);gap:12px;border-radius:0;background:none;overflow:visible}
 .st-slot{position:relative;left:auto;top:auto;width:auto;height:auto;z-index:auto;border-radius:22px;overflow:hidden;transition:none}
 .st-slot-plate{background:#f3f1ec}
 .st-slot-product{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}
@@ -452,7 +452,7 @@
 }
 /* v6 fit: the plate pane gets most of the centre; shorter model photos; one-line style and colour rows. */
 .st-layout{grid-template-columns:clamp(270px,19.5vw,350px) minmax(0,1fr) clamp(320px,22vw,360px)}
-.st-canvas{grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)}
+.st-canvas{grid-template-columns:minmax(0,1fr) minmax(0,1.75fr)}
 .st-slot-product{box-shadow:none;border:1px solid var(--line)}
 .st-models img{aspect-ratio:3/2}
 .st-product{gap:20px}
@@ -524,3 +524,25 @@
 @media(max-width:1100px){.st-layout{grid-template-columns:290px minmax(0,1fr)}}
 .st-product{gap:16px}
 .st-models span{padding:8px 12px}
+
+.st-preview-focus{display:none}
+.st-step-finish{border-block-start:1px solid var(--line);padding-block-start:14px}
+.st-app .st-step-finish h3,.st-app .st-slot-label{font-family:var(--tx-serif,serif);font-weight:600}
+.st-app .st-slot{border-radius:8px}
+.st-app .st-models button{border-radius:5px}
+.st-app .st-slot-plate{background:#f2efe8}
+@media(min-width:1101px){
+ .st-layout{grid-template-columns:clamp(206px,15vw,276px) minmax(0,1fr) clamp(252px,17vw,320px)}
+ .st-app .st-canvas{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}
+ .st-app .st-canvas.is-preview-focus{grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr)}
+ .st-preview-focus{display:block;position:absolute;z-index:4;right:14px;bottom:7px;background:white;border:1px solid var(--line);border-radius:99px;padding:6px 12px;color:var(--ink);font:inherit;font-size:12px;cursor:pointer}
+ .st-slot-product .st-work-note{align-self:flex-start;max-width:calc(100% - 98px)}
+ .st-slot-product .three-reset{bottom:46px}
+ .st-product{border-right:1px solid var(--line)}
+ .st-inspector{border-left:1px solid var(--line)}
+ .st-work{padding-inline:12px}
+ .st-fonts{grid-template-columns:repeat(auto-fit,minmax(70px,1fr))}
+ .st-fonts button{min-width:0;gap:3px}
+ .st-tools{flex-wrap:wrap}
+ .st-models span{padding-inline:6px;letter-spacing:.06em}
+}

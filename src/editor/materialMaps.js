@@ -3,8 +3,23 @@ import {loadImage} from './render.js';
 import {blackGoldStone,greenStone,siltStone,whiteMarble,woodGrain} from './proceduralMaterials.js';
 const squareTop=src=>{const c=document.createElement('canvas');c.width=c.height=src.width;c.getContext('2d').drawImage(src,0,0);return c};
 const sources=new Map(),cache=new Map();let ready;
-export function ensureMaterialMaps(){return ready??=Promise.all(data.textures.map(async t=>{try{const image=await loadImage(t.src),c=document.createElement('canvas');c.width=512;c.height=t.id.includes('metal')?512:1024;const ctx=c.getContext('2d');ctx.drawImage(image,...t.crop,0,0,c.width,c.height);sources.set(t.id,c)}catch{/* The established procedural reference remains available offline. */}}));}
+function ensureLegacyMaps(){return ready??=Promise.all(data.textures.map(async t=>{try{const image=await loadImage(t.src),c=document.createElement('canvas');c.width=512;c.height=t.id.includes('metal')?512:1024;const ctx=c.getContext('2d');ctx.drawImage(image,...t.crop,0,0,c.width,c.height);sources.set(t.id,c)}catch{/* The established procedural reference remains available offline. */}}));}
+function sampleKey(material,color,{modelId,finish}={}){
+ if(material==='wood'&&modelId==='A')return finish?.includes('木橫擔')?'A-crossbar':'A-cypress';
+ if(material==='wood'&&modelId==='C')return 'C-wood';
+ if(material==='stone'&&color==='#e5e3db'&&['A','B','C','D','E'].includes(modelId))return `${modelId}-white`;
+ if(material==='stone'&&color==='#24453e'&&modelId==='D')return 'D-green';
+}
+export function ensureMaterialMaps(target){
+ const options={modelId:target.modelId||target.id,finish:target.finish};
+ const entries=target.fills?Object.entries(target.fills):[[target.material,target.fill]];
+ const keys=entries.map(([kind,color])=>sampleKey(kind,color,options)).filter(Boolean);
+ return Promise.all([ensureLegacyMaps(),...keys.filter(key=>!sources.has(key)).map(async key=>{
+  try{sources.set(key,await loadImage(`/assets/models/finishes/${key}.webp`))}catch{return null}
+ })]);
+}
 export function photoMaterialTexture(material,color,options={}){
+ const sample=sources.get(sampleKey(material,color,options));if(sample)return sample;
  // Drawn to match the owner's renders (proceduralMaterials.js, 2026-11-07): green stone for D and F (F's disc
  // takes a square crop); white marble for A–E; black with smoky gold (v2, after D's black photo) for A, B and C,
  // C starting lower on the stone where the gold runs; A's woods

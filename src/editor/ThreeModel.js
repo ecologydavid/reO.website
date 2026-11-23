@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {materialTexture,renderCanonicalSurface,fDecoration,makeCanvas} from './canonicalRender.js';
+import {loadImage} from './render.js';
 import {ensureMaterialMaps} from './materialMaps.js';
 import {triangulateFace,worldNormal,pointOnSurface,polygonPrism,chamferMesh} from './modelGeometry.mjs';
 import cadModels from '../data/cad-models.json';
@@ -30,7 +31,7 @@ const finish={
  metalSatin:{metalness:1,roughness:.5}
 };
 export async function buildModel(scene){
- await ensureMaterialMaps();const group=new THREE.Group(),unit=3/scene.height,bevel=scene.height*.0025;
+ await ensureMaterialMaps(scene);const group=new THREE.Group(),unit=3/scene.height,bevel=scene.height*.0025;
  const world=([x,y,z])=>[(x-scene.width/2)*unit,(scene.height/2-y)*unit,z*unit];
  const metalFinish=scene.id==='E'?finish.metalSatin:finish.metal;
  const material=(kind,endgrain=false)=>{
@@ -38,7 +39,7 @@ export async function buildModel(scene){
   if(kind==='metal')return new THREE.MeshPhysicalMaterial({map,...metalFinish,side:THREE.DoubleSide});
   if(kind==='acrylic')return new THREE.MeshPhysicalMaterial({color:'#f2f6f4',transparent:true,opacity:.1,roughness:.08,clearcoat:.5,clearcoatRoughness:.1,metalness:0,side:THREE.DoubleSide,depthWrite:false});
   const f=finish[kind]||finish.stone;
-  return new THREE.MeshPhysicalMaterial({map,bumpMap:map,bumpScale:f.bumpScale,roughness:f.roughness,clearcoat:f.clearcoat,clearcoatRoughness:f.clearcoatRoughness,metalness:0,side:THREE.DoubleSide,polygonOffset:kind==='stone',polygonOffsetFactor:-1,polygonOffsetUnits:-2});
+  return new THREE.MeshPhysicalMaterial({map,bumpMap:map,bumpScale:map.image instanceof HTMLImageElement ? .008 :f.bumpScale,roughness:f.roughness,clearcoat:f.clearcoat,clearcoatRoughness:f.clearcoatRoughness,metalness:0,side:THREE.DoubleSide,polygonOffset:kind==='stone',polygonOffsetFactor:-1,polygonOffsetUnits:-2});
  };
  const addMesh=(data,customMaterial=null,uvLocal=null)=>{
   const positions=[],uvs=[],triangles=data.faces.flatMap(face=>triangulateFace(data.vertices,face));
@@ -74,18 +75,36 @@ export async function buildModel(scene){
   for(const part of cad.m.parts){
    const n=part.vertexCount,s=part.vertexStart,pos=new Float32Array(n*3),nor=new Float32Array(n*3),uv=new Float32Array(n*2);
    // and start at the part's own corner, so no mirror seam crosses a face.
-   let W=scene.width,H=scene.height,o=[0,0,0];if(perPart){const b=[Infinity,-Infinity,Infinity,-Infinity,Infinity];for(let i=0;i<n;i++){const X=cad.positions[(s+i)*3],Y=cad.positions[(s+i)*3+1],Z=cad.positions[(s+i)*3+2];b[0]=Math.min(b[0],X);b[1]=Math.max(b[1],X);b[2]=Math.min(b[2],Y);b[3]=Math.max(b[3],Y);b[4]=Math.min(b[4],Z)}W=b[1]-b[0];H=b[3]-b[2];o=[b[0],b[2],b[4]]}
-   const T=Math.max(H,2*W);
+   const mat=material(part.role),sampled=mat.map?.image instanceof HTMLImageElement;
+   let W=scene.width,H=scene.height,o=[0,0,0];if(perPart||sampled){const b=[Infinity,-Infinity,Infinity,-Infinity,Infinity];for(let i=0;i<n;i++){const X=cad.positions[(s+i)*3],Y=cad.positions[(s+i)*3+1],Z=cad.positions[(s+i)*3+2];b[0]=Math.min(b[0],X);b[1]=Math.max(b[1],X);b[2]=Math.min(b[2],Y);b[3]=Math.max(b[3],Y);b[4]=Math.min(b[4],Z)}W=b[1]-b[0];H=b[3]-b[2];o=[b[0],b[2],b[4]]}
+   const T=Math.max(H,2*W),spanX=sampled?Math.max(W,1):T/2,spanY=sampled?Math.max(H,1):T;
+   let cutVertices=null;
+   if(scene.id==='A'&&part.role==='wood'){
+    const wood=scene.finish.includes('木橫擔')?'crossbar':'cypress';
+    const atlas=await loadImage(`/assets/models/finishes/A-${wood}-cad.webp`).catch(()=>null);
+    if(atlas){
+     mat.map.image=atlas;mat.map.needsUpdate=true;
+     cutVertices=Array.from({length:n},(_,i)=>i).filter(i=>[0,1,2].every(axis=>cad.normals[(s+i)*3+axis]>0)).sort((left,right)=>posY(left)-posY(right));
+    }
+   }
+   function posY(i){return cad.positions[(s+i)*3+1]}
    for(let i=0;i<n;i++){
     const w=world([cad.positions[(s+i)*3],cad.positions[(s+i)*3+1],cad.positions[(s+i)*3+2]]);pos.set(w,i*3);
     const X=cad.positions[(s+i)*3]-o[0],Y=cad.positions[(s+i)*3+1]-o[1],Z=cad.positions[(s+i)*3+2]-o[2];
     const nx=cad.normals[(s+i)*3]/127,ny=cad.normals[(s+i)*3+1]/127,nz=cad.normals[(s+i)*3+2]/127,l=Math.hypot(nx,ny,nz)||1;nor.set([nx/l,ny/l,nz/l],i*3);
     const ax=Math.abs(nx),ay=Math.abs(ny),az=Math.abs(nz);
-    if(az>=ax&&az>=ay)uv.set([X/(T/2),1-Y/T],i*2);else if(ax>=ay)uv.set([.5+Z/(T/2),1-Y/T],i*2);else uv.set([X/(T/2),.5+Z/T],i*2);
+    if(az>=ax&&az>=ay)uv.set([X/spanX,1-Y/spanY],i*2);else if(ax>=ay)uv.set([.5+Z/spanX,1-Y/spanY],i*2);else uv.set([X/spanX,.5+Z/T],i*2);
+    if(cutVertices){
+     const corner=cutVertices.indexOf(i);
+     const panel=corner>=0?1:ay>ax&&ay>az?2:0;
+     const u=corner>=0?(corner===0?0:1):az>=ax||panel===2?X/W:Z/W;
+     const v=corner>=0?(corner===2?0:1):panel===2?Z/W:1-Y/H;
+     uv.set([(panel+.005+.99*THREE.MathUtils.clamp(u,0,1))/3,THREE.MathUtils.clamp(v,0,1)],i*2);
+    }
    }
    const index=new Uint32Array(part.indexCount);for(let i=0;i<part.indexCount;i++)index[i]=cad.indices[part.indexStart+i]-s;
    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('normal',new THREE.BufferAttribute(nor,3));g.setAttribute('uv',new THREE.BufferAttribute(uv,2));g.setIndex(new THREE.BufferAttribute(index,1));g.computeBoundingSphere();
-   const mat=material(part.role);for(const t of [mat.map,mat.bumpMap])if(t){t.wrapS=t.wrapT=THREE.MirroredRepeatWrapping;t.needsUpdate=true}
+   for(const t of [mat.map,mat.bumpMap])if(t){t.wrapS=t.wrapT=THREE.MirroredRepeatWrapping;t.needsUpdate=true}
    const mesh=new THREE.Mesh(g,mat);mesh.castShadow=true;mesh.receiveShadow=true;mesh.userData.part=part.role;group.add(mesh);
   }
  }else for(const data of scene.meshes){

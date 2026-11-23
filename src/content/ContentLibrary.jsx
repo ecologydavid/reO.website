@@ -1,3 +1,4 @@
+import {casePreview} from './casePreviews.js';
 import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {categoryInfo} from '../components/site/navigation.js';
 import {classicPages,groupFor,editorFor,cardImage,isBanner,splitCase,detailsFor} from './catalogue.js';
@@ -21,13 +22,13 @@ export function ContentCard({page}){const image=cardImage(page);return <article 
 // rises in a tab at the lower left. Details load on the first hover only.
 // The frame is square. A portrait photo would lose its top and base there, so it is shown whole and
 // the frame's sides continue the photo's own left and right edge colours, top to bottom, so no band shows.
-export function CasePhoto({page,image,client}){
+export function CasePhoto({page,image,client,early=false}){
  const [peek,setPeek]=useState(false),[fill,setFill]=useState(null),photo=useRef(null),{details,more}=detailsFor(page);
  const tall=image.width<image.height,main=details.length?Math.min(.72,Math.max(.56,image.width/image.height)):1;
  const sample=()=>{if(tall)setFill(edgeFill(photo.current))};
  useEffect(()=>{if(photo.current?.complete)sample()},[image.src]);
  return <span className={`content-works-photo${details.length?' has-details':''}`} style={{'--main':main,'--n':details.length||1,background:fill||undefined}} onPointerEnter={()=>setPeek(true)}>
-  <img ref={photo} className={`content-works-main${tall?' is-whole':''}`} src={image.src} alt={image.alt||page.title} width={image.width} height={image.height} loading="lazy" onLoad={sample}/>
+  <img ref={photo} className={`content-works-main${tall?' is-whole':''}`} src={image.src} alt={image.alt||page.title} width={image.width} height={image.height} loading={early?'eager':'lazy'} onLoad={sample}/>
   {peek&&details.map((d,i)=><span className="content-works-detail" style={{'--i':i}} key={d.src}><img src={d.src} alt="" width={d.width} height={d.height}/>{i===details.length-1&&more>0&&<em>+{more}</em>}</span>)}
   {client&&<span className="content-works-client"><em>Client</em><span>{client}</span></span>}
  </span>;
@@ -39,7 +40,7 @@ function Entry({page,index,group,showLine,named}){
  const isCase=page.category==='cases',image=cardImage(page),[first,...rest]=page.title.split('｜');
  const {work,client}=isCase?splitCase(page.title):{work:first,client:''},title=named?classicNames[named]:work,line=isCase||named?'':rest.join('｜')||(showLine?page.summary:'');
  return <li data-reveal><a href={page.path}>
-  {isCase&&image?<CasePhoto page={page} image={image} client={client}/>:<span className="content-works-photo" style={isBanner(image)?{aspectRatio:'2/1'}:undefined}>{image?<img src={image.src} alt={image.alt||page.title} width={image.width} height={image.height} loading="lazy"/>:<span className="content-type-letter">{page.category_label}</span>}</span>}
+  {isCase&&image?<CasePhoto page={page} image={image} client={client} early={index<5}/>:<span className="content-works-photo" style={isBanner(image)?{aspectRatio:'2/1'}:undefined}>{image?<img src={image.src} alt={image.alt||page.title} width={image.width} height={image.height} loading="lazy"/>:<span className="content-type-letter">{page.category_label}</span>}</span>}
   <span className="content-works-meta"><em>{pad(index+1)}</em><span>{group}</span></span>
   <span className={`content-works-title${named?' is-named':''}`}><strong lang={named?'en':undefined}>{title}</strong><SiteArrow/></span>
   {line&&<span className="content-works-line">{line}</span>}
@@ -97,7 +98,7 @@ export default function ContentLibrary({category,filter:routeFilter='',section='
     <div className="pg-actions">{landing.actions.map(([label,href,variant])=><Button key={href} href={href} {...(href.startsWith('#/preview/')?studioTab:{})} variant={variant} icon={iconFor(href)}>{label}</Button>)}</div>
    </div>}
   </header>
-  {landing.hero&&<figure className="pg-hero"><img src={landing.hero.src} alt={landing.hero.alt} width={landing.hero.width} height={landing.hero.height} fetchPriority="high" style={{objectPosition:landing.hero.position}}/></figure>}
+  {landing.hero&&<figure className="pg-hero"><img {...casePreview(landing.hero.src,'100vw')} alt={landing.hero.alt} width={landing.hero.width} height={landing.hero.height} fetchPriority="high" style={{objectPosition:landing.hero.position}}/></figure>}
   {landing.band&&<landing.band/>}
 
   <section className="pg-index folio-gutter" ref={index} aria-labelledby="pg-index-title">
