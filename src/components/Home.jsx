@@ -55,10 +55,14 @@ const pad = n => String(n).padStart(2, '0');
 // Slides keep their alt text; hidden ones are aria-hidden. Each panel haze is a 160px copy of its photo.
 const slideMs = 5000;
 const img = id => '/content/images/' + id + '.webp';
+// v1.2.4 (owner, 2026-11-25): on the stage too, the piece sits in the middle and is never cut. The stage changes shape
+// with the window, so E and B use a very wide photo framed around the piece (tools/classic-tiles.py): `object-fit:
+// cover` then always fits it by height, the piece keeps its size and place, and only plain backdrop comes and goes at
+// the sides. `phone` is the square framing for the square stage on phones (a <picture> source).
 const heroSlides = [
   { id: 'D', src: img('0ec85ee98fb1103204'), haze: '/assets/hero-haze-D-trio.webp', position: '41% 58%', line: '大理石邊料研磨再生，白、黑、綠三色。', alt: 'D 款 DELTA 公版獎盃，白、黑、綠三色再生大理石並列' },
-  { id: 'E', src: '/assets/hero-wide.webp', haze: '/assets/hero-haze-E.webp', position: '56% 50%', line: '鋁片折面與再生大理石，設計師聯名款。', alt: 'E 款 EXCEED 公版獎盃 The way to PEAK，金與銀兩色並列' },
-  { id: 'B', src: img('e8b500fc458fa120e4'), haze: '/assets/hero-haze-B.webp', position: '50% 50%', line: '熱處理北美黃檜，嵌入再生大理石。', alt: 'B 款 BOND 公版獎盃，木質盃身與黑色再生大理石構件' }
+  { id: 'E', src: '/assets/hero-E-wide.webp', phone: '/assets/hero-E-square.webp', wide: true, haze: '/assets/hero-haze-E.webp', position: '50% 50%', line: '鋁片折面與再生大理石，設計師聯名款。', alt: 'E 款 EXCEED 公版獎盃 The way to PEAK，金與銀兩色並列' },
+  { id: 'B', src: '/assets/hero-B-wide.webp', phone: '/assets/hero-B-square.webp', wide: true, haze: '/assets/hero-haze-B.webp', position: '50% 50%', line: '熱處理北美黃檜，嵌入再生大理石。', alt: 'B 款 BOND 公版獎盃，木質盃身與黑色再生大理石構件' }
 ];
 const heroPicks = offered;
 // v70 (owner, 2026-11-17): pointing at (or focusing) one of the A to E cards shows that model in the hero: its name,
@@ -99,9 +103,12 @@ function Hero({ onPreview }) {
       </div>
     </div>
     <div className="rv-hero-stage">
-      {heroSlides.map((s, i) => <img key={s.id} className={`rv-hero-photo${s.id === slide.id ? ' is-active' : ''}`} src={s.src}
-        {...(i === 0 ? { srcSet: `${import.meta.env.BASE_URL}assets/hero-d-720.webp 720w, ${s.src} 1440w`, sizes: '(max-width: 760px) 100vw, 65vw' } : small({ src: s.src, width: 1440 }, '(max-width: 760px) 60vw, 65vw'))}
-        alt={s.alt} aria-hidden={s.id !== slide.id || undefined} width="1440" height="1080" style={{ objectPosition: s.position }} fetchPriority={i ? 'low' : 'high'} loading={i ? 'lazy' : undefined} />)}
+      {heroSlides.map((s, i) => {
+        const photo = <img key={s.id} className={`rv-hero-photo${s.id === slide.id ? ' is-active' : ''}`} src={s.src}
+          {...(i === 0 ? { srcSet: `${import.meta.env.BASE_URL}assets/hero-d-720.webp 720w, ${s.src} 1440w`, sizes: '(max-width: 760px) 100vw, 65vw' } : {})}
+          alt={s.alt} aria-hidden={s.id !== slide.id || undefined} width={s.wide ? 2112 : 1440} height={s.wide ? 960 : 1080} style={{ objectPosition: s.position }} fetchPriority={i ? 'low' : 'high'} loading={i ? 'lazy' : undefined} />;
+        return s.phone ? <picture key={s.id} className="rv-hero-pic"><source media="(max-width: 760px)" srcSet={s.phone} />{photo}</picture> : photo;
+      })}
       {heroExtras.map(s => <img key={s.id} className={`rv-hero-photo is-extra${s.id === slide.id ? ' is-active' : ''}`} src={s.src} alt={s.alt} aria-hidden={s.id !== slide.id || undefined} width="1200" height="900" loading="lazy" />)}
       <div className="rv-hero-tabs" role="group" aria-label="主打公版獎盃">{heroSlides.map((s, i) => <button key={s.id} aria-pressed={i === active} onClick={() => { setPeek(null); setActive(i) }}><span className="rv-hero-bar">{i === active && <i key={active} onAnimationEnd={next} />}</span><strong>{s.id}</strong><span>{classicNames[s.id].slice(1)}</span></button>)}<button className="rv-hero-toggle" onClick={() => setPaused(p => !p)} aria-label={paused ? '播放輪播' : '暫停輪播'}><svg viewBox="0 0 16 16" aria-hidden="true"><path d={paused ? 'M5 3.5v9l7.5-4.5z' : 'M5 3.5v9M11 3.5v9'} fill={paused ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></button></div>
     </div>

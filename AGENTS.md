@@ -945,3 +945,16 @@ Both are done by the build (tools/images.mjs, called from tools/prerender.mjs be
 - Brand wall (LogoWall.jsx `priority`): the owner's first sixteen, in order: Delta, 日月光, 富邦, 資誠, 行政院, 環境部,
   資策會, 台電, Disney, HOLA, Heineken, Singleton, Uber Eats, 台北金馬影展, 松山文創園區, Pinkoi. The rest follow in
   logo-wall.json order. Phones show the first twelve until expanded.
+
+## Hero stage: E and B centred (v1.2.4, 2026-11-25, by request)
+- Same owner rule as v1.2.3, now on the home hero stage: the piece in the middle, never cut. The stage changes shape
+  with the window (about 1:1 at 1440×900, 1.5:1 at 1900×900, 2:1 on very wide monitors), so a 4:3 photo with an
+  off-centre piece was cropped differently everywhere (B ran off the bottom, E sat low and left).
+- E and B slides now use public/assets/hero-{E,B}-wide.webp: a 2.2:1 canvas framed around the piece
+  (tools/classic-tiles.py). `object-fit: cover` then fits it by HEIGHT on every desktop stage, so the piece keeps its
+  size and place and only backdrop is cut or shown at the sides. Phones (square stage) get hero-{E,B}-square.webp
+  through a <picture> source (`phone` on the slide; `.rv-hero-pic{display:contents}`).
+- The script's edge extension keeps the photo's edge next to the photo (light blur only: a heavy blur softened the
+  backdrop gradient and showed a step on E) and fades it into a blur along the seam farther out, so a shadow that
+  crossed the photo's edge (B) dissolves instead of running on as a stripe.
+- The D slide is unchanged (not asked); on stages wider than about 1.8:1 its three trophies are cut top and bottom.

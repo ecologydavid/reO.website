@@ -66,3 +66,6 @@
  .rv-hero.is-v64 .rv-hero-tabs button>.rv-hero-bar{grid-column:1/-1}
  .rv-hero.is-v64 .rv-hero-tabs button>span:last-child{display:inline;overflow:visible}
 }
+
+/* v1.2.4: E and B slides sit in a <picture> (a square photo for phones); the wrapper takes no box of its own. */
+.rv-hero-pic{display:contents}

@@ -16,27 +16,46 @@ photos = {
     'B': ('assets/catalogue-B.webp',               (.47, .08, .77, .93)),
     'D': ('content/images/0ec85ee98fb1103204.webp', (.22, .13, .785, .88)),
     'E': ('assets/hero-wide.webp',                  (.205, .31, .685, .87)),
+    'Bh': ('content/images/e8b500fc458fa120e4.webp', (.47, .08, .79, .93)),   # the same B shot, larger file (hero)
 }
 #        output name            photo  width:height  fill   size
 jobs = [('classic-B-tall.webp',  'B', 4 / 5, .76, (960, 1200)),
         ('classic-D-tall.webp',  'D', 4 / 5, .76, (960, 1200)),
         ('classic-E-tall.webp',  'E', 4 / 5, .66, (960, 1200)),
         ('classic-B-square.webp', 'B', 1.0, .78, (720, 720)),
-        ('classic-E-square.webp', 'E', 1.0, .70, (720, 720))]
+        ('classic-E-square.webp', 'E', 1.0, .70, (720, 720)),
+        # Home hero stage (v1.2.4). Its shape changes with the window (about 1:1 to 2:1). A very wide canvas is always
+        # fitted by HEIGHT, so the piece keeps the same size, stays whole and stays in the middle on every desktop;
+        # only plain background is cut from, or shown at, the sides. Phones (a square stage) get the square ones.
+        ('hero-B-wide.webp',   'Bh', 2.2, .74, (2112, 960)),
+        ('hero-E-wide.webp',   'E',  2.2, .62, (2112, 960)),
+        ('hero-B-square.webp', 'Bh', 1.0, .74, (1080, 1080)),
+        ('hero-E-square.webp', 'E',  1.0, .68, (1080, 1080))]
 
 def extend(im, left, top, right, bottom):
     """The photo on a larger canvas; each new band continues the photo's edge and is blurred."""
     w, h = im.size
     canvas = Image.new('RGB', (w + left + right, h + top + bottom))
     canvas.paste(im, (left, top))
-    def band(strip, size, at):
-        if size[0] > 0 and size[1] > 0:
-            canvas.paste(strip.resize(size, Image.BILINEAR).filter(ImageFilter.GaussianBlur(max(size) / 14)), at)
-    band(im.crop((0, 0, w, 4)), (w, top), (left, 0))
-    band(im.crop((0, h - 4, w, h)), (w, bottom), (left, top + h))
+    def band(strip, size, at, away):
+        """`away`: the side of the band that is farthest from the photo ('left', 'right', 'top', 'bottom')."""
+        if size[0] <= 0 or size[1] <= 0:
+            return
+        # Next to the photo: the edge itself, with a light blur only (enough to calm the stretched grain; more would
+        # soften the backdrop's own gradient and show as a step where the band meets the photo, seen on E).
+        near = strip.resize(size, Image.BILINEAR).filter(ImageFilter.GaussianBlur(min(5, max(size) / 14)))
+        # Far from the photo: the same band blurred along the seam, so anything that crossed the photo's edge
+        # (B's long shadow) dissolves into the backdrop instead of running on as a straight stripe.
+        along = size[1] if away in ('left', 'right') else size[0]
+        far = near.filter(ImageFilter.GaussianBlur(along / 7))
+        ramp = Image.linear_gradient('L')                                    # black at the top, white at the bottom
+        ramp = {'bottom': ramp, 'top': ramp.rotate(180), 'right': ramp.rotate(90), 'left': ramp.rotate(270)}[away].resize(size)
+        canvas.paste(Image.composite(far, near, ramp), at)
+    band(im.crop((0, 0, w, 4)), (w, top), (left, 0), 'top')
+    band(im.crop((0, h - 4, w, h)), (w, bottom), (left, top + h), 'bottom')
     full = canvas.crop((left, 0, left + w, h + top + bottom))
-    band(full.crop((0, 0, 4, full.height)), (left, full.height), (0, 0))
-    band(full.crop((w - 4, 0, w, full.height)), (right, full.height), (left + w, 0))
+    band(full.crop((0, 0, 4, full.height)), (left, full.height), (0, 0), 'left')
+    band(full.crop((w - 4, 0, w, full.height)), (right, full.height), (left + w, 0), 'right')
     return canvas
 
 for name, key, ratio, fill, size in jobs:
