@@ -14,8 +14,10 @@
    Grey text is #686d65 (AA on white); the old #80847d failed it at small sizes. Scoped to .folio-home.tx
    (the site's root), one class stronger than the older rules it replaces; the studio is not touched. */
 .folio-home.tx{
- --tx-serif:"Noto Serif TC","Songti TC",serif;
- --tx-sans:"Inter","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+ /* v1.2.1: "reO Serif" is the page's own subset of Noto Serif TC (tools/prerender.mjs); the full family follows after load.
+    Chinese text uses the device face; "Noto Sans TC" stays in the list only for devices that have it installed. */
+ --tx-serif:"reO Serif","Noto Serif TC","Songti TC",serif;
+ --tx-sans:"Inter","PingFang TC","Microsoft JhengHei","Noto Sans TC","Noto Sans CJK TC",sans-serif;
  --tx-latin:"Inter","Helvetica Neue",Arial,sans-serif;
  --tx-ink:#1f2320;--tx-ink-2:#3d433b;--tx-body:#4a5047;--tx-muted:#686d65;
  --tx-display:clamp(56px,7.4vw,116px);

@@ -10,6 +10,7 @@
 // dist/404.html keeps the plain app shell: hosts that serve it for unknown addresses (GitHub Pages) still open any
 // route, e.g. the plaque studio (/studio/A/), which is not prerendered.
 import http from 'node:http';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import {spawn} from 'node:child_process';
@@ -71,10 +72,13 @@ await send('Page.enable');
 // Ready when the page has set its own title and address (src/seo.js) and nothing is still loading.
 const ready = address => `decodeURIComponent(document.documentElement.dataset.page||'')===decodeURIComponent(${JSON.stringify(address)})&&!document.querySelector('.app-loading,.content-loading')&&!!document.querySelector('main')`;
 // The saved page: what a visitor sees before the app starts. Runtime-only marks are removed so it starts clean.
-const snapshot = `(()=>{const d=document.documentElement.cloneNode(true);delete d.dataset.page;d.querySelectorAll('[data-count]').forEach(e=>{e.textContent=e.dataset.count});d.querySelectorAll('.site-header-v5').forEach(h=>h.classList.remove('is-condensed','is-hidden'));d.querySelectorAll('link[rel=preload][as=image],body noscript').forEach(l=>l.remove());return '<!doctype html>\\n'+d.outerHTML})()`;
+const snapshot = `(()=>{const d=document.documentElement.cloneNode(true);delete d.dataset.page;d.querySelectorAll('[data-count]').forEach(e=>{e.textContent=e.dataset.count});d.querySelectorAll('.site-header-v5').forEach(h=>h.classList.remove('is-condensed','is-hidden'));d.querySelectorAll('link[rel=preload][as=image],body noscript,link[data-late]').forEach(l=>l.remove());d.querySelectorAll('link[onload]').forEach(l=>{l.media='print'});return '<!doctype html>\\n'+d.outerHTML})()`;
+// v1.2.1: the characters this page sets in the heading face (every element whose font list starts with "reO Serif",
+// hidden menus and panels included), so the page can carry one small font holding just those.
+const serifText = `(()=>{const s=new Set();const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){const p=n.parentElement;if(!p||/^(SCRIPT|STYLE|NOSCRIPT)$/.test(p.tagName))continue;if(getComputedStyle(p).fontFamily.includes('reO Serif'))for(const c of n.nodeValue)if(c.trim()&&c.codePointAt(0)>32)s.add(c)}return [...s].sort().join('')})()`;
 
 let done = 0;
-const failed = [], started = Date.now();
+const failed = [], started = Date.now(), written = [];
 for (const route of list) {
   const address = base + route;
   await send('Page.navigate', {url: origin + address});
@@ -86,6 +90,7 @@ for (const route of list) {
   const out = path.join(dist, decodeURIComponent(route), 'index.html');
   fs.mkdirSync(path.dirname(out), {recursive: true});
   fs.writeFileSync(out, html);
+  written.push({out, text: await evaluate(serifText) || ''});
   if (++done % 25 === 0) console.log(`prerender: ${done}/${list.length}`);
 }
 ws.close();
@@ -93,6 +98,57 @@ chrome.kill();
 server.close();
 await sleep(400);
 try { fs.rmSync(profile, {recursive: true, force: true}); } catch {}
+
+// ── Heading font per page (v1.2.1) ─────────────────────────────────────────────────────────────────────────────
+// Noto Serif TC as Google slices it cost a page 16+ files (about 1.5 MB) at top priority, ahead of the photos. Google
+// can also cut the font down to a given text: each page gets one file with only its own heading characters (roughly
+// 30 kB per 100 characters), saved under dist/fonts/ by content hash and declared in the page as "reO Serif", the
+// first name in --tx-serif. Characters that are not in it (text that appears later, the next page after an in-site
+// click) fall through to the full family, which index.html adds once the page has loaded.
+// If Google cannot be reached the page is left as it is: headings then wait for the full family, as before.
+const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
+const hash = data => crypto.createHash('sha1').update(data).digest('hex').slice(0, 18);
+const ranges = text => { const cps = [...new Set([...text].map(c => c.codePointAt(0)))].sort((a, b) => a - b), out = []; for (let i = 0; i < cps.length; i++) { let j = i; while (cps[j + 1] === cps[j] + 1) j++; out.push('U+' + cps[i].toString(16) + (j > i ? '-' + cps[j].toString(16) : '')); i = j; } return out.join(','); };
+async function fontFor(text) {
+  const r = await fetch('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600&display=swap&text=' + encodeURIComponent(text), {headers: {'user-agent': UA}});
+  const blocks = (await r.text()).match(/@font-face\s*{[^}]*}/g) || [];
+  // More than a handful of blocks means Google ignored the text (too long) and answered with the whole family.
+  if (!r.ok || !blocks.length || blocks.length > 4) throw new Error('no subset for ' + text.length + ' characters');
+  const faces = new Map();
+  for (const b of blocks) { const url = b.match(/url\((https:[^)]+)\)/)?.[1], weight = b.match(/font-weight:\s*(\d+)/)?.[1]; if (!url || !weight) throw new Error('unreadable font rule'); faces.set(url, [...(faces.get(url) || []), +weight]); }
+  let css = '', preload = '', bytes = 0;
+  for (const [url, weights] of faces) {
+    const data = Buffer.from(await (await fetch(url)).arrayBuffer());
+    if (data.length < 500) throw new Error('empty font file');
+    const file = `fonts/${hash(data)}.woff2`;
+    fs.mkdirSync(path.join(dist, 'fonts'), {recursive: true});
+    fs.writeFileSync(path.join(dist, file), data); bytes += data.length;
+    const w = [...new Set(weights)].sort((a, b) => a - b);
+    css += `@font-face{font-family:"reO Serif";font-style:normal;font-weight:${w.length > 1 ? w[0] + ' ' + w.at(-1) : w[0]};font-display:swap;src:url(${base}${file}) format("woff2");unicode-range:${ranges(text)}}`;
+    preload += `<link rel="preload" as="font" type="font/woff2" href="${base}${file}" crossorigin>`;
+  }
+  return {css, preload, bytes};
+}
+const fontCache = new Map(), chunkSize = 450;
+let fontPages = 0, fontBytes = 0, fontFailed = 0;
+const queue = [...written];
+await Promise.all(Array.from({length: 6}, async () => {
+  for (let job; (job = queue.shift());) {
+    if (!job.text) continue;
+    try {
+      // The space travels with the first part, so words in a heading are spaced by the same font.
+      const chars = [...job.text], parts = [];
+      for (let i = 0; i < chars.length; i += chunkSize) parts.push((i ? '' : ' ') + chars.slice(i, i + chunkSize).join(''));
+      const made = await Promise.all(parts.map(p => { if (!fontCache.has(p)) fontCache.set(p, fontFor(p)); return fontCache.get(p); }));
+      const head = made.map(m => m.preload).join('') + '<style id="reo-serif">' + made.map(m => m.css).join('') + '</style>';
+      const html = fs.readFileSync(job.out, 'utf8');
+      if (!html.includes('</head>')) throw new Error('no head');
+      fs.writeFileSync(job.out, html.replace('</head>', head + '</head>'));
+      fontPages++; fontBytes += made.reduce((a, m) => a + m.bytes, 0);
+    } catch (e) { fontFailed++; if (fontFailed <= 3) console.error('prerender: heading font skipped for ' + path.relative(dist, job.out) + ': ' + e.message); }
+  }
+}));
+console.log(`prerender: heading fonts on ${fontPages} pages, average ${fontPages ? Math.round(fontBytes / fontPages / 1024) : 0} kB` + (fontFailed ? `; skipped on ${fontFailed}` : ''));
 if (site && !only) {
   const today = new Date().toISOString().slice(0, 10), pages = list.filter(r => !failed.includes(r) && r !== 'brands/');
   fs.writeFileSync(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map(r => ` <url><loc>${site}/${r}</loc><lastmod>${today}</lastmod></url>`).join('\n')}\n</urlset>\n`);

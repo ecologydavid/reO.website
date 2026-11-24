@@ -884,3 +884,30 @@ the public label IP聯名設計 maps to the stored group IP生活設計 so legac
 The gift menu no longer links to Pinkoi; its standalone header, footer and shipping links remain.
 Delivery uses the owner's carrier marks and clear channel icons. About keeps the six origami photos
 in a compact stage, and the footer links to the studio's Facebook and Instagram accounts.
+
+## Load weight: fonts, caching, late extras (v1.2.1, 2026-11-25, by request)
+The owner reported photos arriving late on ordinary connections. Measured on the live site (headless Chrome, phone,
+4 Mbps): the home page's first view was 4.6 MB, of which 2.8 MB was 38 Chinese font files at top priority; photos
+(1.2 MB, low priority) queued behind them and finished at about 10 s (24 s at 1.6 Mbps). Photos were not the problem.
+- Chinese TEXT now uses the device's face (`--tx-sans` in site/type.css: Inter, PingFang TC, Microsoft JhengHei, …).
+  Noto Sans TC is no longer downloaded on the site. HEADINGS stay Noto Serif TC.
+- Headings: tools/prerender.mjs collects the characters each page sets in the heading face and asks Google Fonts for a
+  font cut to that text (`&text=`, at most 450 characters a request; longer text is split and each part gets its
+  unicode-range). The files go to dist/fonts/<hash>.woff2 and the page declares them as "reO Serif", the first name in
+  `--tx-serif`, with a preload. About 45 kB a page instead of 1.5 MB. Text not in it falls through to the full
+  Noto Serif TC, which index.html adds only after the page has loaded. If Google cannot be reached at build time the
+  page is simply left without its subset. A new heading style must keep using `var(--tx-serif)` to be included.
+- The plaque studio (/studio/…) loads Noto Sans TC and Noto Serif TC from the start, as before: plate text and the
+  editor are unchanged (index.html decides by address).
+- index.html's font link is saved by the prerenderer as media="print" again (it used to be saved as "all", which
+  made the 170 kB font stylesheet block the first paint of every prerendered page).
+- Caching (public/_headers, Cloudflare Pages): /app/ (Vite's hashed files; `build.assetsDir`), /fonts/,
+  /content/images/ and /assets/case-previews/ for a year; other /assets/ files for a day, then refreshed in the
+  background. Rules must not overlap (Cloudflare joins their values), which is why /assets/ is listed folder by folder
+  and its own files by `/assets/:file`. A NEW FOLDER under public/assets needs its own line. HTML and page JSON keep
+  the default (always checked), so updates still show at once.
+- After the page: Google Analytics' tag (1.2 s after load, 8 s at the latest, or when the visitor leaves) and the
+  logo's drawing GIF (hover still plays it at once).
+- Result, same test on the new build: first view 1.6 MB (fonts 0.1 MB), photos done at about 3.3 s.
+- Not done yet (offered): 720px copies of article photos for phones (srcset); the 3–6 MB originals in public/assets
+  that only models.json or nothing refers to.

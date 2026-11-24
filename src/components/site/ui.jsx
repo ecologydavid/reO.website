@@ -26,9 +26,11 @@ export function BrandLogo({className='',alt='re.O',size=100,style,loop=false}){
  },[loop,swap]);
  useEffect(()=>{
   if(loop)return;
-  const observer=new IntersectionObserver(([entry])=>{if(entry.isIntersecting){observer.disconnect();play()}});
+  // v1.2.1: the first automatic drawing waits until the page has loaded, so the GIF never competes with the photos.
+  let live=true;const later=()=>{if(live)play()};
+  const observer=new IntersectionObserver(([entry])=>{if(entry.isIntersecting){observer.disconnect();if(document.readyState==='complete')later();else window.addEventListener('load',()=>setTimeout(later,400),{once:true})}});
   observer.observe(box.current);
-  return()=>{observer.disconnect();clearTimeout(timer.current);swap(logoStill)};
+  return()=>{live=false;observer.disconnect();clearTimeout(timer.current);swap(logoStill)};
  },[loop,play,swap]);
  return <picture className={`rv-logo ${className}`} style={style} ref={box} onMouseEnter={play}><source srcSet={logoStill} media="(prefers-reduced-motion: reduce)"/><img src={src} alt={alt} width={size} height={size}/></picture>;
 }

@@ -34,4 +34,6 @@ const seo={
 // The build date (Taipei) shown with the version in the footer (src/version.js).
 const buildInfo={date:new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Taipei'}).format(new Date()).replace(/-/g,'.')};
 // adminDev: the case admin's local back end, dev server only (admin-service/dev-plugin.mjs).
-export default defineConfig({base,define:{__BUILD__:JSON.stringify(buildInfo)},plugins:[rebase,seo,adminDev],esbuild:{jsxFactory:'reoH',jsxInject:"import {reoH} from '/src/h.js'"}});
+// build.assetsDir: Vite's hashed files go to /app/ (not /assets/, which also holds photos that keep their names),
+// so public/_headers can cache each kind for the right length of time.
+export default defineConfig({base,build:{assetsDir:'app'},define:{__BUILD__:JSON.stringify(buildInfo)},plugins:[rebase,seo,adminDev],esbuild:{jsxFactory:'reoH',jsxInject:"import {reoH} from '/src/h.js'"}});

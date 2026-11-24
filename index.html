@@ -10,13 +10,26 @@
     <link rel="canonical" href="%SITE_URL%/" />
     <link rel="icon" type="image/png" href="/assets/reo-logo.png" />
     <link rel="apple-touch-icon" href="/assets/reo-logo.png" />
-    <!-- V42 type system: headings in Noto Serif TC, text in Noto Sans TC, Latin and figures in Inter.
-         Google serves the Chinese faces in small unicode-range slices, so a page loads only the
-         characters it uses. Non-blocking: text shows at once in the system face, then swaps. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <!-- Type (v1.2.1, 2026-11-25): Chinese text uses the device's own face (PingFang, Microsoft JhengHei, Noto Sans CJK);
+         headings stay Noto Serif TC; Latin and figures are Inter.
+         Measured on the live site: 38 font files (2.8 MB, top priority) made photos wait up to 10 s on 4G. Now:
+         - each prerendered page carries ONE small font with just the heading characters it shows ("reO Serif",
+           written into the page by tools/prerender.mjs and served from /fonts/);
+         - the full Noto Serif TC (Google's unicode-range slices) is added only after the page has loaded, for
+           headings that appear later or on the next page;
+         - the plaque studio keeps the original three families from the start, so plate text is unchanged. -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600&display=swap" media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600&display=swap" /></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'" />
+    <script>
+      (function () {
+        var studio = location.pathname.indexOf('/studio/') >= 0 || location.hash.indexOf('#/preview/') === 0;
+        var href = 'https://fonts.googleapis.com/css2?' + (studio ? 'family=Noto+Sans+TC:wght@400;500;700&' : '') + 'family=Noto+Serif+TC:wght@500;600&display=swap';
+        function add() { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; l.setAttribute('data-late', ''); document.head.appendChild(l); }
+        if (studio) return add();
+        var done = false, go = function () { if (!done) { done = true; (window.requestIdleCallback || setTimeout)(add, {timeout: 2000}); } };
+        if (document.readyState === 'complete') go(); else { addEventListener('load', go); setTimeout(go, 12000); }
+      })();
+    </script>
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="re.O" />
     <meta property="og:locale" content="zh_TW" />

@@ -15,10 +15,21 @@ function initialize() {
     page_location: location.origin + location.pathname,
     page_referrer: document.referrer ? new URL(document.referrer).origin : ''
   });
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
-  document.head.append(script);
+  // v1.2.1: fetched once the page has loaded (or after 8s on a slow line), so it never delays the first photos.
+  // gtag() calls made before then wait in dataLayer and are sent when the tag arrives.
+  let requested = false;
+  const request = () => {
+    if (requested) return;
+    requested = true;
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.append(script);
+  };
+  if (document.readyState === 'complete') setTimeout(request, 1200);
+  else { window.addEventListener('load', () => setTimeout(request, 1200), {once: true}); setTimeout(request, 8000); }
+  // A visitor who leaves before that is still counted.
+  window.addEventListener('pagehide', request, {once: true});
 
   let scheduled = false;
   window.addEventListener('scroll', () => {
