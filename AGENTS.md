@@ -932,3 +932,16 @@ Both are done by the build (tools/images.mjs, called from tools/prerender.mjs be
   the original. Build only (the dev server has no /i/). A new <img> for a content photo should spread small(...).
   If size or quality changes, change SUFFIX in images.mjs and responsive.js together (the addresses are cached).
 - Same phone test as before: home first view 1.2 MB of photos → 0.6 MB; a case page's photos roughly a third less.
+
+## Centred classic photos, brand wall order (v1.2.3, 2026-11-25, by request)
+- Owner rule: on the home page the piece sits in the MIDDLE of its frame, clear of the edges, never shifted to a side.
+  The catalogue photos are 4:3 with the piece off centre (B right, E left and low) or edge to edge (D), which a
+  centre crop into a tall or square frame made worse. tools/classic-tiles.py frames the same photos around the piece
+  (its box is given by hand in the script) and, where the frame reaches past the photo, continues the photo's own
+  edge (background only): public/assets/classic-{B,D,E}-tall.webp (4:5, desktop Classic grid) and
+  classic-{B,E}-square.webp (hero A to E cards). Home.jsx `tallPhoto` / `pickPhoto`; the tall photo replaces the 4:3
+  one only at ≥1101px (two frames, CSS swaps them), because smaller screens show the 4:3 photo whole.
+  A new or replaced classic photo: add its box to the script, run it, check the three places.
+- Brand wall (LogoWall.jsx `priority`): the owner's first sixteen, in order: Delta, 日月光, 富邦, 資誠, 行政院, 環境部,
+  資策會, 台電, Disney, HOLA, Heineken, Singleton, Uber Eats, 台北金馬影展, 松山文創園區, Pinkoi. The rest follow in
+  logo-wall.json order. Phones show the first twelve until expanded.

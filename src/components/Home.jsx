@@ -65,6 +65,8 @@ const heroPicks = offered;
 // line, size, price, studio button and photo. A and C are not slides, so they bring their catalogue photo and a line
 // written from models.json's materials. The loop waits meanwhile and resumes when the pointer leaves.
 const peekLines = { A: '北美黃檜或木橫擔，立於再生大理石底座。', C: '熱處理北美黃檜，立於再生大理石底座。' };
+// Square cards under the hero: B and E framed around the piece (see tallPhoto below).
+const pickPhoto = { B: '/assets/classic-B-square.webp', E: '/assets/classic-E-square.webp' };
 const heroExtras = heroPicks.filter(id => !heroSlides.some(s => s.id === id)).map(id => ({ id, src: `/assets/catalogue-${id}.webp`, line: peekLines[id], alt: `${id} 款 ${classicNames[id]} 公版獎盃實品` }));
 const sizeOf = m => Array.isArray(m.dimensions_mm) ? `高 ${Math.max(...m.dimensions_mm) / 10} cm` : '';
 function Hero({ onPreview }) {
@@ -93,7 +95,7 @@ function Hero({ onPreview }) {
       </div>
       <div className="rv-hero-picks">
         <p>A 至 E 款<span>點選款式，開啟銘版排版工作室</span></p>
-        <ul onMouseLeave={() => setPeek(null)} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setPeek(null) }}>{heroPicks.map(id => <li key={id}><button className={id === slide.id ? 'is-on' : undefined} onMouseEnter={() => setPeek(id)} onFocus={() => setPeek(id)} onClick={() => onPreview(id)} aria-label={`開始 ${id} 款 ${classicNames[id]} 排版（另開新視窗）`}><img src={`/assets/catalogue-${id}.webp`} alt="" width="1200" height="900" loading="lazy" /><span aria-hidden="true"><b>{id}</b>{classicNames[id].slice(1)}</span></button></li>)}</ul>
+        <ul onMouseLeave={() => setPeek(null)} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setPeek(null) }}>{heroPicks.map(id => <li key={id}><button className={id === slide.id ? 'is-on' : undefined} onMouseEnter={() => setPeek(id)} onFocus={() => setPeek(id)} onClick={() => onPreview(id)} aria-label={`開始 ${id} 款 ${classicNames[id]} 排版（另開新視窗）`}><img src={pickPhoto[id] || `/assets/catalogue-${id}.webp`} alt="" width={pickPhoto[id] ? 720 : 1200} height={pickPhoto[id] ? 720 : 900} loading="lazy" /><span aria-hidden="true"><b>{id}</b>{classicNames[id].slice(1)}</span></button></li>)}</ul>
       </div>
     </div>
     <div className="rv-hero-stage">
@@ -276,6 +278,11 @@ const customModes = [
 ];
 // D and E are the models the studio promotes; they lead the classic at a larger size.
 const featured = ['E', 'D'];
+// v1.2.3 (owner, 2026-11-25): the piece sits in the middle of its frame, clear of the edges. The catalogue photos are
+// 4:3; in the tall desktop cells and the square hero cards a centre crop left B and E off centre and D against the
+// sides. These are the same photos framed around the piece (tools/classic-tiles.py). The tall ones show only in the
+// desktop grid (CSS swaps the two frames); smaller screens keep the 4:3 photo, which they show whole.
+const tallPhoto = { B: '/assets/classic-B-tall.webp', D: '/assets/classic-D-tall.webp', E: '/assets/classic-E-tall.webp' };
 // V48 (owner, 2026-11-08): each standard model has an English name that starts with its letter. On home the
 // card shows only the photo and that name, grown out of the letter tab; name, spec and the start button are gone.
 // The letter stays in its square; the rest of the name rises in letter by letter as the card comes into
@@ -303,7 +310,7 @@ export default function Home({ onPreview, section }) {
       <section className="rv-section rv-gutter" id="classic" aria-labelledby="rv-classic-title">
         <SectionHead index="01" label="公版獎盃" en="Classic" id="rv-classic-title" title={<>為榮耀，<br />找到合適的樣貌。</>} />
         <div className="rv-products">{models.filter(m => offered.includes(m.id)).sort((a, b) => featured.indexOf(b.id) - featured.indexOf(a.id)).map(m => <article className={`rv-product${featured.includes(m.id) ? ' is-feature' : m.id === 'C' ? ' is-wide' : ''}`} key={m.id} data-reveal>
-          <button className="rv-product-photo" onClick={() => onPreview(m.id)} aria-label={`${m.id} 款 ${classicNames[m.id]}，開始銘版排版`}><Frame src={`/assets/catalogue-${m.id}.webp`} alt={`${m.id} 款 ${m.name}實品`} width="1200" height="900" /><ClassicTab id={m.id} /></button>
+          <button className="rv-product-photo" onClick={() => onPreview(m.id)} aria-label={`${m.id} 款 ${classicNames[m.id]}，開始銘版排版`}><Frame className={tallPhoto[m.id] ? 'is-wide-only' : ''} src={`/assets/catalogue-${m.id}.webp`} alt={`${m.id} 款 ${m.name}實品`} width="1200" height="900" />{tallPhoto[m.id] && <Frame className="is-tall-only" src={tallPhoto[m.id]} alt={`${m.id} 款 ${m.name}實品`} width="960" height="1200" />}<ClassicTab id={m.id} /></button>
         </article>)}</div>
       </section>
 

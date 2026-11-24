@@ -3,7 +3,8 @@ import logos from '../../data/logo-wall.json';
 import { SiteArrow } from './SiteHeader.jsx';
 import BrandMark from './BrandMark.jsx';
 import './brand-wall.css';
-const priority = ['ase', 'delta', 'pwc', 'pinkoi', 'fubon', 'hola', 'disney', 'tmall', 'taipower', 'iii'];
+// The owner's order for the first sixteen (2026-11-25, numbered by hand on a screenshot); the rest follow as listed.
+const priority = ['delta', 'ase', 'fubon', 'pwc', 'executive-yuan', 'moenv', 'iii', 'taipower', 'disney', 'hola', 'heineken', 'singleton', 'uber-eats', 'golden-horse', 'songshan', 'pinkoi'];
 const ordered = [...logos].sort((a, b) => { const x = priority.indexOf(a.id), y = priority.indexOf(b.id); return (x < 0 ? 99 : x) - (y < 0 ? 99 : y) });
 // Marks drawn in white for dark grounds: 木客 keeps its white mark on an ink tile; DCC's black and
 // white inks print as one dark silhouette.

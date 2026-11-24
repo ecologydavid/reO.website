@@ -597,3 +597,8 @@
  .rv-cycle-brief .rv-cycle-more{animation:none;margin:16px 0}
  .rv-cycle-brief .rv-cycle-more img{max-height:320px;object-fit:contain;object-position:left center}
 }
+
+/* v1.2.3 Classic grid: B, D and E carry a second, tall photo framed around the piece; it replaces the 4:3 photo only
+   where the cells are tall (the desktop grid). */
+.rv-products .rv-frame.is-tall-only{display:none}
+@media(min-width:1101px){.rv-products .rv-frame.is-wide-only{display:none}.rv-products .rv-frame.is-tall-only{display:block}}
