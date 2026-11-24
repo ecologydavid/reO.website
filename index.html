@@ -49,14 +49,16 @@
     <!-- The home hero photo is the largest paint; fetch it alongside the script, on the home route only. -->
     <script>
       if (location.pathname === '%BASE_URL%' && location.hash.length < 3) {
-        const photo = document.createElement('link');
-        photo.rel = 'preload';
-        photo.as = 'image';
-        photo.href = '%BASE_URL%content/images/0ec85ee98fb1103204.webp';
-        photo.imageSrcset = '%BASE_URL%assets/hero-d-720.webp 720w, ' + photo.href + ' 1440w';
-        photo.imageSizes = '(max-width: 760px) 100vw, 65vw';
-        photo.fetchPriority = 'high';
-        document.head.appendChild(photo);
+        // v1.2.5: the stage shows the wide framing on desktops and the square one on phones (Home.jsx <picture>).
+        [['%BASE_URL%assets/hero-D-wide.webp', '(min-width: 761px)'], ['%BASE_URL%assets/hero-D-square.webp', '(max-width: 760px)']].forEach(function (p) {
+          const photo = document.createElement('link');
+          photo.rel = 'preload';
+          photo.as = 'image';
+          photo.href = p[0];
+          photo.media = p[1];
+          photo.fetchPriority = 'high';
+          document.head.appendChild(photo);
+        });
       }
     </script>
   </head>

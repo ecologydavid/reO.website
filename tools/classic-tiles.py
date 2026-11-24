@@ -13,24 +13,28 @@ from PIL import Image, ImageFilter
 root = Path(__file__).resolve().parents[1] / 'public'
 #        source photo                              piece box: x0, y0, x1, y1
 photos = {
-    'B': ('assets/catalogue-B.webp',               (.47, .08, .77, .93)),
+    'A': ('assets/catalogue-A.webp',                (.42, .10, .58, .89)),
+    'B': ('content/images/e8b500fc458fa120e4.webp', (.47, .08, .79, .93)),
+    'C': ('assets/catalogue-C.webp',                (.275, .18, .71, .91)),
     'D': ('content/images/0ec85ee98fb1103204.webp', (.22, .13, .785, .88)),
     'E': ('assets/hero-wide.webp',                  (.205, .31, .685, .87)),
-    'Bh': ('content/images/e8b500fc458fa120e4.webp', (.47, .08, .79, .93)),   # the same B shot, larger file (hero)
 }
-#        output name            photo  width:height  fill   size
-jobs = [('classic-B-tall.webp',  'B', 4 / 5, .76, (960, 1200)),
-        ('classic-D-tall.webp',  'D', 4 / 5, .76, (960, 1200)),
-        ('classic-E-tall.webp',  'E', 4 / 5, .66, (960, 1200)),
-        ('classic-B-square.webp', 'B', 1.0, .78, (720, 720)),
-        ('classic-E-square.webp', 'E', 1.0, .70, (720, 720)),
-        # Home hero stage (v1.2.4). Its shape changes with the window (about 1:1 to 2:1). A very wide canvas is always
-        # fitted by HEIGHT, so the piece keeps the same size, stays whole and stays in the middle on every desktop;
-        # only plain background is cut from, or shown at, the sides. Phones (a square stage) get the square ones.
-        ('hero-B-wide.webp',   'Bh', 2.2, .74, (2112, 960)),
-        ('hero-E-wide.webp',   'E',  2.2, .62, (2112, 960)),
-        ('hero-B-square.webp', 'Bh', 1.0, .74, (1080, 1080)),
-        ('hero-E-square.webp', 'E',  1.0, .68, (1080, 1080))]
+# Every model in every frame shape the site uses (v1.2.5: all five, so no frame is left to a plain centre crop).
+#   tall    4:5   desktop Classic grid cells
+#   square  1:1   hero A to E cards, the round picks on the 公版 page
+#   wide    4:3   Classic grid on tablets and phones, C's wide desktop cell, the 公版 mosaic
+#   hero    2.2:1 home hero stage on desktops. The stage changes shape with the window (about 1:1 to 2:1); a canvas
+#                 this wide is always fitted by HEIGHT, so the piece keeps its size and place and only plain backdrop
+#                 is cut from, or shown at, the sides.
+#   hero-square   home hero stage on phones (a square stage)
+#            shape          width:height  size          fill of the tighter side, per model
+shapes = [('tall',        4 / 5, (960, 1200),  {'A': .78, 'B': .76, 'C': .78, 'D': .76, 'E': .66}),
+          ('square',      1.0,   (720, 720),   {'A': .78, 'B': .78, 'C': .72, 'D': .76, 'E': .70}),
+          ('wide',        4 / 3, (1200, 900),  {'A': .74, 'B': .74, 'C': .64, 'D': .70, 'E': .62}),
+          ('hero',        2.2,   (2112, 960),  {'A': .74, 'B': .74, 'C': .64, 'D': .72, 'E': .62}),
+          ('hero-square', 1.0,   (1080, 1080), {'A': .76, 'B': .74, 'C': .68, 'D': .76, 'E': .68})]
+jobs = [((f'hero-{key}-wide.webp' if shape == 'hero' else f'hero-{key}-square.webp' if shape == 'hero-square' else f'classic-{key}-{shape}.webp'), key, ratio, fills[key], size)
+        for shape, ratio, size, fills in shapes for key in 'ABCDE']
 
 def extend(im, left, top, right, bottom):
     """The photo on a larger canvas; each new band continues the photo's edge and is blurred."""

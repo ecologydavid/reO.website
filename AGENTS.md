@@ -958,3 +958,19 @@ Both are done by the build (tools/images.mjs, called from tools/prerender.mjs be
   backdrop gradient and showed a step on E) and fades it into a blur along the seam farther out, so a shadow that
   crossed the photo's edge (B) dissolves instead of running on as a stripe.
 - The D slide is unchanged (not asked); on stages wider than about 1.8:1 its three trophies are cut top and bottom.
+
+## Every classic photo framed for its frame (v1.2.5, 2026-11-25, by request: "handle wherever this can happen")
+- The owner's rule (v1.2.3) now holds for all five models in every place they show: src/components/site/classicPhotos.js
+  lists, per model, the photo framed around the piece for each frame shape (tall 4:5, square, wide 4:3, hero 2.2:1,
+  heroPhone square), all made by tools/classic-tiles.py (25 files, 0.8 MB). Use the entry that matches the frame;
+  do not centre-crop a 4:3 catalogue photo into another shape.
+  - Home hero stage: D, E, B slides and the A and C previews all use `hero` (+ `heroPhone` on phones via <picture>).
+    index.html preloads the D slide in the shape the screen will show (two preload links with `media`).
+    The old hero-d-720.webp and per-slide object-position are no longer used.
+  - Home hero cards: `square` for all five. Classic grid: `tall` on desktop for A, B, D, E; `wide` for C's wide cell
+    and for every model on tablets and phones.
+  - 公版 page: the step-01 mosaic uses `wide`, the round picks use `square` (they used product-thumb crops).
+  - Not changed: the plaque studio's model cards (protected), the FAQ's 72px thumbnails and the unused MaterialHero.
+- Checked on screenshots: hero D/E/B and the A/C previews at 1440, 1900 and 2560 wide and on a phone; the Classic grid
+  at 1440, 1024 and 390; the 公版 mosaic and picks at 1440 and 390. A new classic model or photo: add its box to the
+  script, run it, add the entry to classicPhotos.js.
