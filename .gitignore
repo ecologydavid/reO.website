@@ -3,3 +3,4 @@ dist/
 .sites-runtime/
 .openai/*.local.*
 *.log
+.cache/

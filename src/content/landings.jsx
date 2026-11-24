@@ -1,4 +1,5 @@
 import {casePreview} from './casePreviews.js';
+import {small,half} from '../components/site/responsive.js';
 import React,{useEffect,useRef,useState} from 'react';
 import cases from '../data/brand-cases.json';
 import {contentHref} from '../components/site/navigation.js';
@@ -42,7 +43,7 @@ function GuideBand({id='pg-band-title',kicker,en,title,items,compact}){
    <div className="pg-flow-stage">
     {items.map((s,i)=>s.mosaic
      ?<div key={s.title} className={`pg-flow-shot pg-flow-mosaic${i===active?' is-on':''}`} role="img" aria-label={s.alt} aria-hidden={i!==active||undefined}>{flowModels.map(m=><span key={m}><img src={`/assets/catalogue-${m}.webp`} alt="" width="1200" height="900" loading="lazy"/><em>{m}</em></span>)}</div>
-     :<img key={s.title} className={`pg-flow-shot${i===active?' is-on':''}`} src={s.src} alt={i===active?s.alt:''} aria-hidden={i!==active||undefined} width={s.width||1440} height={s.height||1080} loading="lazy" style={{objectPosition:s.position||'50% 50%'}}/>)}
+     :<img key={s.title} className={`pg-flow-shot${i===active?' is-on':''}`} src={s.src} {...small({src:s.src,width:s.width||1440},half)} alt={i===active?s.alt:''} aria-hidden={i!==active||undefined} width={s.width||1440} height={s.height||1080} loading="lazy" style={{objectPosition:s.position||'50% 50%'}}/>)}
     <p className="pg-flow-caption" aria-hidden="true"><b>{numbers[active]}</b>/ {total}<span>{items[active].caption||items[active].title}</span></p>
    </div>
    <div className="pg-flow-text">
@@ -123,7 +124,7 @@ function MaterialReel(){
  const n=materials.length;
  return <section className="pg-studio" aria-labelledby="pg-band-title">
   <div className="pg-split folio-gutter" data-reveal><p className="pg-kicker"><span>01</span>Textures</p><div><h2 id="pg-band-title">材料的下一站。</h2><p>從回收原材的特性出發，探索設計與製造的可能。</p></div></div>
-  <div className="pg-reel is-materials" aria-label="循環材料質地"><ul>{[...materials,...materials].map(([name,en,slug,src],i)=>{const copy=i>=n;return <li key={i} className={i%n%2?'is-low':undefined} aria-hidden={copy||undefined}><a href={`#/read/pages/${slug}`} tabIndex={copy?-1:undefined}><img src={src} alt={copy?'':`${name}原材料質地`} loading="lazy"/><span className="mt-name"><em>{two(i%n+1)}</em><span className="mt-words"><strong>{name}</strong><small lang="en">{en}</small></span></span></a></li>})}</ul></div>
+  <div className="pg-reel is-materials" aria-label="循環材料質地"><ul>{[...materials,...materials].map(([name,en,slug,src],i)=>{const copy=i>=n;return <li key={i} className={i%n%2?'is-low':undefined} aria-hidden={copy||undefined}><a href={`#/read/pages/${slug}`} tabIndex={copy?-1:undefined}><img src={src} {...small({src,width:1440},'(max-width: 760px) 60vw, 34vw')} alt={copy?'':`${name}原材料質地`} loading="lazy"/><span className="mt-name"><em>{two(i%n+1)}</em><span className="mt-words"><strong>{name}</strong><small lang="en">{en}</small></span></span></a></li>})}</ul></div>
  </section>;
 }
 

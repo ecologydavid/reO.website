@@ -11,6 +11,7 @@
 // route, e.g. the plaque studio (/studio/A/), which is not prerendered.
 import http from 'node:http';
 import crypto from 'node:crypto';
+import {hashAssets, smallCopies} from './images.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {spawn} from 'node:child_process';
@@ -24,6 +25,10 @@ const toPath = name => { let p = name.slice(2).split('?')[0]; if (p.startsWith('
 const routes = [...new Set(['', 'brands/', ...['standard', 'products', 'cases', 'materials', 'journal', 'support'].map(c => `explore/${c}/`), ...index.pages.filter(p => !/^#\/read\/products\/f款/i.test(decodeURIComponent(p.path))).map(p => toPath(p.path))])];
 const only = process.argv[2];
 const list = only ? routes.filter(r => decodeURIComponent(r).includes(only)) : routes;
+
+// v1.2.2: before anything is rendered, photos in /assets/ get addresses that follow their content, and the built files
+// are pointed at them (tools/images.mjs). Running it again on the same folder changes nothing.
+{ const named = hashAssets(dist); console.log(`prerender: ${named.photos} photos named by content, ${named.files} files updated`); }
 
 // The plain shell, kept from the first run (later runs overwrite index.html with the prerendered home page).
 const shellFile = path.join(dist, '404.html');
@@ -68,6 +73,7 @@ ws.onmessage = e => { const m = JSON.parse(e.data); if (m.id && pending.has(m.id
 const send = (method, params = {}) => new Promise(r => { const i = ++id; pending.set(i, r); ws.send(JSON.stringify({id: i, method, params})); });
 const evaluate = async expression => (await send('Runtime.evaluate', {expression, awaitPromise: true, returnByValue: true})).result?.result?.value;
 await send('Page.enable');
+{ const made = await smallCopies({dist, root, origin, base, send, evaluate}); console.log(`prerender: small copies for ${made.photos} photos (${made.made} new, ${made.seconds}s)` + (made.failed ? `; ${made.failed} could not be resized and use the original` : '')); }
 
 // Ready when the page has set its own title and address (src/seo.js) and nothing is still loading.
 const ready = address => `decodeURIComponent(document.documentElement.dataset.page||'')===decodeURIComponent(${JSON.stringify(address)})&&!document.querySelector('.app-loading,.content-loading')&&!!document.querySelector('main')`;

@@ -911,3 +911,24 @@ The owner reported photos arriving late on ordinary connections. Measured on the
 - Result, same test on the new build: first view 1.6 MB (fonts 0.1 MB), photos done at about 3.3 s.
 - Not done yet (offered): 720px copies of article photos for phones (srcset); the 3–6 MB originals in public/assets
   that only models.json or nothing refers to.
+
+## Photos named by content, small copies for phones (v1.2.2, 2026-11-25, by request)
+Both are done by the build (tools/images.mjs, called from tools/prerender.mjs before any page is rendered; tests/images.test.mjs).
+- Names that follow the content: every photo in public/assets (not case-previews, not files over 2.5 MB) is copied to
+  /i/assets/<name>.<10-hex hash of its bytes>.<ext>, and every whole "/assets/….ext" address in the built scripts,
+  styles, shell and page JSON is pointed at the copy. Replace a photo under the same name and its address changes at
+  the next build, so nobody keeps the old one; /i/ is cached for a year (public/_headers). The original stays in
+  /assets/ (one-day cache) for the case admin, addresses built in code (`/assets/catalogue-${id}.webp`), absolute
+  addresses (og:image) and old links.
+  - Source code and data keep writing '/assets/x.webp'. Do not test a photo's address with startsWith('/assets/…')
+    or look it up by its file name without allowing for the hash (casePreviews.js strips it; AboutPage uses includes).
+- Small copies: an 800px WebP of EVERY photo (content/images and the renamed assets), "<name>-800.webp" under /i/.
+  Resized in the prerenderer's Chrome (no image library), about 20 s for 1,700 photos the first time; finished copies
+  are kept in .cache/images (git-ignored; actions/cache restores it on GitHub), after which a build resizes only new
+  photos. src/components/site/responsive.js `small(image, sizes)` returns srcSet/sizes; wired into article photos
+  (lead, chapters, details, gallery, works), library and material cards, the materials reel, flow photos, home tiles,
+  hero slides 2–3, Frame and About. On phones `sizes` says 60vw on purpose, so a 3x phone takes the 800px copy
+  (about 2x the screen) instead of the 1440px original; on wide screens the true width is given, so large photos get
+  the original. Build only (the dev server has no /i/). A new <img> for a content photo should spread small(...).
+  If size or quality changes, change SUFFIX in images.mjs and responsive.js together (the addresses are cached).
+- Same phone test as before: home first view 1.2 MB of photos → 0.6 MB; a case page's photos roughly a third less.

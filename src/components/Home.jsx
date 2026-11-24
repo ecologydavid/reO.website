@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { small, third } from './site/responsive.js';
 import models from '../data/models.json';
 import SiteHeader from './site/SiteHeader.jsx';
 import SiteFooter from './site/SiteFooter.jsx';
@@ -97,8 +98,7 @@ function Hero({ onPreview }) {
     </div>
     <div className="rv-hero-stage">
       {heroSlides.map((s, i) => <img key={s.id} className={`rv-hero-photo${s.id === slide.id ? ' is-active' : ''}`} src={s.src}
-        srcSet={i === 0 ? `${import.meta.env.BASE_URL}assets/hero-d-720.webp 720w, ${s.src} 1440w` : undefined}
-        sizes={i === 0 ? '(max-width: 760px) 100vw, 65vw' : undefined}
+        {...(i === 0 ? { srcSet: `${import.meta.env.BASE_URL}assets/hero-d-720.webp 720w, ${s.src} 1440w`, sizes: '(max-width: 760px) 100vw, 65vw' } : small({ src: s.src, width: 1440 }, '(max-width: 760px) 60vw, 65vw'))}
         alt={s.alt} aria-hidden={s.id !== slide.id || undefined} width="1440" height="1080" style={{ objectPosition: s.position }} fetchPriority={i ? 'low' : 'high'} loading={i ? 'lazy' : undefined} />)}
       {heroExtras.map(s => <img key={s.id} className={`rv-hero-photo is-extra${s.id === slide.id ? ' is-active' : ''}`} src={s.src} alt={s.alt} aria-hidden={s.id !== slide.id || undefined} width="1200" height="900" loading="lazy" />)}
       <div className="rv-hero-tabs" role="group" aria-label="主打公版獎盃">{heroSlides.map((s, i) => <button key={s.id} aria-pressed={i === active} onClick={() => { setPeek(null); setActive(i) }}><span className="rv-hero-bar">{i === active && <i key={active} onAnimationEnd={next} />}</span><strong>{s.id}</strong><span>{classicNames[s.id].slice(1)}</span></button>)}<button className="rv-hero-toggle" onClick={() => setPaused(p => !p)} aria-label={paused ? '播放輪播' : '暫停輪播'}><svg viewBox="0 0 16 16" aria-hidden="true"><path d={paused ? 'M5 3.5v9l7.5-4.5z' : 'M5 3.5v9M11 3.5v9'} fill={paused ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></button></div>
@@ -221,7 +221,7 @@ function Process() {
           {sequence.map((s, i) => {
             const t = stepAngle(i) * Math.PI / 180;
             return <figure key={s.label} className={`rv-cycle-card${shown === i ? ' is-open' : ''}`} aria-hidden="true" style={{ '--ux': Math.sin(t) * ringR, '--uy': -Math.cos(t) * ringR }}>
-              <img src={s.src} alt="" width={s.width} height={s.height} loading="lazy" style={crop(s)} />
+              <img src={s.src} {...small(s, third)} alt="" width={s.width} height={s.height} loading="lazy" style={crop(s)} />
               {!compact && <figcaption><span>{pad(i + 1)}・{phases[i >> 1].name}</span><strong>{s.label}</strong></figcaption>}
             </figure>
           })}
@@ -230,7 +230,7 @@ function Process() {
             return <li key={s.label} style={{ '--dx': Math.sin(t), '--dy': -Math.cos(t) }} className={shown == null && phaseHover != null && i >> 1 !== phaseHover ? 'is-dim' : undefined}>
               <button type="button" ref={n => { nodes.current[i] = n }} className={`rv-cycle-node${shown === i ? ' is-active' : ''}`} style={{ left: `${x}%`, top: `${y}%` }} aria-pressed={shown === i} aria-label={`${pad(i + 1)} ${phases[i >> 1].name}・${s.label}：${s.line}`}
                 onMouseEnter={() => point(i)} onMouseLeave={() => clearTimeout(intent.current)} onFocus={() => pick(i)} onClick={() => pick(i)}>
-                <img src={s.src} alt="" width={s.width} height={s.height} loading="lazy" style={crop(s)} />
+                <img src={s.src} {...small(s, third)} alt="" width={s.width} height={s.height} loading="lazy" style={crop(s)} />
               </button>
               <span className="rv-cycle-no" aria-hidden="true">{pad(i + 1)}</span>
             </li>
@@ -249,7 +249,7 @@ function Process() {
           <ArrowLink href="#/read/pages/material-recycled-marble">認識再生大理石</ArrowLink>
         </div> : <div className="rv-cycle-side is-right">
           <figure className="rv-cycle-layer rv-cycle-material" aria-hidden={shown != null || undefined}>
-            <img src={img('55069d17278e6fd5db')} alt="再生大理石的材質樣本" width="1440" height="961" loading="lazy" />
+            <img src={img('55069d17278e6fd5db')} {...small({src: img('55069d17278e6fd5db'), width: 1440}, third)} alt="再生大理石的材質樣本" width="1440" height="961" loading="lazy" />
             <figcaption>
               <p className="rv-cycle-figure"><strong><small>近</small>30</strong><span>種廢棄原材，<br />re.O 工作室現有</span></p>
               <p className="rv-cycle-text">將大理石邊料研磨為粉末，再與樹脂結合，重新應用於獎盃、器物與品牌作品。</p>

@@ -1,4 +1,5 @@
 import React,{useEffect,useRef,useState} from 'react';
+import {small,half,third} from '../components/site/responsive.js';
 import {Button,ArrowLink} from '../components/site/ui.jsx';
 import {setPageMeta} from '../seo.js';
 import {record,kinds} from './record.js';
@@ -33,7 +34,7 @@ function RecordCaption({item}){
 }
 function Record(){
  const [kind,setKind]=useState(''),[active,setActive]=useState(0),item=record[active];
- const ownerPhoto=item.src?.startsWith('/assets/about-events/');
+ const ownerPhoto=item.src?.includes('/assets/about-events/');
  const printShape=ownerPhoto?(item.w<item.h?' is-portrait':item.w/item.h>1.7?' is-wide':''):'';
  const shown=record.map((p,i)=>[p,i]).filter(([p])=>!kind||p.kind===kind);
  const choose=k=>{setKind(k);setActive(record.findIndex(p=>!k||p.kind===k))};
@@ -80,7 +81,7 @@ export default function AboutPage({focus}){
    </div>
   </header>
 
-  <figure className="pg-hero"><img src={img('8adb10dc0ad1b38e8f')} alt="職人手中灑落的再生材料粉末" width="1440" height="960" fetchPriority="high"/></figure>
+  <figure className="pg-hero"><img src={img('8adb10dc0ad1b38e8f')} {...small({src:img('8adb10dc0ad1b38e8f'),width:1440})} alt="職人手中灑落的再生材料粉末" width="1440" height="960" fetchPriority="high"/></figure>
 
   {/* v64 (owner, 2026-11-17): the founder. Only facts with a source on file: the company's responsible person and
       designer (TISDC talk deck 2026, 東森新聞 2019), the two Golden Pin awards and the talks listed in the record below.
@@ -103,7 +104,7 @@ export default function AboutPage({focus}){
 
   <section className="pg-studio" aria-labelledby="pg-studio-title">
    <div className="pg-split folio-gutter" data-reveal><p className="pg-kicker"><span>02</span>Material · Design · Making</p><div><h2 id="pg-studio-title">材料、設計、製造。</h2><p>re.O 獨家研發再生材質，將廢料重新再利用。從品牌語彙設計、立體建模到文字排版，透過灌模製造與工作室組裝，把關每一步過程。</p></div></div>
-   <div className="pg-reel" aria-label="工作室照片"><ul>{[...studio,...studio].map(([id,alt],i)=><li key={i} className={i%studio.length%2?'is-low':undefined} aria-hidden={i>=studio.length||undefined}><img src={img(id)} alt={i<studio.length?alt:''} width="1440" height="1440" loading="lazy"/></li>)}</ul></div>
+   <div className="pg-reel" aria-label="工作室照片"><ul>{[...studio,...studio].map(([id,alt],i)=><li key={i} className={i%studio.length%2?'is-low':undefined} aria-hidden={i>=studio.length||undefined}><img src={img(id)} {...small({src:img(id),width:1440},third)} alt={i<studio.length?alt:''} width="1440" height="1440" loading="lazy"/></li>)}</ul></div>
   </section>
 
   <section className="pg-origami" aria-labelledby="pg-origami-title">
