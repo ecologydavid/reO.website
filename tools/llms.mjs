@@ -73,6 +73,6 @@ ${materials.map(p => link(p, clip(p.summary))).join('\n')}
 
 ## 工藝與研究文章
 
-${journal.map(p => link(p, clip(p.summary))).join('\n')}
+${journal.map(p => link(p, (p.published ? p.published + '　' : '') + clip(p.summary))).join('\n')}
 `;
 }

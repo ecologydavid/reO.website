@@ -75,7 +75,7 @@ export default function AboutPage({focus}){
  return <main className="pg pg-about" ref={root}>
   <div className="folio-gutter"><nav className="content-breadcrumb" aria-label="麵包屑"><a href="#/">首頁</a><span>/</span><span>關於 re.O</span></nav></div>
   <header className="pg-top folio-gutter" id="about-contact">
-   <div className="pg-title"><p className="content-display" aria-hidden="true">Studio</p><h1>關於 re.O</h1><p>以再生材質開發為起點，整合品牌語彙、立體建模、排版、灌模與工作室組裝。</p></div>
+   <div className="pg-title"><p className="content-display" aria-hidden="true">Studio</p><h1>關於 re.O</h1>{/* v1.4.1: who re.O is and how 匠子 relates to it, in the owner's approved wording (2026-11-26). */}<p>re.O（或心國際設計有限公司）以再生材質為企業、機關與賽事設計製作獎盃與禮贈品。匠子 CHANZ STUDIO 是 re.O 的自有生活品牌，在 Pinkoi 販售。以再生材質開發為起點，整合品牌語彙、立體建模、排版、灌模與工作室組裝。</p></div>
    <div className="pg-contact">
     <dl>{contact.map(([en,label,value])=><div key={en}><dt><span>{en}</span>{label}</dt><dd>{value}</dd></div>)}</dl>
     <div className="pg-actions"><Button href="mailto:service@re-o.co">寄信洽詢</Button><Button variant="ghost" href="tel:+886289665369">來電預約</Button><Button variant="ghost" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`} target="_blank" rel="noreferrer">地圖導航</Button></div>

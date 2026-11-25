@@ -1044,3 +1044,22 @@ Second part of the GEO work; the owner approved each item.
   redirect file (`merged` in tools/aliases.mjs) and the static page is gone.
 - Not done, by the owner's choice so far: the About page identity sentence, a 怎麼下單 block and new FAQ entries,
   rewording the five classic pages' Pinkoi-era ordering steps, article dates.
+
+## Visible introductions, how to order, article dates (v1.4.1, 2026-11-26, by request)
+- The owner expected the approved descriptions on the pages themselves, not only in search results. The seven library
+  pages now show their `written` description under the title (ContentLibrary; `categoryInfo.intro` is only the
+  fallback), and 3D 建模, 匠子 and 運送政策 carry it as their summary (content index and page JSON). Home and the FAQ
+  keep their own headline lines; About opens with the identity sentence in the owner's approved wording, followed by
+  the earlier line.
+- 怎麼下單: one line under the buttons of 公版獎盃, 品牌獎盃訂製 and 禮贈品訂製 (`order` in landings.jsx; e-mail or
+  telephone, quote after confirming model/quantity/date, small orders taken, 公版 for a tighter budget) and three
+  FAQ entries (怎麼下單？ 可以只訂少量嗎？ 預算有限怎麼選？), which also enter the FAQPage data.
+- The five classic product pages (and the three withdrawn F pages) no longer say 「請在下單前私訊提供」 /
+  「完成付款」 (Pinkoi-era): they ask for the files by e-mail or telephone and quote before payment. The rest of each
+  step is the owner's old wording. A, B and C still say 2～3 次校稿 while D, E and the FAQ say 3 次: not changed,
+  waiting for the owner.
+- Article dates: `published` on the eleven journal entries (content index and page JSON) is the date each post
+  showed on the old site (research/raw/*.html, `<div class="Post-date">`). Shown under the title (發表於 2026.03.18),
+  written as Article datePublished and in llms.txt. A new article needs its own `published`.
+- Data files are compact JSON (the index ends with a newline; product pages hold `0.0` prices that a JSON round trip
+  would rewrite): edit page JSON as text, or check the round trip first.

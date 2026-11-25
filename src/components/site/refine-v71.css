@@ -7,3 +7,11 @@
 .folio-home .rv-doors{margin:20px 0 0;font-size:14px;line-height:1.9;letter-spacing:.04em;color:#4d524a}
 .folio-home .rv-doors a{color:var(--ui-ink,#1c1e1c);font-weight:500;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
 .folio-home .rv-doors a:hover{text-decoration-thickness:2px}
+
+/* v1.4.1: 怎麼下單, one line under the buttons of 公版獎盃, 品牌獎盃訂製 and 禮贈品訂製 (same text style as the doors note). */
+.folio-home .rv-order strong{display:inline-block;margin-right:12px;padding-right:12px;border-right:1px solid rgba(31,35,32,.22);font-weight:600;color:var(--ui-ink,#1c1e1c);line-height:1.2}
+.folio-home .rv-order+.rv-doors{margin-top:6px}
+/* The approved introductions are fuller than the old one-liners: a little more measure for them. */
+.folio-home .pg-library .pg-title>p:last-child{max-width:31em}
+/* Article date (journal). */
+.folio-home .content-article-heading .content-date{margin-top:10px;font-size:13px;letter-spacing:.06em;color:#686d65}

@@ -129,7 +129,8 @@ export function articleData(page, {classic, image} = {}) {
     // sourceOrganization: "the organization on whose behalf the creator was working", i.e. the client.
     sourceOrganization: m.client ? {'@type': 'Organization', name: one(m.client)} : undefined,
     material: one(m.material) || undefined, dateCreated: year(m.year), genre: one(page.subcategory) || undefined};
-  if (page.category === 'journal') return {'@type': 'Article', headline: name, description: summary, image: picture, author: {'@id': org}, publisher: {'@id': org}};
+  // datePublished: the date the post showed on the old site (`published` in the content index); left out when unknown.
+  if (page.category === 'journal') return {'@type': 'Article', headline: name, description: summary, image: picture, datePublished: page.published || undefined, author: {'@id': org}, publisher: {'@id': org}};
   return null;
 }
 // Questions and answers exactly as the FAQ page shows them: [[question, answer text], …].
