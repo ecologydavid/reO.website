@@ -2,6 +2,7 @@ import React,{useEffect,useRef,useState} from 'react';
 import {small,half,third} from '../components/site/responsive.js';
 import {Button,ArrowLink} from '../components/site/ui.jsx';
 import {setPageMeta} from '../seo.js';
+import {written} from './pageMeta.js';
 import {record,kinds} from './record.js';
 import './pages.css';
 // About, awards and contact share one page: contact details first, then the studio told in photographs,
@@ -62,7 +63,7 @@ function focusRecord(sectionId,behavior='instant'){
 }
 export default function AboutPage({focus}){
  const root=useRef(null);
- useEffect(()=>{setPageMeta({title:'關於 re.O',description:'re.O 由李東陽創辦，以再生材質開發為起點，整合品牌語彙、立體建模、排版、灌模與工作室組裝。聯絡方式、創辦人、設計獎項與工作室介紹。',trail:[['首頁','#/'],['關於 re.O','#/read/pages/about']],canonical:'#/read/pages/about'});const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.08});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
+ useEffect(()=>{setPageMeta({...written['#/read/pages/about'],trail:[['首頁','#/'],['關於 re.O','#/read/pages/about']],canonical:'#/read/pages/about'});const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.08});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
  useEffect(()=>{
   if(!focus)return;
   let frame;

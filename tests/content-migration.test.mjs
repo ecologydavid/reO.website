@@ -51,8 +51,10 @@ test('the two Delta glass tree entries share one case and keep the light-and-sha
  assert.deepEqual(chapters.map(chapter=>chapter.image.src.split('/').pop()),[
   '26e4f9262d65e63e15.webp','bc6f73c905e5d02660.webp','f9a083db8afb679a0c.webp','76a09f1578f03bcfc1.webp',
  ]);
- const redirect=readFileSync(new URL('public/pages/new-page-7/index.html',root),'utf8');
- assert(redirect.includes('url=../delta-glass-tree-trophy/'));
+ // v1.4.0: the old address is answered by the host's redirect file (tools/aliases.mjs), no longer by a refresh page.
+ const {redirectsFile}=await import('../tools/aliases.mjs');
+ assert(redirectsFile('/').split('\n').includes('/pages/new-page-7/ /pages/delta-glass-tree-trophy/ 301'));
+ assert(!existsSync(new URL('public/pages/new-page-7/index.html',root)));
 });
 test('all migrated pages and local related links resolve without old-site redirects',()=>{assert(pages.length>0);assert.equal(new Set(pages.map(p=>p.path)).size,pages.length);assert.equal(new Set(pages.map(p=>p.id)).size,pages.length);for(const p of pages){const data=JSON.parse(readFileSync(new URL('public/content/pages/'+p.id+'.json',root),'utf8'));assert.equal(data.path,p.path);assert(data.sections.length||data.images.length,p.title);for(const l of data.links.filter(l=>!/f款/i.test(decodeURIComponent(l.path))))assert(findPage(l.path),p.title+' -> '+l.path);for(const im of [data.hero,...data.images].filter(Boolean))assert(existsSync(new URL('public'+im.src,root)),im.src);}});
 test('six navigation groups keep standard and custom trophies apart and lead to valid internal pages',()=>{assert.equal(navigation.length,6);assert.deepEqual(navigation.slice(0,2).map(n=>n.href),['#/explore/standard','#/read/pages/custom']);const hrefs=[...navigation.flatMap(n=>[n.href,...n.links.map(([,href])=>href)]),...supportLinks.map(([,href])=>href)];for(const href of hrefs.filter(h=>!h.startsWith('https://www.pinkoi.com/'))){assert(href.startsWith('#/'));if(href.startsWith('#/read/'))assert(findPage(href),href);if(href.startsWith('#/explore/'))assert(classicPages(href.slice(10).split('?')[0]).length>0,href);}});

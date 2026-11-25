@@ -130,6 +130,8 @@ function MaterialReel(){
 }
 
 // Price per classic model (NT$, owner 2026-11-09). A's price depends on its wood.
+// priceOf('A') → '2,500～2,800': the model's price as written in titles and structured data (v1.4.0).
+export const priceOf=id=>prices.find(p=>p[0]===id)?.[1].map(([,n])=>n.toLocaleString('en-US')).join('～');
 const prices=[['A',[['北美黃檜',2500],['木橫擔',2800]]],['B',[['',2800]]],['C',[['',2000]]],['D',[['',2300]]],['E',[['',3000]]]];
 // v53: plain list, no box. Name (bold first letter) + 款 above the price; A's two woods share one line.
 function PriceList(){

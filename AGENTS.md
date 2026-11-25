@@ -1012,3 +1012,35 @@ GEO work after an audit of the live site (report: ../GEO目前V1.pdf). AI answer
 - Still to do, waiting for the owner: structured data for the organisation (匠子 as its brand, IG, FB, contact
   points), the FAQ, the five classic models with prices, cases and articles; new titles and descriptions (about
   14 hand-written pages sent for review, the rest by rule); the Pinkoi button's wording; article dates.
+
+## Two doors in the header, titles and descriptions, structured data (v1.4.0, 2026-11-26, by request)
+Second part of the GEO work; the owner approved each item.
+- Header (SiteHeader.jsx, header-v6.css): the Pinkoi pill reads 「匠子生活選物」 beside Pinkoi's mark (retail, new
+  tab) and a new ink button 「洽詢訂製」 (mailto:service@re-o.co, mail icon) is the header's main action. This is a new
+  header button by request; the v50 removal concerned the studio button only. Widths: both labels from 1500px; at
+  1440–1499 the links sit closer and the shop drops its arrow chip so its label still fits; 1101–1439 the shop shows
+  the mark only (title attribute names it); ≤1240 and phones 洽詢訂製 is its mail icon. Checked at 1920, 1600,
+  1560, 1500, 1499, 1440, 1439, 1280, 1150, 1024, 760 and 390. Size rules for the links need `.folio-home .site-links>a`
+  (site.css is loaded again later through ui.jsx and would otherwise win).
+- site/DoorNote.jsx: 「企業訂製請來信；單件零售請到 Pinkoi 匠子設計館。」 under the buttons on 禮贈品訂製 and under the
+  text on the 匠子 page.
+- FAQ: home delivery on the main island is 1–3 days (owner: the shipping policy is right; the FAQ said 1–2). The
+  v57 note above is superseded on that figure.
+- Titles and descriptions (src/content/pageMeta.js, tests/geo.test.mjs): what the page is comes first, 「｜re.O」 last
+  (seo.js adds it unless the title already names re.O). Thirteen pages are written by hand and were approved by the
+  owner line by line (`written`): home, the six libraries, 品牌獎盃訂製, About, FAQ, shipping, 3D modelling, 匠子.
+  Change them only with the owner. Every other page is composed by `articleMeta` from its own fields: cases
+  「name｜material｜re.O 案例」 with year, group, client, material, service and the summary; materials with their
+  English name; the five classic pages with price and lead time; articles; 匠子 products. `nameOf` reads a work's
+  name from the two title shapes (work｜client x re.O, client｜work). Nothing is invented: a case with no data gets
+  a short description until the owner fills it in the admin. index.html carries the home title and description.
+- Structured data: index.html describes the organisation once (@id …/#org): also written re.o, reO, 或心; brand
+  匠子 CHANZ STUDIO with its Pinkoi store; Instagram and Facebook; a sales contact point (e-mail, telephone, hours),
+  plus a WebSite node. Pages add their own through setPageMeta `data` (script#reo-data): FAQPage with the answers as
+  shown; Product with price in TWD, MadeToOrder, seller re.O for the five classic pages (A as a price range);
+  CreativeWork for cases (creator re.O, sourceOrganization = the client, material, year when it is one year);
+  Article for the journal (no dates: the owner has not supplied them).
+- The second 台達 玻璃樹 address (/pages/new-page-7/) was a refresh page in public/pages; it is now a 301 in the
+  redirect file (`merged` in tools/aliases.mjs) and the static page is gone.
+- Not done, by the owner's choice so far: the About page identity sentence, a 怎麼下單 block and new FAQ entries,
+  rewording the five classic pages' Pinkoi-era ordering steps, article dates.

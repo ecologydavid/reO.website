@@ -1,9 +1,11 @@
 import {toPath} from './router.js';
 import {recordPage} from './analytics.js';
+import {written,org} from './content/pageMeta.js';
 // One place sets the document title, description and their social-card copies, so every route reads
 // as its own page to search engines and link previews. Routes call setPageMeta from their own effect;
 // App only handles the editor, so a parent effect never overwrites a page's title.
-const fallback={title:'re.O｜循環材料與設計的可能。',description:'re.O 循環設計。以回收石材與再生材料製作公版與客製化獎盃，線上編輯銘版並下載排版預覽 PDF。'};
+// The home page's title and description (also written into index.html for the first paint).
+const fallback=written['#/'];
 const clip=t=>{t=String(t||'').replace(/\s+/g,' ').trim();return t.length>150?t.slice(0,149)+'…':t};
 function meta(attr,key,value){
  let el=document.head.querySelector(`meta[${attr}="${key}"]`);
@@ -22,7 +24,9 @@ const shared=typeof document==='undefined'?{}:{image:document.head.querySelector
 //   home page at the wall; About also opens as contact and awards). Left out, the page's own address is used.
 // image (v1.3.0): {src, alt} of the page's own photo for link previews (LINE, Facebook, Slack). The build turns it
 //   into a 1200×630 JPEG card (tools/images.mjs shareCards); without one the site-wide picture is used.
-export function setPageMeta({title,description,trail,canonical,image}={}){
+// data (v1.4.0): schema.org object(s) for this page (src/content/pageMeta.js). Addresses starting with '/' and the
+//   organisation's id are completed here; the page's own address is added as `url`.
+export function setPageMeta({title,description,trail,canonical,image,data}={}){
  const here=site+'/'+(canonical?toPath(canonical):window.location.pathname).slice(appBase.length);
  const link=document.head.querySelector('link[rel=canonical]');if(link)link.setAttribute('href',here);
  meta('property','og:url',here);
@@ -33,7 +37,16 @@ export function setPageMeta({title,description,trail,canonical,image}={}){
  }else crumbs?.remove();
  // tools/prerender.mjs saves a page once this names the address it asked for.
  document.documentElement.dataset.page=window.location.pathname;
- const t=title?`re.O｜${title}`:fallback.title,d=clip(description)||fallback.description;
+ let own=document.getElementById('reo-data');
+ const items=[].concat(data||[]).filter(Boolean);
+ if(items.length){
+  const full=v=>typeof v==='string'&&v.startsWith('/')?site+'/'+(v.startsWith(appBase)?v.slice(appBase.length):v.slice(1)):v;
+  const fill=v=>Array.isArray(v)?v.map(fill):v&&typeof v==='object'?Object.fromEntries(Object.entries(v).filter(([,x])=>x!==undefined).map(([k,x])=>[k,k==='@id'&&x===org?site+'/'+org:k==='image'||k==='url'?full(x):fill(x)])):v;
+  if(!own){own=document.createElement('script');own.type='application/ld+json';own.id='reo-data';document.head.append(own)}
+  own.textContent=JSON.stringify({'@context':'https://schema.org','@graph':items.map(item=>fill({...item,url:here}))});
+ }else own?.remove();
+ // v1.4.0: what the page is comes first, the brand last (a title that already names re.O is left as written).
+ const t=title?(title.includes('re.O')?title:`${title}｜re.O`):fallback.title,d=clip(description)||fallback.description;
  document.title=t;
  meta('name','description',d);meta('property','og:title',t);meta('property','og:description',d);
  meta('name','twitter:title',t);meta('name','twitter:description',d);

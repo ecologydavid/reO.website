@@ -2,15 +2,16 @@ import React,{useEffect} from 'react';
 import {Button,ArrowLink} from '../components/site/ui.jsx';
 import {keepRanges} from './arrange.js';
 import {setPageMeta} from '../seo.js';
+import {written,faqData} from './pageMeta.js';
 import CountUp from '../components/site/CountUp.jsx';
 import './pages.css';
 // 訂製與服務常見問題. Facts follow the migrated FAQ page (derived-faq-v4) and the shipping policy; the
 // wording is shortened for customers. Three numbers lead so the essentials read in seconds; every
 // answer stays open (no accordion) in a question | answer ledger.
 // v57 (owner, 2026-11-11): 公版 3 working days (10 or more pieces quoted separately, as on the 公版 page), 3 proof
-// rounds, 1–2 days home delivery on the main island. Each group leads with a photo in its sticky column; the three
+// rounds, 1–3 days home delivery on the main island (owner, 2026-11-26: the shipping policy's 1 to 3 days is right; this page said 1–2). Each group leads with a photo in its sticky column; the three
 // ways to order and the packaging answer carry a small picture each.
-const facts=[['3','個工作天','公版製作時間'],['3','次','設計校稿'],['1–2','天','宅配到貨（本島）']];
+const facts=[['3','個工作天','公版製作時間'],['3','次','設計校稿'],['1–3','天','宅配到貨（本島）']];
 const img=id=>`/content/images/${id}.webp`;
 const Pic=({src,alt})=><img className="pg-faq-thumb" src={src} alt={alt} loading="lazy" width="96" height="96"/>;
 const groups=[
@@ -23,15 +24,17 @@ const groups=[
  ]},
  {n:'02',en:'Delivery',title:'製作與配送',photo:[img('9c539bc9ebc1b804f7'),'以膠帶封箱出貨','包裝出貨，皆由 re.O 把關','50% 50%'],items:[
   ['製作需要多久？','公版約 3 個工作天，10 座以上工期另計；現貨約 2～3 個工作天寄出。實際交期請與我們確認。'],
-  ['有哪些配送方式？','台灣本島順豐宅配約 1～2 天；外島以郵局寄送；7-11、全家超商取貨約 3～4 天。節慶或訂單較多時可能延遲。']
+  ['有哪些配送方式？','台灣本島順豐宅配約 1～3 天；外島以郵局寄送；7-11、全家超商取貨約 3～4 天。節慶或訂單較多時可能延遲。']
  ]},
  {n:'03',en:'Material',title:'材質',photo:[img('0ec85ee98fb1103204'),'D 款公版獎盃，白、黑、綠三色再生大理石並列','每一件的石紋，都不一樣','41% 58%'],items:[
   ['每件再生石材的紋理都一樣嗎？','不一樣。石紋在灌注時自然流動，每件都獨一無二；手工製作也可能留有細微的模線或研磨痕跡。'],
   ['想用品牌自己的材質有什麼限制？','需要是乾燥後的顆粒或粉末化狀物料。']
  ]}
 ];
+// The answers as plain text for structured data (FAQPage): the same words the page shows, pictures left out.
+const plain=n=>n==null||typeof n==='boolean'?'':typeof n==='string'||typeof n==='number'?String(n):Array.isArray(n)?n.map(plain).join(''):n.type===Pic?'':n.type==='b'?plain(n.props.children)+'：':plain(n.props?.children);
 export default function FaqPage(){
- useEffect(()=>{setPageMeta({title:'常見問題',description:'公版、專案與專料訂製的差別、製作交期、校稿、配送方式與再生石材紋理等常見問題。',trail:[['首頁','#/'],['常見問題','#/read/pages/faq']]})},[]);
+ useEffect(()=>{setPageMeta({...written['#/read/pages/faq'],trail:[['首頁','#/'],['常見問題','#/read/pages/faq']],data:faqData(groups.flatMap(g=>g.items.map(([q,a])=>[q,plain(a)])))})},[]);
  return <main className="pg pg-faq">
   <div className="folio-gutter"><nav className="content-breadcrumb" aria-label="麵包屑"><a href="#/">首頁</a><span>/</span><span>服務指南</span><span>/</span><span>常見問題</span></nav></div>
   <header className="pg-top folio-gutter">

@@ -1,6 +1,6 @@
 import React,{useCallback,useEffect,useRef,useState} from 'react';
 import {navigation,shopLink,supportLinks,isExternal} from './navigation.js';
-import {ArrowIcon,BrandLogo,Button,Chip,MenuIcon,studioTab} from './ui.jsx';
+import {ActionIcon,ArrowIcon,BrandLogo,Button,Chip,MenuIcon,studioTab} from './ui.jsx';
 import {useRoute,toPath} from '../../router.js';
 import './site.css';
 import './header-v6.css';
@@ -96,8 +96,11 @@ export default function SiteHeader(){
    {[{id:'home',short:'首頁',href:'#/'},...navigation].map(n=><React.Fragment key={n.id}><a href={n.href} className={[n.menu&&'has-sub',(on?on===n.id:(n.id==='home'?isHome(hash):current===n.id))&&'is-pill'].filter(Boolean).join(' ')||undefined} aria-current={(n.id==='home'?isHome(hash):current===n.id)?'page':undefined} aria-expanded={n.menu?sub?.id===n.id:undefined} onMouseEnter={e=>enter(n,e.currentTarget)} onFocus={e=>enter(n,e.currentTarget)}><span>{n.short}</span></a>{sub?.id===n.id&&<SubPanel group={n} x={sub.x} right={sub.right} here={decodeURIComponent(toPath(hash))} onPick={shut}/>}</React.Fragment>)}
   </nav>
   <div className="site-actions">
-   {/* Retail has its own button: the studio's Pinkoi store, in a new tab (arrow tilted to say so). */}
-   <Button href={shopLink[1]} target="_blank" rel="noopener noreferrer" variant="ghost" className="site-shop" icon={<ArrowIcon/>} aria-label="Pinkoi 選購（另開新視窗）"><img className="site-shop-logo" src="/assets/pinkoi-logo.png" alt="Pinkoi" width="213" height="64"/><span className="site-shop-label">選購</span></Button>
+   {/* Two doors, told apart (v1.4.0, owner 2026-11-26). Retail: 匠子 CHANZ STUDIO, re.O's own lifestyle brand, on Pinkoi
+       (new tab, arrow tilted to say so). Company orders are agreed by e-mail or telephone: 洽詢訂製 is the header's
+       main action, in ink, so it reads before the shop. */}
+   <Button href={shopLink[1]} target="_blank" rel="noopener noreferrer" variant="ghost" className="site-shop" icon={<ArrowIcon/>} aria-label="匠子生活選物：Pinkoi 設計館（另開新視窗）" title="匠子生活選物｜Pinkoi 設計館"><img className="site-shop-logo" src="/assets/pinkoi-logo.png" alt="Pinkoi" width="213" height="64"/><span className="site-shop-label">匠子生活選物</span></Button>
+   <Button href="mailto:service@re-o.co" variant="dark" className="site-ask" icon={<ActionIcon name="mail"/>} aria-label="洽詢訂製：寄信至 service@re-o.co"><span className="site-ask-label">洽詢訂製</span></Button>
    <Button variant="ghost" className="site-menu-button" ref={trigger} aria-expanded={open} aria-controls="site-menu" onClick={()=>setOpen(true)} icon={<MenuIcon/>}>選單</Button>
   </div>
   {open&&<SiteMenu onClose={close} onDismiss={dismiss} route={hash}/>}

@@ -27,6 +27,14 @@ export const aliases = {
   'products/摺紙花器': 'products/摺紙花器-origami-series/'  // the same product page was migrated twice
 };
 
+// A page that was merged into another and no longer exists (not in the content index): the same redirect.
+// 2026-11-23: the second 台達 玻璃樹模範獎盃 entry. It used to be a small HTML page that refreshed to the case
+// (public/pages/new-page-7/); a real redirect replaces it.
+export const merged = {
+  'pages/new-page-7': 'pages/delta-glass-tree-trophy/'
+};
+const moved = {...aliases, ...merged};
+
 const clean = route => decodeURIComponent(route).replace(/^\/+|\/+$/g, '');
 export const isAlias = route => Object.hasOwn(aliases, clean(route));
 
@@ -34,7 +42,7 @@ export const isAlias = route => Object.hasOwn(aliases, clean(route));
 // slash; Chinese both as typed and percent-encoded, since the documentation does not say which form is matched).
 export function redirectsFile(base = '/') {
   const lines = ['# Old addresses that repeat another page (tools/aliases.mjs). Written by the build; do not edit here.'];
-  for (const [from, to] of Object.entries(aliases)) {
+  for (const [from, to] of Object.entries(moved)) {
     const target = base + encodeURI(to);
     for (const form of new Set([from, encodeURI(from)])) for (const end of ['', '/']) lines.push(`${base}${form}${end} ${target} 301`);
   }
@@ -43,7 +51,7 @@ export function redirectsFile(base = '/') {
 
 // In a saved page, links to an old address go straight to the page that holds the content.
 export function rewriteLinks(html, base = '/') {
-  for (const [from, to] of Object.entries(aliases)) {
+  for (const [from, to] of Object.entries(moved)) {
     for (const form of new Set([from, encodeURI(from)])) html = html.split(`href="${base}${form}/"`).join(`href="${base}${to}"`);
   }
   return html;

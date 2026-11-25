@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {aliases, isAlias, redirectsFile, rewriteLinks} from '../tools/aliases.mjs';
+import {aliases, merged, isAlias, redirectsFile, rewriteLinks} from '../tools/aliases.mjs';
 import {llmsText} from '../tools/llms.mjs';
 
 const root = new URL('../', import.meta.url);
@@ -19,6 +19,7 @@ test('every old address is a real page of the migrated site, and lands on a page
     assert(!isAlias(target), 'a redirect must not lead to another redirect: ' + to);
     assert(to.split('#')[0].endsWith('/'), 'targets are written with their closing slash: ' + to);
   }
+  for (const [from, to] of Object.entries(merged)) { assert(!known.has(from), 'still a page: ' + from); assert(known.has(to.replace(/\/$/, '')), from + ' → ' + to); }
   assert(isAlias('pages/contact/') && isAlias('/pages/awards') && isAlias(encodeURI('categories/翻轉鏡') + '/'));
   assert(!isAlias('pages/about/') && !isAlias(''));
 });
@@ -43,4 +44,48 @@ test('llms.txt introduces the company, how to order, the prices and every listed
   for (const p of cases) assert(text.includes(`](https://www.re-o.co/${p.path.replace(/^#\/read\//, '')}/)`), p.title);
   for (const from of Object.keys(aliases)) assert(!text.includes(`/${from}/)`), 'old address listed: ' + from);
   assert(!/\/products\/f款/i.test(text) && !text.includes(encodeURI('/products/f款')) && !text.includes(encodeURI('/products/F款')));
+});
+
+// v1.4.0: titles, descriptions and structured data (src/content/pageMeta.js).
+const {written, articleMeta, articleData, faqData, nameOf, org} = await import('../src/content/pageMeta.js');
+const count = text => [...text].length;
+
+test('hand-written titles and descriptions fit a search result and name re.O', () => {
+  for (const [route, {title, description}] of Object.entries(written)) {
+    const shown = title.includes('re.O') ? title : title + '｜re.O';
+    assert(count(shown) <= 38, route + ' title too long: ' + count(shown));
+    assert(count(description) >= 35 && count(description) <= 150, route + ' description: ' + count(description));
+    assert(route === '#/' || route.startsWith('#/explore/') || known.has(route.replace(/^#\/read\//, '')), 'unknown route ' + route);
+  }
+  // The plaque studio's name is fixed (v71), and the main island delivery time is 1 to 3 days (owner, 2026-11-26).
+  for (const {title, description} of Object.values(written)) assert(!/線上排版|1 至 2 天|1～2 天/.test(title + description));
+});
+
+test('every page gets its own title and a description, by rule, from its own fields', () => {
+  const seen = new Map();
+  for (const p of index.pages.filter(p => !p.hidden && !isAlias(decodeURIComponent(p.path).replace(/^#\/read\//, '')))) {
+    const {title, description} = articleMeta(p, {});
+    assert(title && description, p.path);
+    assert(count(title) <= 40, p.title + ' → ' + title);
+    assert(!/，。|。。|undefined|null/.test(description), description);
+    assert(!seen.has(title), `same title: ${p.path} and ${seen.get(title)}`);
+    seen.set(title, p.path);
+  }
+  assert.equal(nameOf({title: '台達 玻璃樹模範獎盃｜Delta x re.O'}), '台達 玻璃樹模範獎盃');
+  assert.equal(nameOf({title: '行政院國家永續發展委員會｜國家永續發展獎獎盃'}), '行政院國家永續發展委員會 國家永續發展獎獎盃');
+  assert.equal(nameOf({title: 'Uber Eats 商家合作夥伴獎｜快點行銷委製'}), 'Uber Eats 商家合作夥伴獎');
+  const classic = articleMeta({path: '#/read/products/trophy-2025-1', title: 'D款獎盃', summary: ''}, {classic: {id: 'D', name: 'DELTA', price: '2,300'}});
+  assert.equal(classic.title, 'D 款 DELTA 公版獎盃｜NT$ 2,300・3 個工作天起');
+});
+
+test('structured data states the price, the maker and the client the page itself states', () => {
+  const d = articleData({title: 'D款', category: 'products', summary: 's'}, {classic: {id: 'D', name: 'DELTA', price: '2,300'}});
+  assert.deepEqual(d.offers, {'@type': 'Offer', priceCurrency: 'TWD', price: 2300, availability: 'https://schema.org/MadeToOrder', seller: {'@id': org}});
+  const a = articleData({title: 'A款', category: 'products'}, {classic: {id: 'A', name: 'APEX', price: '2,500～2,800'}});
+  assert.equal(a.offers['@type'], 'AggregateOffer'); assert.equal(a.offers.lowPrice, 2500); assert.equal(a.offers.highPrice, 2800);
+  const c = articleData({title: '台達 玻璃樹模範獎盃｜Delta x re.O', category: 'cases', metadata: {client: '台達', year: '2022-2024', material: '玻璃、木橫擔'}}, {});
+  assert.equal(c.creator['@id'], org); assert.equal(c.sourceOrganization.name, '台達'); assert.equal(c.dateCreated, undefined);
+  assert.equal(articleData({title: 'x', category: 'cases', metadata: {year: '2025'}}, {}).dateCreated, '2025');
+  assert.equal(articleData({title: 'x', category: 'materials'}, {}), null);
+  assert.deepEqual(faqData([['問', '答']]).mainEntity[0], {'@type': 'Question', name: '問', acceptedAnswer: {'@type': 'Answer', text: '答'}});
 });

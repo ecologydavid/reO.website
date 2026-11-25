@@ -62,3 +62,17 @@
 @media(max-width:1100px){
  .site-sheet-bar{height:62px;position:sticky;top:0;background:#fff;z-index:1}
 }
+
+/* v1.4.0 (owner, 2026-11-26): 洽詢訂製, the header's main action (e-mail), beside the Pinkoi pill that now names what
+   it sells (匠子生活選物). The ink pill reads first; the shop stays ivory. Narrow headers drop the labels in turn:
+   the shop's first (its Pinkoi mark still says what it is), then 洽詢訂製 becomes its mail icon alone. */
+.folio-home .site-actions .site-ask:hover .rv-chip .rv-icon{transform:none}
+.site-shop-label{white-space:nowrap}
+.site-ask-label{white-space:nowrap}
+/* 1440 to 1560 (most laptops): the label stays; the links sit a little closer and the shop drops its arrow chip to make the room. */
+@media(max-width:1560px) and (min-width:1440px){.folio-home .site-links>a{padding:0 15px}.folio-home .site-actions .site-shop{padding:6px 20px}.folio-home .site-actions .site-shop .rv-chip{display:none}}
+@media(max-width:1499px) and (min-width:1440px){.folio-home .site-header-v5{gap:22px}.folio-home .site-links>a{padding:0 12px;font-size:14.5px;letter-spacing:.06em}}
+@media(max-width:1439px) and (min-width:1101px){.site-shop-label{display:none}}
+@media(max-width:1240px) and (min-width:1101px){.folio-home .site-actions .site-ask{padding:6px;gap:0}.site-ask-label{display:none}}
+@media(max-width:760px){.folio-home .site-actions .site-ask{padding:6px;gap:0}.site-ask-label{display:none}}
+@media(max-width:400px){.folio-home .site-actions{gap:8px}}
