@@ -1063,3 +1063,10 @@ Second part of the GEO work; the owner approved each item.
   written as Article datePublished and in llms.txt. A new article needs its own `published`.
 - Data files are compact JSON (the index ends with a newline; product pages hold `0.0` prices that a JSON round trip
   would rewrite): edit page JSON as text, or check the round trip first.
+
+## Small orders only on 公版, three proof rounds (v1.4.2, 2026-11-26, by request)
+- 「少量也接」 is said on 公版獎盃 only; the owner had it removed from the 怎麼下單 line of 品牌獎盃訂製 and 禮贈品訂製.
+  The FAQ entry 「可以只訂少量嗎？」 and llms.txt still say small orders are taken, in general terms: the owner has
+  not asked to change them.
+- Proof rounds are 3 everywhere: the A, B and C product pages and the migrated FAQ source said 2～3.
+- Article dates (v1.4.1) are accepted as drafted; the owner will ask if any should change.

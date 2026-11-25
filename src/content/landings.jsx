@@ -148,7 +148,8 @@ export const landings={
   // v64: the price list sits in the right column (under 銘版排版工作室), one model per row; 款式 and 製作時程 on the left.
   card:[['Models','款式','A、B、C、D、E','is-left'],['Studio','銘版排版工作室','即時預覽・下載確認稿'],['Lead time','製作時程',<>3 個工作天<small>10 座以上工期另計</small></>,'is-left'],['Price','價格',<PriceList/>,'is-price']],
   actions:[['開始排版','#/preview/A'],['寄信洽詢','mailto:service@re-o.co','ghost'],['來電洽詢','tel:+886289665369','ghost'],['訂製常見問題','#/read/pages/faq','ghost']],
-  // v1.4.1 (owner, 2026-11-26): orders are agreed by e-mail or telephone; small orders are taken too.
+  // v1.4.1 (owner, 2026-11-26): orders are agreed by e-mail or telephone. v1.4.2: only this page says 少量也接;
+  // the owner had it taken off 品牌獎盃訂製 and 禮贈品訂製.
   order:'選好款式後來信或來電，確認數量、銘版內容與交期後報價。少量也接。',
   // No full-bleed photo here: the ordering steps and the six models come straight after the facts.
   band:StudioBand,indexEn:'Models',indexTitle:'五款公版',grid:'is-models',
@@ -171,13 +172,13 @@ export const landings={
  custom:{en:'Brand',title:'品牌獎盃訂製',
   card:[['Modes','訂製方式','專案訂製・專料訂製'],['Packaging','包裝','客製化訂製'],['Email','電子郵件',<a href="mailto:service@re-o.co">service@re-o.co</a>],['Phone','電話',<a href="tel:+886289665369">+886-2-8966-5369</a>]],
   actions:[['寄信洽詢','mailto:service@re-o.co'],['來電洽詢','tel:+886289665369','ghost'],['訂製常見問題','#/read/pages/faq','ghost']],
-  order:<>來信或來電說明需求，確認造型、數量與交期後報價。少量也接；預算有限時可選<a href="#/explore/standard">公版獎盃</a>。</>,
+  order:<>來信或來電說明需求，確認造型、數量與交期後報價。預算有限時可選<a href="#/explore/standard">公版獎盃</a>。</>,
   band:BrandBand,indexEn:'Works',indexTitle:'企業獎盃案例',grid:'is-works',meta:'year',
   closing:['想先看看公版款式，或為品牌準備禮贈品？',['公版獎盃','#/explore/standard'],['禮贈品訂製','#/explore/products']]},
  products:{en:'Gifts',title:'禮贈品訂製',
   card:[['Range','品項','品牌禮贈・品牌器物・IP聯名設計'],['Packaging','包裝','客製化訂製'],['Email','電子郵件',<a href="mailto:service@re-o.co">service@re-o.co</a>],['Phone','電話',<a href="tel:+886289665369">+886-2-8966-5369</a>]],
   actions:[['寄信洽詢','mailto:service@re-o.co'],['來電洽詢','tel:+886289665369','ghost'],['訂製常見問題','#/read/pages/faq','ghost']],
-  order:'來信或來電說明需求，確認品項、數量與交期後報價。少量也接。',
+  order:'來信或來電說明需求，確認品項、數量與交期後報價。',
   band:GiftBand,indexEn:'Works',indexTitle:'禮贈品案例',grid:'is-works',
   closing:['需要專屬造型，或品牌自己的材料？',['品牌獎盃訂製','#/read/pages/custom'],['循環材料','#/explore/materials']]},
  journal:{en:'Journal',title:'設計與工藝'},
