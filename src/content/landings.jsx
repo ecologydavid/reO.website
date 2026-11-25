@@ -172,7 +172,7 @@ export const landings={
  custom:{en:'Brand',title:'品牌獎盃訂製',
   card:[['Modes','訂製方式','專案訂製・專料訂製'],['Packaging','包裝','客製化訂製'],['Email','電子郵件',<a href="mailto:service@re-o.co">service@re-o.co</a>],['Phone','電話',<a href="tel:+886289665369">+886-2-8966-5369</a>]],
   actions:[['寄信洽詢','mailto:service@re-o.co'],['來電洽詢','tel:+886289665369','ghost'],['訂製常見問題','#/read/pages/faq','ghost']],
-  order:<>來信或來電說明需求，確認造型、數量與交期後報價。預算有限時可選<a href="#/explore/standard">公版獎盃</a>。</>,
+  order:<>來信或來電說明需求，確認造型、數量與交期後報價。訂製含設計與開模費用，數量少、預算有限時可選<a href="#/explore/standard">公版獎盃</a>。</>,
   band:BrandBand,indexEn:'Works',indexTitle:'企業獎盃案例',grid:'is-works',meta:'year',
   closing:['想先看看公版款式，或為品牌準備禮贈品？',['公版獎盃','#/explore/standard'],['禮贈品訂製','#/explore/products']]},
  products:{en:'Gifts',title:'禮贈品訂製',

@@ -1,21 +1,23 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import logos from '../../data/logo-wall.json';
 import { SiteArrow } from './SiteHeader.jsx';
-import BrandMark from './BrandMark.jsx';
 import './brand-wall.css';
 // The owner's order for the first sixteen (2026-11-25, numbered by hand on a screenshot); the rest follow as listed.
 const priority = ['delta', 'ase', 'fubon', 'pwc', 'executive-yuan', 'moenv', 'iii', 'taipower', 'disney', 'hola', 'heineken', 'singleton', 'uber-eats', 'golden-horse', 'songshan', 'pinkoi'];
 const ordered = [...logos].sort((a, b) => { const x = priority.indexOf(a.id), y = priority.indexOf(b.id); return (x < 0 ? 99 : x) - (y < 0 ? 99 : y) });
-// Marks drawn in white for dark grounds: 木客 keeps its white mark on an ink tile; DCC's black and
-// white inks print as one dark silhouette.
-const tone = { muke: 'is-dark', dcc: 'is-silhouette' };
+// 木客's mark is drawn in white, so its tile is ink. (DCC's black and white inks print as one dark shape; that is
+// made in the file itself now.)
+const tone = { muke: 'is-dark' };
+// v1.5.0 (owner, 2026-11-26): every mark is a picture made by tools/logos.py to ONE rule (background off, trimmed,
+// sized by area, centred on a canvas of the tile's shape). The tile shows that canvas whole; nothing here or in the
+// stylesheet sizes a mark. A new partner: add it to logo-wall.json and run the script.
 
 // Partner marks in their own colours on white tiles over a warm ground. Pointing at a mark brings it
 // forward (the others step back) and a small print of the work follows the cursor: the photo, the
 // project and the partner. Keyboard focus shows the same print beside the tile; touch goes straight
 // to the case.
-// The wall lives on the home page only, every mark in the markup with its name and project as text
-// (the marks are canvases), since hash routes such as #/brands are not indexed as pages of their own.
+// The wall lives on the home page only, every mark in the markup with its name (the picture's description) and its
+// project as text.
 // Phones show four rows and open the rest in place.
 export default function LogoWall() {
     const card = useRef(null), motion = useRef({ x: 0, y: 0, tx: 0, ty: 0, r: 0, frame: 0, on: false, still: false, loaded: false });
@@ -53,7 +55,7 @@ export default function LogoWall() {
                     onPointerEnter={e => { if (mouse(e)) show(logo, e.clientX, e.clientY) }}
                     onFocus={e => { if (!e.currentTarget.matches(':focus-visible')) return; const b = e.currentTarget.getBoundingClientRect(); show(logo, b.right - 12, b.top + b.height / 2) }}
                     onBlur={hide}>
-                    <BrandMark image={logo.image} /><span className="sr-only">{logo.name}：{logo.project?.split('｜')[0] || '合作案例'}</span>
+                    <img className="brand-mark" src={logo.mark.src} alt={logo.name} width={logo.mark.width} height={logo.mark.height} loading="lazy" decoding="async" /><span className="sr-only">：{logo.project?.split('｜')[0] || '合作案例'}</span>
                 </a>
             </article>)}
         </div>

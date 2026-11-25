@@ -1070,3 +1070,27 @@ Second part of the GEO work; the owner approved each item.
   not asked to change them.
 - Proof rounds are 3 everywhere: the A, B and C product pages and the migrated FAQ source said 2～3.
 - Article dates (v1.4.1) are accepted as drafted; the owner will ask if any should change.
+
+## Brand marks to one rule, the FAQ completed and numbered (v1.5.0, 2026-11-26, by request)
+- Brand wall: the owner's complaint was that marks showed at very different strengths (some clear, some small and
+  cramped) because each source file was fitted by its outer box into one wide strip. Every mark is now a picture made
+  by tools/logos.py to ONE rule: background removed (edges un-mixed from it), trimmed to the ink, sized by AREA so a
+  square emblem and a long wordmark carry the same weight (width = √(area × ratio)), corrected for how much of its
+  box is ink (thin lettering up to 18% larger, solid blocks up to 12% smaller), limited to 68% of the tile's width and
+  46% of its height, centred on a transparent 640×512 canvas (the tile's 5:4). Output public/assets/logos/<id>.webp,
+  recorded as `mark` in logo-wall.json (`image` stays as the source). LogoWall shows it as an <img> that fills the
+  tile (alt = the partner's name); BrandMark.jsx and brandArtwork.js (canvas drawing in the browser) are gone, and
+  no CSS sizes a mark. A square mark is 39% of the tile's height (`AREA`).
+  A NEW PARTNER: add the entry with `image.src` to logo-wall.json, run `python -I -X utf8 tools/logos.py`, look at
+  .cache/logos-sheet.png, commit. The script lists a mark as ENLARGED when its source is smaller than it is drawn
+  (none today). TMall's cat is cut by a straight line in the mark itself; that is its design, not a cropped file.
+- FAQ (src/content/faq.js is the data; FaqPage.jsx the page): five groups and 22 questions (下單與報價, 公版獎盃,
+  品牌獎盃與禮贈品訂製, 製作與配送, 材質), a jump list under the title, and a number on every question (Q01…) that is
+  a link to it (/pages/faq/#q-order). Decision on numbering: yes for people (point at "第 7 題", send one answer),
+  but outside the question's own words, which stay as a person would ask them in the heading, the FAQPage data and
+  llms.txt (that is what search engines and assistants match). `id`s are the addresses and must not change; numbers
+  may. New answers only restate the site or the owner; the header comment of faq.js lists each source and what is
+  still unanswered (rush orders, payment and invoices, shipping abroad, lead time for custom work).
+- Small orders (owner, 2026-11-26, supersedes the v1.4.2 note): taken for classic AND custom work. Custom work
+  carries design and mould fees, so a small quantity on a tight budget is steered to the classic trophies; if the
+  client accepts the fees it is made. Said this way in the FAQ, llms.txt and the 品牌獎盃訂製 ordering line.

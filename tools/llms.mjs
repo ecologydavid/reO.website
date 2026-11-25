@@ -7,6 +7,7 @@
 // name; 匠子 CHANZ STUDIO is its own lifestyle brand, sold on Pinkoi; the main work is company orders, small orders are
 // taken too, the classic trophies suit a tighter budget, and orders are agreed by e-mail or telephone.
 import {isAlias} from './aliases.mjs';
+import {questions} from '../src/content/faq.js';
 
 const names = {A: 'APEX', B: 'BOND', C: 'CRYSTAL', D: 'DELTA', E: 'EXCEED'};
 const toPath = name => { let p = name.slice(2).split('?')[0]; if (p.startsWith('read/')) p = p.slice(5); p = p.replace(/\/+$/, ''); return p ? p + '/' : ''; };
@@ -39,7 +40,7 @@ export function llmsText({site, index, models}) {
 
 - 企業訂製、公版獎盃與少量訂單，都以來信或來電洽詢，確認款式、數量與交期後報價。
 - 電子郵件：service@re-o.co　電話：+886-2-8966-5369
-- 主要承接企業、機關與賽事的訂單，少量訂單也接。預算有限時可選公版獎盃。
+- 主要承接企業、機關與賽事的訂單，公版與客製都接少量訂單。客製會有設計與開模費用，數量少、預算有限時建議選公版獎盃。
 - 生活器物的零售在 Pinkoi 匠子 CHANZ STUDIO 設計館。
 
 ## 服務
@@ -62,6 +63,10 @@ ${classic.map(m => `- [${m.id} 款 ${names[m.id]}](${site}/products/${m.slug}/)�
 - [3D 建模與設計](${url('#/read/pages/3d-modeling')})
 - [常見問題](${url('#/read/pages/faq')})：訂製方式、交期、校稿、配送與材質。
 - [運送政策](${url('#/read/about/delivery-policy')})
+
+## 常見問題
+
+${questions.map(q => `- ${q.q} ${q.a}`).join('\n')}
 
 ## 合作案例（re.O 設計製作）
 

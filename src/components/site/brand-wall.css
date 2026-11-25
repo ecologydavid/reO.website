@@ -7,11 +7,11 @@
 .folio-home .brand-ledger .site-logo-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;border:0;background:none}
 .folio-home .brand-ledger .site-logo-cell{aspect-ratio:5/4;border:0;background:#fff;transition:opacity .45s ease,background .45s ease}
 .folio-home .brand-ledger .site-logo-cell.is-dark{background:var(--folio-ink)}
-.folio-home .brand-ledger .site-logo-cell>.brand-card-link{display:flex;align-items:center;justify-content:center;width:100%;height:100%;min-height:0;padding:0 16%;border:0;background:none;color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.folio-home .brand-ledger .site-logo-cell>.brand-card-link{display:flex;align-items:center;justify-content:center;width:100%;height:100%;min-height:0;padding:0;border:0;background:none;color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
 .folio-home .brand-ledger .brand-card-link:focus-visible{outline:2px solid var(--folio-ink);outline-offset:3px}
-.folio-home .brand-ledger .site-logo-cell canvas{display:block;width:100%;height:56px;object-fit:contain;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
-.folio-home .brand-ledger .is-silhouette canvas{filter:brightness(0);opacity:.78}
-.folio-home .brand-ledger .site-logo-cell.is-active canvas{transform:scale(1.08)}
+/* v1.5.0: the mark is a picture of the tile's own shape (tools/logos.py decides its size); it simply fills the tile. */
+.folio-home .brand-ledger .site-logo-cell img.brand-mark{display:block;width:100%;height:100%;max-height:none;object-fit:contain;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.folio-home .brand-ledger .site-logo-cell.is-active img.brand-mark{transform:scale(1.08)}
 /* Only the mark under the pointer stays at full strength. */
 @media(hover:hover){.folio-home .brand-ledger .site-logo-grid:has(.is-active) .site-logo-cell:not(.is-active){opacity:.32}}
 
@@ -30,10 +30,8 @@
  .folio-home .brand-ledger{padding-top:44px;padding-bottom:48px}
  .folio-home .brand-ledger .folio-section-heading{margin-bottom:28px}
  .folio-home .brand-ledger .site-logo-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
- .folio-home .brand-ledger .site-logo-cell>.brand-card-link{padding:0 12%}
- .folio-home .brand-ledger .site-logo-cell canvas{height:40px}
 }
-@media(prefers-reduced-motion:reduce){.brand-preview,.folio-home .brand-ledger .site-logo-cell,.folio-home .brand-ledger .site-logo-cell canvas{transition:none}}
+@media(prefers-reduced-motion:reduce){.brand-preview,.folio-home .brand-ledger .site-logo-cell,.folio-home .brand-ledger .site-logo-cell img.brand-mark{transition:none}}
 .site-brand-links{display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:flex-end}
 /* V35 every mark is on the home page (no separate wall page). Phones show four rows; the button opens the rest in place. */
 .site-brand-links .site-brand-more{background:none;border:0;border-bottom:1px solid currentColor;border-radius:0;color:inherit;font:inherit;cursor:pointer;display:none}

@@ -1,7 +1,7 @@
 // v1.3.0: one address per page (tools/aliases.mjs) and the plain-text introduction for AI assistants (tools/llms.mjs).
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync, existsSync} from 'node:fs';
 import {aliases, merged, isAlias, redirectsFile, rewriteLinks} from '../tools/aliases.mjs';
 import {llmsText} from '../tools/llms.mjs';
 
@@ -38,7 +38,7 @@ test('the redirect file answers both spellings of an address, and saved pages li
 test('llms.txt introduces the company, how to order, the prices and every listed case, with no old address', () => {
   const text = llmsText({site: 'https://www.re-o.co', index, models});
   assert(text.startsWith('# re.O\n\n> '));
-  for (const fact of ['或心國際設計有限公司', '匠子 CHANZ STUDIO 是 re.O 的自有生活品牌', 'service@re-o.co', '+886-2-8966-5369', 'NT$ 2,300', '少量訂單也接']) assert(text.includes(fact), fact);
+  for (const fact of ['或心國際設計有限公司', '匠子 CHANZ STUDIO 是 re.O 的自有生活品牌', 'service@re-o.co', '+886-2-8966-5369', 'NT$ 2,300', '都接少量訂單', '設計與開模費用']) assert(text.includes(fact), fact);
   const cases = index.pages.filter(p => p.category === 'cases' && !p.hidden && !isAlias(decodeURIComponent(p.path).replace(/^#\/read\//, '')));
   assert(cases.length >= 70);
   for (const p of cases) assert(text.includes(`](https://www.re-o.co/${p.path.replace(/^#\/read\//, '')}/)`), p.title);
@@ -88,4 +88,35 @@ test('structured data states the price, the maker and the client the page itself
   assert.equal(articleData({title: 'x', category: 'cases', metadata: {year: '2025'}}, {}).dateCreated, '2025');
   assert.equal(articleData({title: 'x', category: 'materials'}, {}), null);
   assert.deepEqual(faqData([['問', '答']]).mainEntity[0], {'@type': 'Question', name: '問', acceptedAnswer: {'@type': 'Answer', text: '答'}});
+});
+
+// v1.5.0: the FAQ's data (src/content/faq.js) and the brand marks made by tools/logos.py.
+const faq = await import('../src/content/faq.js');
+test('FAQ: every question has its own address and a full answer in words; numbers run in page order', () => {
+  const ids = faq.questions.map(q => q.id), asked = faq.questions.map(q => q.q);
+  assert.equal(new Set(ids).size, ids.length); assert.equal(new Set(asked).size, asked.length);
+  assert(faq.questions.length >= 20);
+  faq.questions.forEach((q, i) => {
+    assert.equal(q.n, String(i + 1).padStart(2, '0'));
+    assert.match(q.id, /^[a-z][a-z-]*$/); assert(q.q.endsWith('？'), q.q);
+    assert(q.a.length >= 12 && /[。）]$/.test(q.a), q.q);
+    assert(!/^Q?\d/.test(q.q), 'the number is not part of the question: ' + q.q);
+  });
+  // Facts the owner fixed on 2026-11-26.
+  const all = faq.questions.map(q => q.a).join('\n');
+  assert(all.includes('1～3 天') && !all.includes('1～2 天'));
+  assert(all.includes('3 次校稿') && !/2～3 ?次/.test(all));
+  assert(faq.questions.find(q => q.id === 'small').a.includes('設計與開模費用'));
+  for (const g of faq.groups) assert(existsSync(new URL('public' + g.photo[0], root)), g.photo[0]);
+  const text = llmsText({site: 'https://www.re-o.co', index, models});
+  for (const q of faq.questions) assert(text.includes(`- ${q.q} ${q.a}`), q.q);
+});
+
+test('every partner mark has its picture, made to the one rule (tools/logos.py)', () => {
+  const logos = JSON.parse(readFileSync(new URL('src/data/logo-wall.json', root), 'utf8'));
+  for (const l of logos) {
+    assert.equal(l.mark?.src, `/assets/logos/${l.id}.webp`, l.id + ': run tools/logos.py');
+    assert(existsSync(new URL('public' + l.mark.src, root)), l.mark.src);
+    assert.equal(l.mark.width / l.mark.height, 5 / 4);
+  }
 });

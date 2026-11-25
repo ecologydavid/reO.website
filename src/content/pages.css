@@ -500,3 +500,18 @@
 .pg-flow-mosaic{grid-template-columns:repeat(6,1fr)}
 .pg-flow-mosaic>span{grid-column:span 2}
 .pg-flow-mosaic>span:nth-child(n+4){grid-column:span 3}
+
+/* v1.5.0 FAQ: a jump list of the five groups, and a number on every question that links to it. */
+.pg-faq-jump{padding-top:clamp(20px,2.4vw,36px)}
+.pg-faq-jump ul{display:flex;flex-wrap:wrap;gap:10px 12px;margin:0;padding:0;list-style:none}
+.pg-faq-jump a{display:inline-flex;align-items:baseline;gap:10px;padding:10px 18px;border:1px solid rgba(31,35,32,.2);border-radius:999px;font-size:15px;letter-spacing:.05em;color:var(--folio-ink);text-decoration:none;transition:background .25s,color .25s,border-color .25s}
+.pg-faq-jump a>span{font:500 12px/1 var(--pg-latin);letter-spacing:.08em;color:#686d65}
+.pg-faq-jump a>em{font-style:normal;font-size:13px;color:#686d65}
+.pg-faq-jump a:is(:hover,:focus-visible){background:var(--folio-ink);border-color:var(--folio-ink);color:#fff}
+.pg-faq-jump a:is(:hover,:focus-visible)>:is(span,em){color:rgba(255,255,255,.76)}
+.pg-faq-group,.pg-faq-group dl>div{scroll-margin-top:112px}
+.pg-faq-group dt{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 14px;align-items:baseline}
+.pg-faq-no{font:500 13px/1.6 var(--pg-latin);letter-spacing:.06em;color:#686d65;text-decoration:none;white-space:nowrap}
+.pg-faq-no:is(:hover,:focus-visible){color:var(--folio-ink);text-decoration:underline;text-underline-offset:4px}
+.pg-faq-group dl>div:target{background:#f4f2ec;box-shadow:-16px 0 0 #f4f2ec,16px 0 0 #f4f2ec}
+@media(max-width:600px){.pg-faq-jump a{padding:9px 14px;font-size:14px}.pg-faq-group dt{gap:0 10px}}
