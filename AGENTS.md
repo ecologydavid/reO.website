@@ -974,3 +974,41 @@ Both are done by the build (tools/images.mjs, called from tools/prerender.mjs be
 - Checked on screenshots: hero D/E/B and the A/C previews at 1440, 1900 and 2560 wide and on a phone; the Classic grid
   at 1440, 1024 and 390; the 公版 mosaic and picks at 1440 and 390. A new classic model or photo: add its box to the
   script, run it, add the entry to classicPhotos.js.
+
+## One address per page, share pictures, llms.txt; the old test site is gone (v1.3.0, 2026-11-26, by request)
+GEO work after an audit of the live site (report: ../GEO目前V1.pdf). AI answers to "環保獎盃 / 永續獎盃 訂製" named
+文洋 and 22STUDIO, never re.O; press and Pinkoi say 匠子 CHANZ STUDIO, and nothing tied that name to re.O.
+- Owner's positioning (2026-11-26; use it in copy and data): re.O is the company and the main name (或心國際設計有限公司).
+  匠子 CHANZ STUDIO is re.O's own lifestyle brand, sold on Pinkoi (retail, small pieces). The main business is
+  company orders (B2B); small orders are taken too; a tighter budget can choose the classic (公版) trophies. Orders
+  are agreed by e-mail or telephone, not through a checkout.
+- The old test site https://ecologydavid.github.io/reO.website/ is offline: the `gh-pages` branch was deleted
+  (it was frozen at v1.0.3, a full copy of the site naming itself the original). The live site is Cloudflare Pages
+  from `cloudflare-dist`. The admin service's ALLOWED_ORIGINS is now https://www.re-o.co only. The 2026-10-27
+  "GitHub Pages deployment" note above is history.
+- One address per page (tools/aliases.mjs, tests/geo.test.mjs): eleven old-site addresses rendered the same page as
+  another address (contact and awards = About; /pages/news, /pages/trophy = cases; /pages/material = materials;
+  /blog/posts = journal; five /categories/… and /pages/discontinued-item = 禮贈品訂製; /products/摺紙花器 twice).
+  The build no longer writes them or lists them in sitemap.xml (141 addresses), writes dist/_redirects (Cloudflare,
+  301 to the page that holds the content, awards to /pages/about/#about-awards) and points links in the saved HTML
+  straight at that page. The app still opens these route names (navigation.js uses awards to open About at its
+  record). A new duplicate goes into the `aliases` table. src/seo.js setPageMeta takes `canonical`: /brands/ names
+  the home page, About and the libraries name their one address.
+- Share pictures (tools/images.mjs shareCards): a page that passes `image` to setPageMeta (articles: the case cover
+  or the page's lead photo; 公版, 品牌獎盃訂製, 禮贈品訂製, cases and materials: one chosen photo) gets
+  /og/<hash>.jpg, 1200×630 JPEG, made in the prerenderer's Chrome and kept in .cache/images/og. The photo is fitted
+  by height and centred; side bands continue the photo's own edge when the edge is plain (studio backdrops) and
+  show the photo enlarged and blurred when the edge is busy. Home, About and the FAQ keep assets/og-image.jpg.
+  /og/ is cached for a year (public/_headers). Change `CARD` in images.mjs when the recipe changes.
+- /llms.txt (tools/llms.mjs): who re.O is, the 匠子 relation, how to order, services, classic prices, key pages,
+  every listed case, materials and articles, written at build time from content-index.json and models.json.
+  Only facts that are on the site or were given by the owner. No assistant has promised to read the file.
+- Image descriptions: content photos already had them; the 706 empty ones on the live site were deliberate
+  (decorative copies, hover prints, logos inside labelled links). Added where a content photo sat inside a labelled
+  button: the A to E cards and the eight process steps on home, the 公版 mosaic and round picks, the About record
+  prints (each keeps its own description; only the one on show is announced).
+- Correction to the audit: BreadcrumbList data was already on 153 of 154 pages (the check missed a script tag with
+  an id).
+- Still to do, waiting for the owner: structured data for the organisation (匠子 as its brand, IG, FB, contact
+  points), the FAQ, the five classic models with prices, cases and articles; new titles and descriptions (about
+  14 hand-written pages sent for review, the rest by rule); the Pinkoi button's wording; article dates.

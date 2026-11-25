@@ -11,7 +11,9 @@
 // route, e.g. the plaque studio (/studio/A/), which is not prerendered.
 import http from 'node:http';
 import crypto from 'node:crypto';
-import {hashAssets, smallCopies} from './images.mjs';
+import {hashAssets, smallCopies, shareCards} from './images.mjs';
+import {isAlias, redirectsFile, rewriteLinks} from './aliases.mjs';
+import {llmsText} from './llms.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {spawn} from 'node:child_process';
@@ -22,7 +24,7 @@ const base = process.env.BASE_PATH || '/', site = (process.env.SITE_URL || '').r
 const index = JSON.parse(fs.readFileSync(path.join(root, 'src/data/content-index.json'), 'utf8'));
 // Same mapping as src/router.js toPath, without the base.
 const toPath = name => { let p = name.slice(2).split('?')[0]; if (p.startsWith('read/')) p = p.slice(5); p = p.replace(/\/+$/, ''); return p ? p + '/' : ''; };
-const routes = [...new Set(['', 'brands/', ...['standard', 'products', 'cases', 'materials', 'journal', 'support'].map(c => `explore/${c}/`), ...index.pages.filter(p => !/^#\/read\/products\/f款/i.test(decodeURIComponent(p.path))).map(p => toPath(p.path))])];
+const routes = [...new Set(['', 'brands/', ...['standard', 'products', 'cases', 'materials', 'journal', 'support'].map(c => `explore/${c}/`), ...index.pages.filter(p => !/^#\/read\/products\/f款/i.test(decodeURIComponent(p.path))).map(p => toPath(p.path))])].filter(r => !isAlias(r));
 const only = process.argv[2];
 const list = only ? routes.filter(r => decodeURIComponent(r).includes(only)) : routes;
 
@@ -92,12 +94,28 @@ for (const route of list) {
   for (let i = 0; i < 80 && !ok; i++) { await sleep(100); ok = await evaluate(ready(address)); }
   if (!ok) { failed.push(route); continue; }
   await sleep(120);
-  const html = await evaluate(snapshot);
+  const html = rewriteLinks(await evaluate(snapshot), base);
   const out = path.join(dist, decodeURIComponent(route), 'index.html');
   fs.mkdirSync(path.dirname(out), {recursive: true});
   fs.writeFileSync(out, html);
-  written.push({out, text: await evaluate(serifText) || ''});
+  written.push({out, text: await evaluate(serifText) || '', picture: html.match(/<meta property="og:image" content="([^"]*)"/)?.[1] || ''});
   if (++done % 25 === 0) console.log(`prerender: ${done}/${list.length}`);
+}
+// ── Share cards (v1.3.0): each page's own photo as a 1200×630 JPEG for link previews (tools/images.mjs) ─────────────
+// A page that named a photo (src/seo.js) has its address in og:image; pages that did not keep the site-wide picture.
+{
+  const relOf = address => { try { const p = decodeURIComponent(new URL(address).pathname); return p.startsWith(base) ? p.slice(base.length) : p.replace(/^\//, ''); } catch { return ''; } };
+  const own = written.filter(w => w.picture && !/\/assets\/og-image\.jpg$/.test(w.picture));
+  const made = await shareCards({dist, root, origin, base, send, evaluate, sources: own.map(w => relOf(w.picture))});
+  let kept = 0;
+  for (const w of own) {
+    const card = made.cards.get(relOf(w.picture)), html = fs.readFileSync(w.out, 'utf8');
+    // No card (the photo could not be read): back to the site-wide picture rather than a WebP some services cannot show.
+    const to = card ? new URL(w.picture).origin + base + card : new URL(w.picture).origin + base + 'assets/og-image.jpg';
+    if (!card) kept++;
+    fs.writeFileSync(w.out, html.split(`content="${w.picture}"`).join(`content="${to}"`));
+  }
+  console.log(`prerender: share pictures for ${own.length - kept} pages (${made.cards.size} cards, ${made.made} new)` + (made.failed ? `; ${made.failed} could not be made` : ''));
 }
 ws.close();
 chrome.kill();
@@ -155,7 +173,11 @@ await Promise.all(Array.from({length: 6}, async () => {
   }
 }));
 console.log(`prerender: heading fonts on ${fontPages} pages, average ${fontPages ? Math.round(fontBytes / fontPages / 1024) : 0} kB` + (fontFailed ? `; skipped on ${fontFailed}` : ''));
+// Old addresses that repeat another page: answered with a redirect by the host (tools/aliases.mjs).
+if (!only) fs.writeFileSync(path.join(dist, '_redirects'), (fs.existsSync(path.join(root, 'public', '_redirects')) ? fs.readFileSync(path.join(root, 'public', '_redirects'), 'utf8').replace(/\n*$/, '\n') : '') + redirectsFile(base));
 if (site && !only) {
+  // llms.txt: the site introduced in plain text for AI assistants (tools/llms.mjs).
+  fs.writeFileSync(path.join(dist, 'llms.txt'), llmsText({site, index, models: JSON.parse(fs.readFileSync(path.join(root, 'src/data/models.json'), 'utf8'))}));
   const today = new Date().toISOString().slice(0, 10), pages = list.filter(r => !failed.includes(r) && r !== 'brands/');
   fs.writeFileSync(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map(r => ` <url><loc>${site}/${r}</loc><lastmod>${today}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 }

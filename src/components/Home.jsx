@@ -98,7 +98,7 @@ function Hero({ onPreview }) {
       </div>
       <div className="rv-hero-picks">
         <p>A 至 E 款<span>點選款式，開啟銘版排版工作室</span></p>
-        <ul onMouseLeave={() => setPeek(null)} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setPeek(null) }}>{heroPicks.map(id => <li key={id}><button className={id === slide.id ? 'is-on' : undefined} onMouseEnter={() => setPeek(id)} onFocus={() => setPeek(id)} onClick={() => onPreview(id)} aria-label={`開始 ${id} 款 ${classicNames[id]} 排版（另開新視窗）`}><img src={classicPhotos[id].square} alt="" width="720" height="720" loading="lazy" /><span aria-hidden="true"><b>{id}</b>{classicNames[id].slice(1)}</span></button></li>)}</ul>
+        <ul onMouseLeave={() => setPeek(null)} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setPeek(null) }}>{heroPicks.map(id => <li key={id}><button className={id === slide.id ? 'is-on' : undefined} onMouseEnter={() => setPeek(id)} onFocus={() => setPeek(id)} onClick={() => onPreview(id)} aria-label={`開始 ${id} 款 ${classicNames[id]} 排版（另開新視窗）`}><img src={classicPhotos[id].square} alt={`${id} 款 ${classicNames[id]} 公版獎盃`} width="720" height="720" loading="lazy" /><span aria-hidden="true"><b>{id}</b>{classicNames[id].slice(1)}</span></button></li>)}</ul>
       </div>
     </div>
     <div className="rv-hero-stage">
@@ -235,7 +235,7 @@ function Process() {
             return <li key={s.label} style={{ '--dx': Math.sin(t), '--dy': -Math.cos(t) }} className={shown == null && phaseHover != null && i >> 1 !== phaseHover ? 'is-dim' : undefined}>
               <button type="button" ref={n => { nodes.current[i] = n }} className={`rv-cycle-node${shown === i ? ' is-active' : ''}`} style={{ left: `${x}%`, top: `${y}%` }} aria-pressed={shown === i} aria-label={`${pad(i + 1)} ${phases[i >> 1].name}・${s.label}：${s.line}`}
                 onMouseEnter={() => point(i)} onMouseLeave={() => clearTimeout(intent.current)} onFocus={() => pick(i)} onClick={() => pick(i)}>
-                <img src={s.src} {...small(s, third)} alt="" width={s.width} height={s.height} loading="lazy" style={crop(s)} />
+                <img src={s.src} {...small(s, third)} alt={`再生大理石製程 ${pad(i + 1)}：${s.label}`} width={s.width} height={s.height} loading="lazy" style={crop(s)} />
               </button>
               <span className="rv-cycle-no" aria-hidden="true">{pad(i + 1)}</span>
             </li>
@@ -299,7 +299,8 @@ function ClassicTab({ id }) {
 // the studio, craft and awards on the About page.
 export default function Home({ onPreview, section }) {
   const root = useRef(null);
-  useEffect(() => setPageMeta(), [section]);
+  // /brands/ is this page opened at the wall: its content lives at the home address.
+  useEffect(() => setPageMeta({ canonical: '#/' }), [section]);
   // A route that names a section (#/brands) opens the home page at it, after the hash change has scrolled to the top.
   useEffect(() => { if (section) requestAnimationFrame(() => document.getElementById(section)?.scrollIntoView()) }, [section]);
   useEffect(() => { const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target) } }), { threshold: .04 }); root.current.querySelectorAll('[data-reveal]').forEach(e => observer.observe(e)); return () => observer.disconnect() }, []);

@@ -43,7 +43,7 @@ function GuideBand({id='pg-band-title',kicker,en,title,items,compact}){
   <div className="pg-flow-grid folio-gutter">
    <div className="pg-flow-stage">
     {items.map((s,i)=>s.mosaic
-     ?<div key={s.title} className={`pg-flow-shot pg-flow-mosaic${i===active?' is-on':''}`} role="img" aria-label={s.alt} aria-hidden={i!==active||undefined}>{flowModels.map(m=><span key={m}><img src={classicPhotos[m].wide} alt="" width="1200" height="900" loading="lazy"/><em>{m}</em></span>)}</div>
+     ?<div key={s.title} className={`pg-flow-shot pg-flow-mosaic${i===active?' is-on':''}`} role="img" aria-label={s.alt} aria-hidden={i!==active||undefined}>{flowModels.map(m=><span key={m}><img src={classicPhotos[m].wide} alt={`${m} 款 ${classicNames[m]} 公版獎盃`} width="1200" height="900" loading="lazy"/><em>{m}</em></span>)}</div>
      :<img key={s.title} className={`pg-flow-shot${i===active?' is-on':''}`} src={s.src} {...small({src:s.src,width:s.width||1440},half)} alt={i===active?s.alt:''} aria-hidden={i!==active||undefined} width={s.width||1440} height={s.height||1080} loading="lazy" style={{objectPosition:s.position||'50% 50%'}}/>)}
     <p className="pg-flow-caption" aria-hidden="true"><b>{numbers[active]}</b>/ {total}<span>{items[active].caption||items[active].title}</span></p>
    </div>
@@ -56,7 +56,7 @@ function GuideBand({id='pg-band-title',kicker,en,title,items,compact}){
      </button>
      <div className="pg-flow-body"><div>
       {s.line?<p>{s.line}</p>:null}
-      {s.mosaic?<ul className="pg-flow-picks">{flowModels.map(m=><li key={m}><a href={`#/preview/${m}`} {...studioTab} aria-label={`開始 ${m} 款排版`}><img src={classicPhotos[m].square} alt="" width="720" height="720" loading="lazy"/><span>{m}</span></a></li>)}</ul>:null}
+      {s.mosaic?<ul className="pg-flow-picks">{flowModels.map(m=><li key={m}><a href={`#/preview/${m}`} {...studioTab} aria-label={`開始 ${m} 款排版`}><img src={classicPhotos[m].square} alt={`${m} 款 ${classicNames[m]} 公版獎盃`} width="720" height="720" loading="lazy"/><span>{m}</span></a></li>)}</ul>:null}
       {s.terms?<dl className="pg-flow-terms">{s.terms.map(([k,v],j)=><div key={j} className={k?undefined:'is-more'}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>:null}
       {s.tags||s.link?<p className="pg-flow-foot">{s.tags?<span className="pg-flow-tags">{s.tags.join(' / ')}</span>:null}{s.link?<a href={s.link[1]}>{s.link[0]}<span aria-hidden="true"> →</span></a>:null}</p>:null}
      </div></div>

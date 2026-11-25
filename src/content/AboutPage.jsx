@@ -42,7 +42,7 @@ function Record(){
   <div className="pg-press-grid folio-gutter">
    <div className="pg-press-side" data-reveal>
     <p className="pg-kicker"><span>04</span>Awards · Exhibitions · Talks · Press</p><h2 id="pg-press-title">設計講座與產業報導</h2>
-    <figure className={`pg-press-print${printShape}`}>{prints.map(p=>{const on=srcOf(p)===srcOf(item),position=on?item.pos:p.pos;return <img key={srcOf(p)} className={on?'is-on':undefined} src={srcOf(p)} alt={on?item.alt:''} aria-hidden={!on||undefined} width={p.w} height={p.h} loading="lazy" style={position?{objectPosition:position}:undefined}/>})}<RecordCaption item={item}/></figure>
+    <figure className={`pg-press-print${printShape}`}>{prints.map(p=>{const on=srcOf(p)===srcOf(item),position=on?item.pos:p.pos;return <img key={srcOf(p)} className={on?'is-on':undefined} src={srcOf(p)} alt={on?item.alt:(p.alt||'')} aria-hidden={!on||undefined} width={p.w} height={p.h} loading="lazy" style={position?{objectPosition:position}:undefined}/>})}<RecordCaption item={item}/></figure>
    </div>
    <div className="pg-press-index" data-reveal>
     <div className="pg-press-filters" role="group" aria-label="依類別篩選"><button type="button" aria-pressed={!kind} onClick={()=>choose('')}>全部<span>{record.length}</span></button>{kinds.map(k=><button key={k} type="button" aria-pressed={kind===k} onClick={()=>choose(k)}>{k}<span>{record.filter(p=>p.kind===k).length}</span></button>)}</div>
@@ -62,7 +62,7 @@ function focusRecord(sectionId,behavior='instant'){
 }
 export default function AboutPage({focus}){
  const root=useRef(null);
- useEffect(()=>{setPageMeta({title:'關於 re.O',description:'re.O 由李東陽創辦，以再生材質開發為起點，整合品牌語彙、立體建模、排版、灌模與工作室組裝。聯絡方式、創辦人、設計獎項與工作室介紹。',trail:[['首頁','#/'],['關於 re.O','#/read/pages/about']]});const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.08});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
+ useEffect(()=>{setPageMeta({title:'關於 re.O',description:'re.O 由李東陽創辦，以再生材質開發為起點，整合品牌語彙、立體建模、排版、灌模與工作室組裝。聯絡方式、創辦人、設計獎項與工作室介紹。',trail:[['首頁','#/'],['關於 re.O','#/read/pages/about']],canonical:'#/read/pages/about'});const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.08});root.current.querySelectorAll('[data-reveal]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
  useEffect(()=>{
   if(!focus)return;
   let frame;

@@ -7,6 +7,7 @@ import {SiteArrow} from '../components/site/SiteHeader.jsx';
 import {Button,ArrowLink,studioTab,iconFor} from '../components/site/ui.jsx';
 import {landings} from './landings.jsx';
 import {classicNames} from '../components/site/classics.js';
+import {classicPhotos} from '../components/site/classicPhotos.js';
 import {materials} from '../components/site/materials.js';
 import {setPageMeta} from '../seo.js';
 import {edgeFill} from './edgeFill.js';
@@ -86,7 +87,9 @@ export default function ContentLibrary({category,filter:routeFilter='',section='
  const pool=useMemo(()=>{const list=classicPages(category);if(category!=='materials')return list;const at=p=>{const i=materials.findIndex(m=>m[2]===slugOf(p));return i<0?99:i};return [...list].sort((a,b)=>at(a)-at(b))},[category]);
  const filters=useMemo(()=>[...new Set(pool.map(p=>groupFor(p,category)).filter(Boolean))],[pool,category]);
  const counts=useMemo(()=>Object.fromEntries(filters.map(f=>[f,pool.filter(p=>groupFor(p,category)===f).length])),[filters,pool,category]);
- useEffect(()=>{setPageMeta({title:info.label,description:info.intro,trail:[['首頁','#/'],[info.label,category==='custom'?'#/read/pages/custom':`#/explore/${category}`]]})},[category,info.label,info.intro]);
+ // The page's own address and share picture (v1.3.0). Old index addresses (/pages/news/, /categories/…) render this
+ // same page, so the canonical names the one address. Literal paths: the build renames whole literal addresses.
+ useEffect(()=>{const home=category==='custom'?'#/read/pages/custom':`#/explore/${category}`,share={standard:{src:classicPhotos.D.hero,alt:'D 款 DELTA 再生大理石公版獎盃'},custom:{src:'/assets/home-mode-ase.webp',alt:'日月光 ASE 傑出供應商獎盃與黑色訂製禮盒'},products:{src:'/assets/home-mode-singleton.webp',alt:'蘇格登威士忌再生大理石杯墊'}}[category]||landing.hero;setPageMeta({title:info.label,description:info.intro,trail:[['首頁','#/'],[info.label,home]],canonical:home,image:share})},[category,info.label,info.intro]);
  const found=useMemo(()=>pool.filter(p=>(!filter||groupFor(p,category)===filter||(filter==='生活回收'&&/glass/.test(p.path)))&&(!query||(p.title+' '+p.summary+' '+JSON.stringify(p.metadata)).toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()))),[pool,filter,category,query]);
  useEffect(()=>{const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.06});root.current.querySelectorAll('[data-reveal]:not(.is-visible)').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[category,found,limit]);
  const choose=f=>{setFilter(f);setLimit(12);index.current?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})};
