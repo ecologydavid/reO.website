@@ -22,9 +22,14 @@
 #   4. Centred on a transparent 5:4 canvas (the tile's shape), 640 × 512, saved as public/assets/logos/<id>.webp.
 #      The tile shows the canvas whole, so the size is decided here and nowhere else.
 #
-# Adding a partner: add its entry to logo-wall.json with `image.src` (the largest clean file available, on a plain
-# background or transparent; `bounds` [x, y, w, h] only if the file holds more than the mark), run this script, look at
-# the sheet it writes (.cache/logos-sheet.png) and commit. Do not size a mark by hand in CSS.
+# Adding a partner: put the largest clean file available (plain background or transparent; an SVG is drawn to a PNG
+# 1600px wide first) in tools/logo-sources/<id>.png, add its entry to logo-wall.json with `image.file` naming it
+# (`bounds` [x, y, w, h] only if the file holds more than the mark; `source` = the public page it came from), run this
+# script, look at the sheet it writes (.cache/logos-sheet.png) and commit. Do not size a mark by hand in CSS.
+# (The first 39 marks name a photo on the site with `image.src` instead; both work.)
+# Options: `background` [r, g, b] when the plate is not the border's colour (今周刊: a red block, on white);
+# `ink` [r, g, b] for a one-colour mark published only in white (Kanari, 台北愛樂); a mark made for dark grounds that
+# has colours of its own keeps its file and gets an ink tile instead (`tone` in LogoWall.jsx: 木客, 木田工場).
 # A source smaller than the size it is drawn at is listed as "enlarged": ask the partner for a vector or larger file.
 import json, sys
 from pathlib import Path
@@ -70,12 +75,16 @@ def cut_out(im, background, mode):
 
 def make(logo):
     image = logo['image']
-    im = Image.open(root / 'public' / image['src'].lstrip('/'))
+    # `file` is a source kept in the repository only (tools/logo-sources, not published); `src` one that is on the site.
+    im = Image.open(root / image['file'] if image.get('file') else root / 'public' / image['src'].lstrip('/'))
     if image.get('bounds'):
         x, y, w, h = image['bounds']
         pad = 6                                              # a little room, so the trim below finds the true edge
         im = im.crop((max(0, x - pad), max(0, y - pad), min(im.width, x + w + pad), min(im.height, y + h + pad)))
     art = cut_out(im, image.get('background'), image.get('matteMode'))
+    if image.get('ink'):
+        # A one-colour mark whose only public file is the white one (made for dark grounds): the same shape in ink.
+        art = art.copy(); art[..., :3] = image['ink']
     solid = art[..., 3] > 40
     if not solid.any():
         raise SystemExit(f"{logo['id']}: nothing left after removing the background")
@@ -102,7 +111,7 @@ raw = data_file.read_text(encoding='utf8')
 data_file.write_text(json.dumps(logos, ensure_ascii=False, indent=2 if raw.startswith('[\n') else None, separators=None if raw.startswith('[\n') else (',', ':')) + ('\n' if raw.endswith('\n') else ''), encoding='utf8')
 
 # A sheet to look at: every mark on its tile (white, or ink for marks drawn in white), in the wall's eight columns.
-dark = {'muke'}
+dark = {'muke', 'muteam'}
 cell = (CANVAS[0] // 2, CANVAS[1] // 2)
 sheet = Image.new('RGB', (8 * (cell[0] + 8) + 8, ((len(made) + 7) // 8) * (cell[1] + 8) + 8), '#f4f2ec')
 for i, (logo, info, canvas) in enumerate(made):

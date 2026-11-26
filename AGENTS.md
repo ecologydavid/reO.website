@@ -1094,3 +1094,20 @@ Second part of the GEO work; the owner approved each item.
 - Small orders (owner, 2026-11-26, supersedes the v1.4.2 note): taken for classic AND custom work. Custom work
   carries design and mould fees, so a small quantity on a tight budget is steered to the classic trophies; if the
   client accepts the fees it is made. Said this way in the FAQ, llms.txt and the 品牌獎盃訂製 ordering line.
+
+## Twenty more partner marks, marks only (v1.6.0, 2026-11-27, by request)
+- The owner listed twenty more partners for the home wall and asked for their public marks only: no case photo, no
+  link, no display of the work yet ("先不放實際案例的圖片和連結"). The wall has 59 marks.
+- An entry in logo-wall.json WITHOUT `href` is a plain tile (LogoWall.jsx): no link, no hover print, name as the
+  picture's description. `works` holds the owner's note of what was made (公版 E, 五轉莫比烏斯環 …); it is not shown.
+  When a case goes up: add `href`, `project` and `preview` and the tile behaves like the first 39.
+- Sources are the organisations' own sites or Wikimedia Commons (each entry's `image.source`), kept in
+  tools/logo-sources/<id>.png (not published; SVGs drawn to PNG 1600px wide in Chrome) and named by `image.file`.
+  tools/logos.py reads `file` or `src`, and takes `ink` for a one-colour mark published only in white (Kanari,
+  台北愛樂管弦樂團: the same shape in ink). 木田工場's mark is made for dark grounds and has colours, so it keeps its
+  file and sits on an ink tile like 木客 (`tone`).
+- Who they are, where the name alone was not enough: kanari = Studio Kanari (翔詠設計, studiokanari.com), to be
+  confirmed by the owner; 木田工場 = 木田工場有限公司 Muteam (台中, muteam.com.tw); 產基會 = 財團法人台灣產業服務基金會;
+  臺北廣播電臺's mark is the station's own (from 聽臺北), not the city government's; 越野跑協會 = TTRA (twttra.com).
+  中小企業總會 and 新竹市環保局 were each listed twice (two works) and have one tile each.
+- Small sources (the script says ENLARGED): 新竹市環保局 (328px) and 產基會 (365px). Ask for larger files.
