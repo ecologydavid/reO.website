@@ -1111,3 +1111,18 @@ Second part of the GEO work; the owner approved each item.
   臺北廣播電臺's mark is the station's own (from 聽臺北), not the city government's; 越野跑協會 = TTRA (twttra.com).
   中小企業總會 and 新竹市環保局 were each listed twice (two works) and have one tile each.
 - Small sources (the script says ENLARGED): 新竹市環保局 (328px) and 產基會 (365px). Ask for larger files.
+
+## About record reviewed by the owner; 蛋造設計 is a case (v1.6.1, 2026-11-27, by request)
+- src/content/record.js (34 entries): IDDI 設計驅動產業創新 is a grant (line 「台灣設計研究院的補助案。」). Source links,
+  each page read and matched to the entry: 2026 TISDC 校園循環經濟講座 at 國立臺灣藝術大學 (tisdc.org, 4/14), 永續串造
+  (scooptw.com; 中原文創園區, 翻轉鏡, the opening talk), Pinkoi 瘋設祭 2025 (ydn.com.tw; the article is about the fair and
+  does not name re.O) and La vie 2020 (wowlavie.com). 理事當選 has no photo of its own: its picture says 示意照片, like
+  GQ × Pinkoi's. All older links answered 200 on 2026-11-27.
+- 蛋造設計 Danzo Studio's 澳洲墨爾本設計週 show left the record ("移除我們的展覽"): it is contract work, now the case
+  /pages/danzo-studio-marble-tray/ (禮贈品訂製 / 生活設計; service 代工製作), made with tools/cases/batch-2026-11-27.json
+  from the owner's one photo (蛋造澳洲展.jpg). Its text is a first draft from the photo, to be confirmed by the owner.
+- Waiting for the owner's photos (he named them after the entries; they were not on this computer or in Drive):
+  2026 TISDC 臺藝大, 永續串造, 三創頒獎典禮, 香港理工大學校內展, 瘋設祭 2025, 台灣設計展 設計 × 料理 × 製造. Until then these
+  keep their stand-in photos (示意照片). Put each in public/assets/about-events and use eventPhoto() in record.js
+  (the test counts the owner photos).
+- tools/cases/import.py writes content-index.json without its closing newline: add it back after a run.
