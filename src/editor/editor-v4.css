@@ -546,3 +546,26 @@
  .st-tools{flex-wrap:wrap}
  .st-models span{padding-inline:6px;letter-spacing:.06em}
 }
+
+/* v1.11.0 (owner, 2026-11-28): a larger picture on desktop.
+   收合側欄 (.st-wide, in the 排版 bar) folds the product column and the settings column away; the preview and the
+   plate then share the whole window. 全螢幕預覽 (.st-full, on the finished-product preview) lays the preview, front
+   or 3D, over the whole window; Esc or 結束全螢幕 returns. Phones and tablets keep their own switch. */
+.st-wide,.st-full{display:none}
+@media(min-width:1101px){
+ .st-wide,.st-full{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:99px;background:#fff;color:var(--ink);font:inherit;font-size:12px;letter-spacing:.04em;white-space:nowrap;cursor:pointer;transition:background .2s,border-color .2s}
+ .st-wide{height:34px;padding:0 14px;margin-right:6px}
+ .st-wide:hover,.st-full:hover,.st-wide[aria-pressed="true"]{background:var(--stone);border-color:#cfcdc5}
+ .st-wide:focus-visible,.st-full:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+ .st-layout.is-wide{grid-template-columns:0 minmax(0,1fr) 0}
+ .st-layout.is-wide>.st-product,.st-layout.is-wide>.st-inspector{visibility:hidden;min-width:0;padding:0;border:0;overflow:hidden}
+ .st-layout.is-wide .st-work{padding-inline:20px}
+ .st-full{position:absolute;z-index:4;right:98px;bottom:7px;padding:6px 12px}
+ .st-slot-product .st-work-note{max-width:calc(100% - 214px)}
+ .st-slot-product.is-full{position:fixed;inset:0;z-index:80;border:0;border-radius:0;background:#fff}
+ .st-slot-product.is-full .st-preview-focus{display:none}
+ .st-slot-product.is-full .st-full{right:20px;top:16px;bottom:auto;height:38px;padding:0 16px;font-size:13px}
+ .st-slot-product.is-full .st-switch{right:auto;left:50%;top:16px;transform:translateX(-50%)}
+ .st-slot-product.is-full .st-slot-label{left:24px;top:22px}
+ .st-slot-product.is-full .st-work-note{max-width:none;padding-left:8px}
+}

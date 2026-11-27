@@ -75,15 +75,17 @@ export default function AboutPage({focus}){
  },[focus]);
  return <main className="pg pg-about" ref={root}>
   <div className="folio-gutter"><nav className="content-breadcrumb" aria-label="麵包屑"><a href="#/">首頁</a><span>/</span><span>關於 re.O</span></nav></div>
-  <header className="pg-top folio-gutter" id="about-contact">
+  {/* v1.11.0 (owner, 2026-11-28): the studio photograph lies under the opening words instead of taking a block of its
+      own below them. It is darkened towards the text side so the white words read easily; the contact panel stays a
+      light sheet with dark type. */}
+  <header className="pg-top pg-top-photo folio-gutter" id="about-contact">
+   <img className="pg-ground" src={img('8adb10dc0ad1b38e8f')} {...small({src:img('8adb10dc0ad1b38e8f'),width:1440})} alt="職人手中灑落的再生材料粉末" width="1440" height="960" fetchPriority="high"/>
    <div className="pg-title"><p className="content-display" aria-hidden="true">Studio</p><h1>關於 re.O</h1>{/* v1.4.1: who re.O is and how 匠子 relates to it, in the owner's approved wording (2026-11-26). */}<Statement text="re.O（或心國際設計有限公司）以再生材質為企業、機關與賽事設計製作獎盃與禮贈品。匠子 CHANZ STUDIO 是 re.O 的自有生活品牌，在 Pinkoi 販售。以再生材質開發為起點，整合品牌語彙、立體建模、排版、灌模與工作室組裝。"/></div>
    <div className="pg-contact">
     <dl>{contact.map(([en,label,value])=><div key={en}><dt><span>{en}</span>{label}</dt><dd>{value}</dd></div>)}</dl>
     <div className="pg-actions"><Button href="mailto:service@re-o.co">寄信洽詢</Button><Button variant="ghost" href="tel:+886289665369">來電預約</Button><Button variant="ghost" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`} target="_blank" rel="noreferrer">地圖導航</Button></div>
    </div>
   </header>
-
-  <figure className="pg-hero"><img src={img('8adb10dc0ad1b38e8f')} {...small({src:img('8adb10dc0ad1b38e8f'),width:1440})} alt="職人手中灑落的再生材料粉末" width="1440" height="960" fetchPriority="high"/></figure>
 
   {/* v64 (owner, 2026-11-17): the founder. Only facts with a source on file: the company's responsible person and
       designer (TISDC talk deck 2026, 東森新聞 2019), the two Golden Pin awards and the talks listed in the record below.

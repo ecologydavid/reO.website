@@ -14,6 +14,7 @@ import { Arrow, ArrowLink, Button, SectionHead, Frame, ActionIcon } from './site
 import './hero-v64.css';
 import './home.css';
 import './home-v10.css';
+import './home-fit.css';
 
 // Recycled-marble process in eight steps. The material page charts three stages (廢棄回收・研磨成粉・
 // 比例澆注); the journal articles 重新定義「廢料」, 實驗再生材質, 強化材質脫氣升級 and 工廠步驟把關
@@ -191,11 +192,15 @@ function Process() {
             {(note.more.pair ? ['a', 'b'].map(k => ({ src: `/assets/process/${note.more.id}-${k}.webp`, w: 696, h: 521 })) : [{ src: img(note.more.id), w: note.more.w, h: note.more.h }]).map((p, k) => <img key={p.src} src={p.src} alt={k ? '' : note.more.caption} width={p.w} height={p.h} loading="lazy" />)}
             <figcaption><span>{note.more.caption}</span><small>出自〈{note.article}〉</small></figcaption>
           </figure>;
+  // v1.11.0: on desktop the heading stands in the ring's left column, over the four phases, so the ring can take the
+  // block's full height (one screen per block). Phones and tablets keep it across the top.
+  const head = <SectionHead index="00" label="再生工藝" en="Process" id="rv-process-title" title={<>從邊料開始，<br />讓榮耀成形。</>} />;
   return <section className="rv-section rv-process" id="process" aria-labelledby="rv-process-title">
-    <div className="rv-gutter"><SectionHead index="00" label="再生工藝" en="Process" id="rv-process-title" title={<>從邊料開始，<br />讓榮耀成形。</>} /></div>
+    {compact && <div className="rv-gutter">{head}</div>}
     <div className="rv-gutter">
       <div className={`rv-cycle${shown != null ? ' has-active' : ''}${lit != null ? ' has-lit' : ''}`} ref={stage} onMouseLeave={() => { clearTimeout(intent.current); if (!compact) setActive(null) }} onBlur={e => { if (!compact && !e.currentTarget.contains(e.relatedTarget)) setActive(null) }} onKeyDown={e => { if (e.key === 'Escape') setActive(null) }}>
         {!compact && <div className="rv-cycle-side is-left">
+          {head}
           <div className="rv-cycle-layer rv-cycle-index" aria-hidden={shown != null || undefined}>
             <p className="rv-cycle-kicker">四個階段・從圓點出發，逆時針</p>
             <ol>{phases.map((p, q) => <li key={p.en}><button type="button" tabIndex={shown != null ? -1 : undefined} className={phaseHover === q ? 'is-on' : undefined} onMouseEnter={() => setPhaseHover(q)} onMouseLeave={() => setPhaseHover(null)} onClick={() => pick(q * 2)}>

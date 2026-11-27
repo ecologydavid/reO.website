@@ -60,6 +60,10 @@ export default function Editor({modelId,onModelChange,onHome}){
   const [menu,setMenu]=useState(false),[big,setBig]=useState('plate'),[inline,setInline]=useState(null),[saved,setSaved]=useState('');
   const [singleFace,setSingleFace]=useState(false);
   const [previewFocus,setPreviewFocus]=useState(false);
+  // v1.11.0 (owner, 2026-11-28): two ways to a larger picture on desktop. `wide` folds the product column and the
+  // settings column away, so the preview and the plate share the whole window; `full` lays the finished-product
+  // preview (front or 3D) over the whole window. Esc leaves the full preview.
+  const [wide,setWide]=useState(false),[full,setFull]=useState(false);
   const [hasLegacy]=useState(()=>{try{return !!localStorage.getItem(legacyStorage)}catch{return false}});
   const inputRef=useRef(null),noticeTimer=useRef(null),measureRef=useRef(null),menuRef=useRef(null);
   if(!measureRef.current)measureRef.current=document.createElement('canvas').getContext('2d');
@@ -127,7 +131,7 @@ export default function Editor({modelId,onModelChange,onHome}){
       if(mod&&k==='z'){e.preventDefault();e.shiftKey?history.redo():history.undo()}
       else if(mod&&k==='y'){e.preventDefault();history.redo()}
       else if(mod&&k==='d'){e.preventDefault();duplicate()}
-      else if(e.key==='Escape')setMenu(false);
+      else if(e.key==='Escape'){setMenu(false);setFull(false)}
     };
     window.addEventListener('keydown',key);return()=>window.removeEventListener('keydown',key);
   });
@@ -149,7 +153,7 @@ export default function Editor({modelId,onModelChange,onHome}){
         </div>
       </div>
     </header>
-    <div className={`st-layout is-${big}`}>
+    <div className={`st-layout is-${big}${wide?' is-wide':''}`}>
       <aside className="st-product" aria-label="選擇產品">
         <div className="st-product-head"><p className="st-kicker"><span lang="en">{classicNames[model.id]}</span>{model.id} 款・{model.kind}</p><h2>{/* v1.10.0: a joint name (木客微光 × 匠子 × re.O) turns after a ×, never inside a name. */model.name.includes(' × ')?model.name.split(' × ').map((part,i,all)=><React.Fragment key={i}><span style={{whiteSpace:'nowrap'}}>{part}{i<all.length-1?' ×':''}</span>{i<all.length-1?' ':''}</React.Fragment>):model.name}</h2><p className="st-meta">{size}<span>NT${model.price}</span></p></div>
         {/* v6: the models as photo cards (the catalogue photos), letter and English name under each. */}
@@ -170,6 +174,7 @@ export default function Editor({modelId,onModelChange,onHome}){
           {scene.surfaces.length>1?<div className="st-zones" role="group" aria-label="編輯區域">{scene.surfaces.map(s=><button type="button" key={s.id} aria-pressed={surface.id===s.id} onClick={()=>pickSurface(s.id)}>{s.name}</button>)}</div>:<p className="st-zone-name">{surface.name}</p>}
           {/* v6: adding text or a graphic lives in one place only, the settings column. */}
           <div className="st-work-tools">
+            <button type="button" className="st-wide" aria-pressed={wide} title={wide?'顯示左右兩欄':'收合左右兩欄，放大畫面'} onClick={()=>setWide(value=>!value)}><Icon name={wide?'menu':'expand'} size={15}/>{wide?'顯示側欄':'收合側欄'}</button>
             <button type="button" className="st-icon" aria-label="復原" title="復原（Ctrl+Z）" disabled={!history.canUndo} onClick={history.undo}><Icon name="undo" size={18}/></button>
             <button type="button" className="st-icon" aria-label="重做" title="重做（Ctrl+Shift+Z）" disabled={!history.canRedo} onClick={history.redo}><Icon name="redo" size={18}/></button>
           </div>
@@ -177,9 +182,10 @@ export default function Editor({modelId,onModelChange,onHome}){
         {/* v6 (2026-11-11): the plate and the finished product side by side, both full height and both live
             (replaces v5's picture in picture). Phones keep the 排版／成品預覽 switch and show one at a time. */}
         <div className={`st-canvas is-${big}${previewFocus?' is-preview-focus':''}`}>
-          <section className={`st-slot st-slot-product${big==='product'?' is-big':''}`} aria-label="成品預覽">
+          <section className={`st-slot st-slot-product${big==='product'?' is-big':''}${full?' is-full':''}`} aria-label="成品預覽">
             <p className="st-slot-label">成品預覽</p>
             <button type="button" className="st-preview-focus" aria-pressed={previewFocus} onClick={()=>setPreviewFocus(value=>!value)}>{previewFocus?'還原並排':'放大成品'}</button>
+            <button type="button" className="st-full" aria-pressed={full} onClick={()=>setFull(value=>!value)}><Icon name={full?'close':'expand'} size={14}/>{full?'結束全螢幕':'全螢幕預覽'}</button>
             <ProductView scene={scene} documents={documents} surface={surface} mode={mode} onMode={setMode} onSurface={pickSurface}/>
             <p className="st-work-note">{mode==='three'?'拖曳旋轉・點銘版切換編輯區':'點銘版切換編輯區'}</p>
           </section>

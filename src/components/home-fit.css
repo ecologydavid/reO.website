@@ -1,0 +1,145 @@
+/* Home: one ground per block, one screen per block (v1.11.0, owner 2026-11-28).
+   "Every block's ground should differ, so scrolling tells you a new block has begun; and as far as possible a whole
+   block should be readable in one desktop screen." Loaded last by Home.jsx; it only sizes and colours, the blocks'
+   own files still draw them.
+
+   Grounds (low in colour, taken from the materials: marble white, silt, black marble, wood, glass, ash):
+     hero       the photograph (dark)
+     Process    ivory   #f5f2ea
+     Classic    white   #ffffff
+     Custom     ink     #1f2320   (the one dark band: white type, the three photos stand out)
+     Materials  sand    #e8e0d1
+     partners   mist    #dfe5e2   (marks stay on white tiles)
+     shop       stone   #efeee9   (its panel turns white)
+   No two neighbours share a ground. Do not set two neighbouring blocks to the same colour again.
+
+   One screen (desktop, 1101px and wider, at least 640px high): a block is as tall as the window under the header
+   (--fit) and its content is sized from that height, never from the width alone:
+     --pad   space above and below the content
+     --disp  the Latin display word; the Chinese heading is a third of it and sits beside it on one row (it used to
+             take a row of its own under the word, about 300px in all)
+     --body  what is left for the photographs of a block whose heading runs across the top
+   Classic and Custom keep the heading across the top. Process and Materials put it in a left rail, so the ring and
+   the nine tiles get the full height. On shorter or narrower screens the blocks flow at their natural height. */
+.folio-home.tx.rv-home{--h-ivory:#f5f2ea;--h-white:#fff;--h-ink:#1f2320;--h-sand:#e8e0d1;--h-mist:#dfe5e2;--h-stone:#efeee9}
+.folio-home.tx.rv-home .rv-process{background:var(--h-ivory)}
+.folio-home.tx.rv-home #classic{background:var(--h-white)}
+.folio-home.tx.rv-home #custom{background:var(--h-ink);color:#fff}
+.folio-home.tx.rv-home .rv-materials{background:var(--h-sand);margin-top:0}
+.folio-home.tx.rv-home .brand-ledger{background:var(--h-mist)}
+.folio-home.tx.rv-home .shop-window{background:var(--h-stone)}
+.folio-home.tx.rv-home .shop-panel{background:#fff}
+.folio-home.tx.rv-home .shop-thumb{background:var(--h-stone)}
+/* Every block carries its own space above and below (a block used to borrow the next one's top space). */
+.folio-home.tx.rv-home main>section:not(.rv-hero){padding-top:var(--rv-space);padding-bottom:var(--rv-space);margin-top:0}
+
+/* Process on ivory: the ring's stone tiles a tone deeper, so they still read against the ground. */
+.folio-home.tx.rv-home .rv-cycle{--tile:#e7e3d9;--tile-on:#dcd7ca;--tile-line:#d9d4c8}
+.folio-home.tx.rv-home .rv-cycle-tile.is-q1.is-current,.folio-home.tx.rv-home .rv-cycle-tile.is-q3.is-current{background:#fbf9f4}
+
+/* Custom on ink. */
+.folio-home.tx.rv-home #custom :is(.rv-display,h2,.rv-mode-label strong){color:#fff}
+.folio-home.tx.rv-home #custom .rv-index{color:rgba(255,255,255,.66)}
+.folio-home.tx.rv-home #custom .rv-index>span{color:#fff}
+.folio-home.tx.rv-home #custom .rv-mode-label{border-top-color:rgba(255,255,255,.24)}
+.folio-home.tx.rv-home #custom .rv-mode-label em{color:rgba(255,255,255,.6)}
+.folio-home.tx.rv-home #custom .rv-mode-line{color:rgba(255,255,255,.74)}
+.folio-home.tx.rv-home #custom .rv-modes .rv-frame{background:#2b302c}
+.folio-home.tx.rv-home #custom .rv-chip{border-color:rgba(255,255,255,.5);color:#fff;background:transparent}
+.folio-home.tx.rv-home #custom a:hover .rv-chip,.folio-home.tx.rv-home #custom a:focus-visible .rv-chip{background:#fff;border-color:#fff;color:var(--h-ink)}
+.folio-home.tx.rv-home #custom a:focus-visible{outline:2px solid #fff;outline-offset:6px}
+
+@media(min-width:1101px) and (min-height:640px){
+ .folio-home.tx.rv-home{
+  --fit:calc(100svh - 72px);
+  --pad:clamp(30px,5.4vh,64px);
+  --disp:clamp(52px,min(6vw,11.6vh),108px);
+  --head-gap:clamp(20px,3.6vh,40px);
+  --body:calc(var(--fit) - 2*var(--pad) - var(--disp) - 36px - var(--head-gap));
+ }
+ .folio-home.tx.rv-home main>section:not(.rv-hero){min-height:var(--fit);padding-top:var(--pad);padding-bottom:var(--pad);display:flex;flex-direction:column;justify-content:center}
+
+ /* The heading on one row: the number and name above, the display word left, the Chinese heading beside it. */
+ .folio-home.tx.rv-home .rv-head{grid-template-columns:minmax(0,5fr) minmax(0,6fr) auto;grid-template-rows:auto auto;gap:14px 24px;align-items:end;margin-bottom:var(--head-gap)}
+ .folio-home.tx.rv-home .rv-head>.rv-index{grid-area:1/1/2/-1;align-self:start;padding-top:0}
+ .folio-home.tx.rv-home .rv-head>.rv-display{grid-area:2/1;margin:0;font-size:var(--disp);line-height:.9}
+ .folio-home.tx.rv-home .rv-head>h2{grid-area:2/2;font-size:max(24px,calc(var(--disp)*.34));line-height:1.4}
+ .folio-home.tx.rv-home .rv-head>.rv-link{grid-area:2/3;margin-bottom:6px}
+
+ /* Classic: the two rows of photographs share what the heading leaves. */
+ .folio-home.tx.rv-home .rv-products{--rv-row:max(170px,calc((var(--body) - 24px)/2));gap:24px}
+
+ /* Custom: three photographs of one height, their names under a rule. */
+ .folio-home.tx.rv-home .rv-modes .rv-frame{aspect-ratio:auto;height:max(200px,calc(var(--body) - 96px))}
+ .folio-home.tx.rv-home .rv-mode-label{margin-top:14px;padding-top:12px}
+ .folio-home.tx.rv-home .rv-mode-line{padding-top:4px}
+
+ /* Materials: the heading in a left rail, the nine tiles over the full height. */
+ .folio-home.tx.rv-home .rv-materials>.rv-gutter{display:grid;grid-template-columns:minmax(0,30fr) minmax(0,70fr);gap:clamp(28px,3.4vw,64px);align-items:stretch}
+ .folio-home.tx.rv-home .rv-materials .rv-head{display:flex;flex-direction:column;align-items:flex-start;gap:0;margin:0}
+ .folio-home.tx.rv-home .rv-materials .rv-head>.rv-display{margin-top:18px;font-size:min(var(--disp),5.6vw)}
+ .folio-home.tx.rv-home .rv-materials .rv-head>h2{margin-top:clamp(16px,2.6vh,28px)}
+ .folio-home.tx.rv-home .rv-materials .rv-head>.rv-link{margin:auto 0 0}
+ .folio-home.tx.rv-home .rv-swatches .rv-frame{aspect-ratio:auto;height:max(120px,calc((var(--fit) - 2*var(--pad) - 2*var(--rv-gap))/3))}
+ .folio-home.tx.rv-home .rv-swatch-name em{font-size:clamp(34px,min(3.4vw,6.4vh),56px)}
+
+ /* Process: the heading in the left column, over the four phases; the ring takes the full height. */
+ .folio-home.tx.rv-home main>section.rv-process{--cyc-gap:clamp(28px,3.2vw,60px);--ring:min(calc((var(--fit) - 2*var(--pad) - 44px)/1.14),44vw,680px);--rail:calc((91.66vw - var(--ring) - 2*var(--cyc-gap))/2)}
+ .folio-home.tx.rv-home .rv-process .rv-cycle-side.is-left{grid-template-rows:auto 1fr;align-self:stretch;row-gap:clamp(16px,2.6vh,32px);padding-block:calc(var(--ring)*.03)}
+ .folio-home.tx.rv-home .rv-process .rv-cycle-side.is-left>.rv-head{grid-area:1/1}
+ .folio-home.tx.rv-home .rv-process .rv-cycle-side.is-left>.rv-cycle-layer{grid-area:2/1;align-self:end}
+ .folio-home.tx.rv-home .rv-process .rv-head{display:flex;flex-direction:column;align-items:flex-start;gap:0;margin:0}
+ .folio-home.tx.rv-home :is(.rv-process,.rv-materials) .rv-head>.rv-index{order:-1}
+ .folio-home.tx.rv-home .rv-process .rv-cycle-index button{padding:clamp(7px,1.5vh,16px) 0;row-gap:clamp(1px,.5vh,6px)}
+ .folio-home.tx.rv-home .rv-process .rv-cycle-kicker{margin-bottom:clamp(6px,1.2vh,14px)}
+ .folio-home.tx.rv-home .rv-process .rv-head>.rv-display{margin-top:18px;font-size:min(var(--disp),calc(var(--rail)/3.9))}
+ .folio-home.tx.rv-home .rv-process .rv-head>h2{margin-top:clamp(14px,2.4vh,26px)}
+ .folio-home.tx.rv-home .rv-process .rv-cycle{--ring:inherit;max-width:none;gap:var(--cyc-gap)}
+ .folio-home.tx.rv-home .rv-process .rv-cycle-ring{margin-block:calc(var(--ring)*.07) calc(var(--ring)*.07)}
+ /* The photographs beside the ring never make the block taller than the ring (it used to grow when a step was read). */
+ .folio-home.tx.rv-home .rv-process .rv-cycle-more img{height:calc((var(--ring)*1.14 - 76px)/2);object-fit:cover}
+ .folio-home.tx.rv-home .rv-process .rv-cycle-more img:only-of-type{height:calc(var(--ring)*.8)}
+ .folio-home.tx.rv-home .rv-process .rv-cycle-material img{max-height:calc(var(--ring)*.6);object-fit:cover}
+ .folio-home.tx.rv-home .rv-process-source{max-width:none;margin-top:14px}
+
+ /* Partners: the heading on one line, twelve marks to a row from 1280px, the rows sized to the height that is left. */
+ .folio-home.tx.rv-home .brand-ledger .folio-section-heading{margin-bottom:clamp(18px,3vh,32px)}
+ .folio-home.tx.rv-home .brand-ledger .folio-section-heading h2 br{display:none}
+ .folio-home.tx.rv-home .brand-ledger .site-brand-bottom{margin-top:clamp(14px,2.2vh,24px)}
+ .folio-home.tx.rv-home .shop-window{padding-top:var(--pad);padding-bottom:var(--pad)}
+ .folio-home.tx.rv-home .shop-panel{min-height:min(calc(var(--fit) - 2*var(--pad)),640px)}
+ .folio-home.tx.rv-home .shop-body{gap:clamp(8px,2vh,22px);padding-block:clamp(18px,4.6vh,64px);justify-content:center}
+ .folio-home.tx.rv-home .shop-body h2{font-size:clamp(26px,min(3vw,5vh),48px)}
+ .folio-home.tx.rv-home .shop-items{max-width:calc((var(--fit) - 2*var(--pad))*1.5)}
+ .folio-home.tx.rv-home .shop-actions{margin-top:0}
+}
+@media(min-width:1280px) and (min-height:640px){
+ .folio-home.tx.rv-home .brand-ledger{--wall:calc(var(--fit) - 2*var(--pad) - 150px)}
+ .folio-home.tx.rv-home .brand-ledger .site-logo-grid{grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-rows:clamp(64px,calc((var(--wall) - 40px)/5),calc((91.66vw - 110px)/15))}
+ .folio-home.tx.rv-home .brand-ledger .site-logo-cell{aspect-ratio:auto;height:100%}
+}
+@media(max-width:1100px){
+ .folio-home.tx.rv-home main>section:not(.rv-hero){padding-top:clamp(56px,9vw,88px);padding-bottom:clamp(56px,9vw,88px)}
+}
+/* The last block has its own ground and space; the white gap every page leaves before the footer is not needed here. */
+.folio-home.tx.rv-home>main{padding-bottom:0}
+/* The Process heading moves between the top (phones) and the ring's left column (desktop) when the window is resized;
+   it is simply shown, without the entrance the other headings have, so it can never stay hidden. */
+.folio-home.tx.rv-home .rv-process .rv-head[data-reveal]{opacity:1;transform:none}
+/* Short desktop windows (a 1536 × 730 laptop): the left column drops its hint line and tightens, so the block still
+   ends with the screen. */
+@media(min-width:1101px) and (min-height:640px){
+ .folio-home.tx.rv-home .rv-process .rv-cycle-side.is-left{padding-block:0}
+}
+@media(min-width:1101px) and (min-height:640px) and (max-height:820px){
+ .folio-home.tx.rv-home .rv-process .rv-cycle-kicker{display:none}
+ .folio-home.tx.rv-home .rv-process .rv-cycle-index button{padding:6px 0;row-gap:0}
+ .folio-home.tx.rv-home .rv-process .rv-cycle-name strong{font-size:18px}
+ .folio-home.tx.rv-home .rv-process .rv-head>.rv-display{margin-top:10px}
+ .folio-home.tx.rv-home .rv-process .rv-head>h2{margin-top:10px;line-height:1.32}
+ .folio-home.tx.rv-home .rv-process .rv-cycle-side.is-left{row-gap:12px}
+}
+@media(min-width:1101px) and (min-height:640px){
+ /* The two large Classic photographs keep the tops of the pieces when the frame is lower than the photograph. */
+ .folio-home.tx.rv-home .rv-product.is-feature .rv-frame>img{object-position:50% 22%}
+}

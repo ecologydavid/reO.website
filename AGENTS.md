@@ -1235,3 +1235,29 @@ stranded words). He showed 公版獎盃, 品牌獎盃訂製, 禮贈品訂製, �
   such name and are unchanged.
 - The ui-ux-pro-max skill was asked for this brief; its UX search returned general rules (line length, line height),
   nothing specific to Chinese display text. The setting above follows the site's own type system.
+
+## Home: a ground per block, a screen per block; About photo under the title; studio enlarges (v1.11.0, 2026-11-28, by request)
+Owner: (1) each home block should have its own ground so scrolling shows where a block ends, and as far as possible
+a block should be read in one desktop screen; (2) the studio needs a button that enlarges the preview (full screen,
+or by folding the side columns); (3) on About, lay the studio photograph under the opening words to save a block.
+- src/components/home-fit.css (loaded last by Home.jsx) holds all of (1). Grounds, in page order: hero photograph,
+  Process ivory #f5f2ea, Classic white, Custom ink #1f2320 (white type), Materials sand #e8e0d1, partners mist
+  #dfe5e2 (marks stay on white tiles), shop stone #efeee9 (its panel white). No two neighbours share a ground
+  (tests/home-blocks.test.mjs). This supersedes "white base" (v10) for the home page only.
+- One screen, desktop (1101px and wider, 640px and higher): a block is min-height 100svh minus the 72px header, and
+  its photographs are sized from that height (--fit, --pad, --disp, --body). The heading is one row: number and name
+  above, the display word left, the Chinese heading beside it (a third of the word's size). Classic and Custom keep
+  it across the top; Materials and Process stand it in a left rail so the nine tiles and the ring use the full
+  height. Process renders its SectionHead inside the ring's left column on desktop (Home.jsx `head`), across the top
+  when compact; its side photographs no longer make the block grow when a step is read. Partners: heading on one
+  line, 12 marks to a row from 1280px, rows sized to the height left. Measured: every block equals the window
+  height at 1366x657, 1280x720, 1536x730, 1440x800, 1900x900 and 1920x1080. Phones and tablets flow as before with
+  the new grounds. The white gap before the footer is off on home (the shop block has its own space).
+- About: `.pg-top-photo` (pages.css). The photograph fills the opening block under a veil that is heavier on the
+  text side; title and statement in white, the contact panel a light sheet with dark type. The separate
+  `figure.pg-hero` is gone from About (other landing pages keep theirs).
+- Studio (Editor.jsx, editor-v4.css; desktop only): 收合側欄 in the 排版 bar folds the product and settings columns
+  (`.st-layout.is-wide`); 全螢幕預覽 on the finished-product preview lays it, front or 3D, over the window
+  (`.st-slot-product.is-full`), Esc or 結束全螢幕 returns. 放大成品 stays. Nothing else in the studio changed.
+- The ui-ux-pro-max searches for this brief returned only general rules (contrast 4.5:1, line height); the palette
+  and the sizing are the site's own.
