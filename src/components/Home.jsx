@@ -66,6 +66,9 @@ const heroSlides = [
   { id: 'B', haze: '/assets/hero-haze-B.webp', line: '熱處理北美黃檜，嵌入再生大理石。', alt: 'B 款 BOND 公版獎盃，木質盃身與黑色再生大理石構件' }
 ];
 const heroPicks = offered;
+// v1.7.0 (owner, 2026-11-27): the A to E cards here and the Classic photos below open the model's own page, not the
+// studio. The studio is entered from that page (and from the hero's 開始 X 款排版 button).
+const classicPage = id => `#/read/products/${models.find(m => m.id === id).slug}`;
 // v70 (owner, 2026-11-17): pointing at (or focusing) one of the A to E cards shows that model in the hero: its name,
 // line, size, price, studio button and photo. A and C are not slides, so they bring their catalogue photo and a line
 // written from models.json's materials. The loop waits meanwhile and resumes when the pointer leaves.
@@ -97,8 +100,8 @@ function Hero({ onPreview }) {
         <div className="rv-hero-actions"><Button onClick={() => onPreview(slide.id)} variant="light" icon={<ActionIcon name="studio" />}>開始 {slide.id} 款排版</Button><Button href="#/explore/standard" variant="glass">全部公版獎盃</Button></div>
       </div>
       <div className="rv-hero-picks">
-        <p>A 至 E 款<span>點選款式，開啟銘版排版工作室</span></p>
-        <ul onMouseLeave={() => setPeek(null)} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setPeek(null) }}>{heroPicks.map(id => <li key={id}><button className={id === slide.id ? 'is-on' : undefined} onMouseEnter={() => setPeek(id)} onFocus={() => setPeek(id)} onClick={() => onPreview(id)} aria-label={`開始 ${id} 款 ${classicNames[id]} 排版（另開新視窗）`}><img src={classicPhotos[id].square} alt={`${id} 款 ${classicNames[id]} 公版獎盃`} width="720" height="720" loading="lazy" /><span aria-hidden="true"><b>{id}</b>{classicNames[id].slice(1)}</span></button></li>)}</ul>
+        <p>A 至 E 款<span>點選款式，查看介紹</span></p>
+        <ul onMouseLeave={() => setPeek(null)} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setPeek(null) }}>{heroPicks.map(id => <li key={id}><a href={classicPage(id)} className={id === slide.id ? 'is-on' : undefined} onMouseEnter={() => setPeek(id)} onFocus={() => setPeek(id)} aria-label={`${id} 款 ${classicNames[id]} 介紹`}><img src={classicPhotos[id].square} alt={`${id} 款 ${classicNames[id]} 公版獎盃`} width="720" height="720" loading="lazy" /><span aria-hidden="true"><b>{id}</b>{classicNames[id].slice(1)}</span></a></li>)}</ul>
       </div>
     </div>
     <div className="rv-hero-stage">
@@ -314,7 +317,7 @@ export default function Home({ onPreview, section }) {
       <section className="rv-section rv-gutter" id="classic" aria-labelledby="rv-classic-title">
         <SectionHead index="01" label="公版獎盃" en="Classic" id="rv-classic-title" title={<>為榮耀，<br />找到合適的樣貌。</>} />
         <div className="rv-products">{models.filter(m => offered.includes(m.id)).sort((a, b) => featured.indexOf(b.id) - featured.indexOf(a.id)).map(m => <article className={`rv-product${featured.includes(m.id) ? ' is-feature' : m.id === 'C' ? ' is-wide' : ''}`} key={m.id} data-reveal>
-          <button className="rv-product-photo" onClick={() => onPreview(m.id)} aria-label={`${m.id} 款 ${classicNames[m.id]}，開始銘版排版`}><Frame className={m.id === 'C' ? '' : 'is-wide-only'} src={classicPhotos[m.id].wide} alt={`${m.id} 款 ${m.name}實品`} width="1200" height="900" />{m.id !== 'C' && <Frame className="is-tall-only" src={classicPhotos[m.id].tall} alt={`${m.id} 款 ${m.name}實品`} width="960" height="1200" />}<ClassicTab id={m.id} /></button>
+          <a className="rv-product-photo" href={classicPage(m.id)} aria-label={`${m.id} 款 ${classicNames[m.id]} 介紹`}><Frame className={m.id === 'C' ? '' : 'is-wide-only'} src={classicPhotos[m.id].wide} alt={`${m.id} 款 ${m.name}實品`} width="1200" height="900" />{m.id !== 'C' && <Frame className="is-tall-only" src={classicPhotos[m.id].tall} alt={`${m.id} 款 ${m.name}實品`} width="960" height="1200" />}<ClassicTab id={m.id} /></a>
         </article>)}</div>
       </section>
 

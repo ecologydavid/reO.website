@@ -64,7 +64,9 @@ test('hand-written titles and descriptions fit a search result and name re.O', (
 test('every page gets its own title and a description, by rule, from its own fields', () => {
   const seen = new Map();
   for (const p of index.pages.filter(p => !p.hidden && !isAlias(decodeURIComponent(p.path).replace(/^#\/read\//, '')))) {
-    const {title, description} = articleMeta(p, {});
+    // The five classic models are titled from their letter, name and price, as the page itself does (ContentReader).
+    const letter = 'ABCDE'[['trophy', 'trophy-1', 'trophy-1-1', 'trophy-2025-1', 'the-way-to-peak-standard-trophy'].indexOf(p.path.split('/').pop())];
+    const {title, description} = articleMeta(p, letter ? {classic: {id: letter, name: {A: 'APEX', B: 'BOND', C: 'CRYSTAL', D: 'DELTA', E: 'EXCEED'}[letter], price: '2,000'}} : {});
     assert(title && description, p.path);
     assert(count(title) <= 40, p.title + ' → ' + title);
     assert(!/，。|。。|undefined|null/.test(description), description);

@@ -1126,3 +1126,30 @@ Second part of the GEO work; the owner approved each item.
   keep their stand-in photos (示意照片). Put each in public/assets/about-events and use eventPhoto() in record.js
   (the test counts the owner photos).
 - tools/cases/import.py writes content-index.json without its closing newline: add it back after a run.
+
+## Classic model pages redesigned; home opens them, not the studio (v1.7.0, 2026-11-27, by request)
+- Links: the home hero's A to E cards and the home Classic photos now open each model's own page
+  (/products/trophy/ …; `classicPage` in Home.jsx). The studio is entered from that page through one dark button,
+  「以 X 款進入銘版排版工作室」 (top and closing band; new tab). From home only the hero button 開始 X 款排版 still
+  opens the studio. The hero line reads 「點選款式，查看介紹」. This supersedes the v48/v50 notes that the cards and
+  photos open the studio; the 公版 page's step-01 picks and the menus are unchanged.
+- The five pages are designed pages (src/content/ClassicPage.jsx + classic-page.css, rendered by ContentReader when
+  editorFor(page) names a model): name and short concept beside the photo with price, height, lead time and the
+  studio button; 設計概念 beside a photo; 商品參數 as rows beside the dimension drawing; 更多照片; 訂製步驟 (01–03);
+  注意事項 (1–4); a closing band with the studio button, e-mail and telephone. Phones: one column, photos full width.
+- Where the words live: the page JSON. `summary` = 簡述; section 設計概念 = 詳述 (a paragraph equal to the summary is
+  not repeated; 「名稱」：… lines become a named list; a line in “…” is a quotation); section 商品參數 = five rows
+  written 「項目：內容」 (材質, 尺寸, 包裝, 包裝尺寸, 淨重), `items` = notes under the table; `images[].kind:'drawing'`
+  is the dimension drawing; `metadata.designer` (E: 王翔). The steps and notes are shared and live in ClassicPage.jsx.
+  Titles are 「A 款 APEX｜木客微光 × 匠子」 … 「E 款 EXCEED｜The way to PEAK」. Every photo has its own description.
+- One way of writing (owner: no circled or boxed figures such as ❶ Ⓐ, tidy and consistent line breaks): a half-width
+  space between Chinese and Latin letters or figures; sizes 長 × 寬 × 高 with the unit once; full-width 、／＋（）;
+  steps and notes are numbered by the page; a measure, a price option and a range never break inside; running
+  text is justified. tests/classic-pages.test.mjs checks the data against these rules.
+- Owner's text of 2026-11-27, with these corrections reported to him: 樹酯 → 樹脂 (the site's spelling); D's
+  「以的希臘字母」 → 「以希臘字母」 and its twice-pasted paragraph used once; 重量（淨重） is labelled 淨重; D no longer
+  lists 1.3 kg with packaging (not in the new text). E's 尺寸 follows his new text (長 5.5 × 寬 10 × 高 19.5 cm).
+- The five dimension drawings were saved again without their printed line 「請在下單前私訊提供 客製內容」 (the page
+  says 紅色區域為可客製範圍 in text); the old files are deleted.
+- Kept from the old pages, reworded only in spacing and punctuation: the three ordering steps, the four notes,
+  A's 木橫擔 note (with a link to the material page). metadata.description (the old one-line dump) was removed.
