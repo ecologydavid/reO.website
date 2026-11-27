@@ -1182,3 +1182,29 @@ The owner's notes on v1.7.0, and what answers each (src/content/ClassicPage.jsx,
 - The ui-ux-pro-max skill was asked for gallery and step-card guidance and returned no match for either; the layout
   follows the site's own language and the skill's general rules (44px targets, visible focus, reduced motion, no
   hover-only actions, no page-level horizontal scroll: measured 0px on desktop and phone).
+
+## Classic model pages, third round: a printed catalogue, not colour cards (v1.9.0, 2026-11-27, by request)
+The owner on v1.8.0: too many colour blocks, tiring to read, and it looked machine-made; he asked for an elegant,
+quiet, high-quality page, freer photo sizes and text setting, and no mark on a photo that only opens large.
+This supersedes the look of v1.8.0 (tints, the ink photo band, step and note colour cards, chips, the round + mark);
+what v1.8.0 settled about content stays. Files: src/content/ClassicPage.jsx, classic-page.css.
+- White throughout. Hairlines (#dcdbd4) and space divide; one ink rule opens the specification table and the closing
+  line. No fills except the photo frames' own ground. The only dark thing is the studio button.
+  tests/classic-pages.test.mjs fails if a tint, a fill or a photo mark comes back.
+- Headings: a small English word over the Chinese heading (no rule, no figure).
+- Opening: name and short concept in five columns, photo in six with a column of air between; price and lead time
+  (and E's designer) as plain label and value rows.
+- 設計概念: photo six columns, words five. A short first sentence is set large in the serif and turns at its
+  punctuation; the paragraphs are ordinary justified text (16px on 2.15). A sentence with a clause longer than 24
+  characters is left to flow, and on phones every clause flows.
+- 商品規格: one table of the five rows; 材質 and 包裝 carry a small 4:3 photo at the end of their row
+  (images[].kind material / package), and the dimension drawing stands beside the table. E's 包裝 row has no photo yet.
+- 作品照片: the strip stays (arrows, mouse drag, swipe, keyboard) but on white, running off the right edge; every slide
+  has its number and caption under it and opens large on a click; nothing dims. The arrows step to the next place the
+  strip can rest (near the end several slides share the last position).
+- 訂製步驟 and 注意事項: heading in a narrow left column, content beside it under one hairline. Steps are three
+  columns parted by hairlines; step 01's address and telephone stand on lines of their own. Notes are four rows:
+  number, a short heading, the owner's sentence.
+- Photos carry no icon. They open large on a click (zoom cursor, a slight enlargement on hover).
+- The ui-ux-pro-max skill's design system for this brief: Minimalism and Swiss style, spacious, subtle motion, avoid
+  block-based colour. Its fonts and palette were not taken; the site's own type system and ink stay.

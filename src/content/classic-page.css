@@ -1,195 +1,167 @@
-/* The classic model pages, A to E (ClassicPage.jsx). v1.7.0, redrawn in v1.8.0 (owner, 2026-11-27).
-   Colour does the dividing as much as rules do: a tint of the model's own material (--cp-tint, --cp-tint-2, set
-   by the page), the site's stone and ink. Block headings keep one form: an ink rule, the Chinese heading on it,
-   a quiet English word at the right. Running text is 16px on a line of 2.1 and turns at the punctuation
-   (.cp-clause). Phones: one column in reading order, every photo full width beside the words it belongs to. */
-.folio-home .cp{--cp-line:#dcdbd4;--cp-stone:#f3f1ec;--cp-gap:clamp(72px,8vw,128px);--cp-tint:#eeedea;--cp-tint-2:#dbd8d1}
+/* The classic model pages, A to E (ClassicPage.jsx). v1.9.0 (owner, 2026-11-27, third round): set like a printed
+   catalogue. White throughout; hairlines and space do the dividing, never a fill. One ink rule opens each table;
+   everything else is a hairline. Headings: a quiet English word over the Chinese heading. Running text is 16px on a
+   line of 2.1, justified; only the two short display lines turn at their punctuation (.cp-clause). The one dark
+   thing on the page is the studio button. Phones: one column in reading order, photos full width. */
+.folio-home .cp{--cp-line:#dcdbd4;--cp-gap:clamp(88px,10vw,168px)}
 .folio-home .cp :where(h1,h2,h3,p,dl,dd,ol,ul,figure,blockquote){margin:0;padding:0}
 .folio-home .cp :where(ol,ul){list-style:none}
 .folio-home .cp .cp-keep{display:inline-block;white-space:nowrap}
 .folio-home .cp .cp-clause{display:inline-block}
+.folio-home .cp figure>figcaption{margin-top:14px;font:400 13px/1.8 var(--tx-sans);letter-spacing:.08em;color:var(--tx-muted)}
+.folio-home .cp .cp-photo{cursor:zoom-in}
 
-/* Photos: all open large; the corner mark says so. */
-.folio-home .cp .cp-photo{position:relative}
-.folio-home .cp-zoom{position:absolute;right:14px;bottom:14px;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.92);color:var(--tx-ink);box-shadow:0 6px 18px -8px rgba(31,35,32,.5);transition:transform .35s cubic-bezier(.2,.7,.2,1),background .25s,color .25s}
-.folio-home .cp-zoom svg{width:16px;height:16px}
-.folio-home .cp-photo:hover .cp-zoom,.folio-home .cp-photo:focus-visible .cp-zoom{transform:scale(1.12) rotate(90deg);background:var(--tx-ink);color:#fff}
-.folio-home .cp figure>figcaption{margin-top:12px;font:400 13px/1.8 var(--tx-sans);letter-spacing:.06em;color:var(--tx-muted)}
-
-/* Opening: name, short concept, price and lead time on the model's tint, the way into the studio; photo beside. */
-.folio-home .cp-top{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-rows:auto 1fr;column-gap:clamp(32px,5.5vw,96px);padding:clamp(4px,1vw,16px) 0 0}
-.folio-home .cp-title{grid-column:1;grid-row:1;align-self:end;padding-top:clamp(8px,2vw,32px)}
-.folio-home .cp-lead{grid-column:1;grid-row:2;align-self:start;padding-bottom:clamp(8px,2vw,32px)}
-.folio-home .cp-hero{grid-column:2;grid-row:1/3;align-self:center;min-width:0}
+/* Opening: name and short concept, price and lead time as two plain rows, the way into the studio; photo beside. */
+.folio-home .cp-top{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:auto 1fr;column-gap:24px;padding-top:clamp(8px,1.6vw,28px)}
+.folio-home .cp-title{grid-column:1/6;grid-row:1;align-self:end}
+.folio-home .cp-lead{grid-column:1/6;grid-row:2;align-self:start}
+.folio-home .cp-hero{grid-column:7/13;grid-row:1/3;align-self:center;min-width:0}
 .folio-home .cp-kicker{display:flex;align-items:center;gap:12px;font:500 13px/1 var(--tx-sans);letter-spacing:.14em;color:var(--tx-muted)}
 .folio-home .cp-kicker>span{font:500 12px/1 var(--tx-latin);letter-spacing:.18em;text-transform:uppercase;padding-right:12px;border-right:1px solid var(--cp-line)}
-.folio-home .cp h1{margin-top:22px}
+.folio-home .cp h1{margin-top:24px}
 .folio-home .cp-name{display:block;font:500 clamp(34px,3.9vw,60px)/1 var(--tx-serif);letter-spacing:.14em;color:var(--tx-ink)}
 .folio-home .cp-name>b{font:600 clamp(64px,7.2vw,112px)/.9 var(--tx-serif);letter-spacing:0;margin-right:.03em}
-.folio-home .cp h1>em{display:block;margin-top:18px;font:normal 500 15px/1.6 var(--tx-sans);letter-spacing:.1em;color:var(--tx-ink-2)}
-.folio-home .cp-brief{margin-top:clamp(24px,2.4vw,36px);font:400 var(--tx-lead)/2.05 var(--tx-sans);letter-spacing:.05em;color:var(--tx-ink-2);line-break:strict}
-.folio-home .cp-buy{display:flex;flex-wrap:wrap;gap:2px;margin-top:clamp(24px,2.6vw,36px)}
-.folio-home .cp-buy>div{flex:1 1 9.5em;display:flex;flex-direction:column;gap:12px;padding:18px 20px 20px;background:var(--cp-tint)}
-.folio-home .cp-buy dt{font:400 13px/1 var(--tx-sans);letter-spacing:.14em;color:var(--tx-ink-2)}
-.folio-home .cp-buy dd{display:flex;flex-direction:column;gap:8px}
-.folio-home .cp-price{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px}
-.folio-home .cp-price>b{font:500 19px/1.4 var(--tx-latin);letter-spacing:.02em;color:var(--tx-ink);white-space:nowrap}
-.folio-home .cp-price>i{font:normal 400 13px/1.5 var(--tx-sans);letter-spacing:.06em;color:var(--tx-ink-2);white-space:nowrap}
-
-/* The way into the studio: the one dark button, larger than the others. */
-.folio-home .cp-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(24px,2.4vw,32px)}
-.folio-home .cp .cp-studio{min-height:58px;padding-left:28px;font-size:15px}
-.folio-home .cp .cp-studio .rv-chip{width:44px;height:44px}
-.folio-home .cp .rv-btn-ghost{min-height:58px}
-.folio-home .cp-hint{margin-top:14px;font:400 13px/1.8 var(--tx-sans);letter-spacing:.04em;color:var(--tx-muted)}
+.folio-home .cp h1>em{display:block;margin-top:20px;font:normal 400 15px/1.6 var(--tx-sans);letter-spacing:.1em;color:var(--tx-ink-2)}
+.folio-home .cp-brief{margin-top:clamp(28px,3vw,44px);font:400 var(--tx-lead)/2.1 var(--tx-sans);letter-spacing:.05em;color:var(--tx-ink-2);line-break:strict}
+.folio-home .cp-buy{margin-top:clamp(28px,3vw,44px);border-bottom:1px solid var(--cp-line)}
+.folio-home .cp-buy>div{display:grid;grid-template-columns:6.5em minmax(0,1fr);gap:0 16px;align-items:baseline;padding:16px 0;border-top:1px solid var(--cp-line)}
+.folio-home .cp-buy dt{font:400 14px/1.8 var(--tx-sans);letter-spacing:.1em;color:var(--tx-muted)}
+.folio-home .cp-buy dd{display:flex;flex-direction:column;gap:4px}
+.folio-home .cp-price{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 14px}
+.folio-home .cp-price>b{font:500 17px/1.8 var(--tx-latin);letter-spacing:.03em;color:var(--tx-ink);white-space:nowrap}
+.folio-home .cp-price>i{font:normal 400 13px/1.8 var(--tx-sans);letter-spacing:.06em;color:var(--tx-muted);white-space:nowrap}
+.folio-home .cp-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(28px,3vw,40px)}
+.folio-home .cp .cp-studio{min-height:56px;padding-left:28px;font-size:15px}
+.folio-home .cp .cp-studio .rv-chip{width:42px;height:42px}
+.folio-home .cp .rv-btn-ghost{min-height:56px}
+.folio-home .cp-hint{margin-top:16px;font:400 13px/1.8 var(--tx-sans);letter-spacing:.04em;color:var(--tx-muted)}
 
 /* Block heading. */
-.folio-home .cp-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:18px;border-top:1px solid var(--tx-ink);margin-bottom:clamp(24px,2.6vw,40px)}
-.folio-home .cp-head h2{font:600 clamp(24px,2.1vw,30px)/1.4 var(--tx-serif);letter-spacing:.06em;color:var(--tx-ink)}
-.folio-home .cp-head p{font:500 12px/1 var(--tx-latin);letter-spacing:.16em;text-transform:uppercase;color:var(--tx-muted);white-space:nowrap}
-.folio-home .cp-head.is-light{border-top-color:rgba(255,255,255,.5)}
-.folio-home .cp-head.is-light h2{color:#fff}.folio-home .cp-head.is-light p{color:rgba(255,255,255,.7)}
+.folio-home .cp-head>p{font:500 12px/1 var(--tx-latin);letter-spacing:.2em;text-transform:uppercase;color:var(--tx-muted)}
+.folio-home .cp-head>h2{margin-top:16px;font:600 clamp(26px,2.3vw,32px)/1.4 var(--tx-serif);letter-spacing:.08em;color:var(--tx-ink)}
 
-/* Concept: photo and words side by side, both kept to a comfortable size; the words turn at the punctuation. */
+/* Concept: the photo and the words share the row; the words keep a book's measure. */
 .folio-home .cp-concept{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:center;margin-top:var(--cp-gap)}
 .folio-home .cp-concept>figure{grid-column:1/7;min-width:0}
 .folio-home .cp-concept>.cp-body{grid-column:8/13;min-width:0}
-.folio-home .cp-concept.is-text>.cp-body{grid-column:3/11}
-.folio-home .cp-text>*+*{margin-top:1.5em}
-.folio-home .cp-text p,.folio-home .cp-finishes dd{font:400 16px/2.1 var(--tx-sans);letter-spacing:.05em;color:var(--tx-body);line-break:strict}
-.folio-home .cp-text .cp-concept-lead{font:500 clamp(19px,1.6vw,23px)/1.85 var(--tx-serif);letter-spacing:.06em;color:var(--tx-ink)}
-.folio-home .cp-finishes{display:grid;gap:2px}
-.folio-home .cp-finishes>div{padding:18px 20px;background:var(--cp-tint)}
-.folio-home .cp-finishes dt{font:600 17px/1.6 var(--tx-serif);letter-spacing:.08em;color:var(--tx-ink);margin-bottom:4px}
-.folio-home .cp-finishes dd{font-size:15px;line-height:2;color:var(--tx-ink-2)}
-.folio-home .cp-text blockquote{padding-left:18px;border-left:2px solid var(--tx-ink);font:italic 400 18px/1.7 Georgia,"Times New Roman",serif;letter-spacing:.01em;color:var(--tx-ink)}
+.folio-home .cp-concept.is-text>.cp-body{grid-column:4/10}
+.folio-home .cp-text{margin-top:clamp(28px,3vw,44px)}
+.folio-home .cp-text>*+*{margin-top:1.6em}
+.folio-home .cp-text p,.folio-home .cp-finishes dd{font:400 16px/2.15 var(--tx-sans);letter-spacing:.05em;color:var(--tx-body);text-align:justify;line-break:strict}
+.folio-home .cp-text .cp-concept-lead{font:500 clamp(19px,1.55vw,22px)/1.95 var(--tx-serif);letter-spacing:.08em;color:var(--tx-ink);text-align:left}
+.folio-home .cp-finishes{border-bottom:1px solid var(--cp-line)}
+.folio-home .cp-finishes>div{padding:18px 0;border-top:1px solid var(--cp-line)}
+.folio-home .cp-finishes dt{font:600 17px/1.6 var(--tx-serif);letter-spacing:.1em;color:var(--tx-ink);margin-bottom:4px}
+.folio-home .cp-finishes dd{font-size:15px;line-height:2.05}
+.folio-home .cp-text blockquote{padding-left:20px;border-left:1px solid var(--tx-ink);font:italic 400 18px/1.8 Georgia,"Times New Roman",serif;letter-spacing:.01em;color:var(--tx-ink)}
 .folio-home .cp-text blockquote::before{content:"“"}.folio-home .cp-text blockquote::after{content:"”"}
 
-/* Specification: three parts, each with its picture beside the words. The drawing leads at full width; material
-   and package follow as two tinted cards. */
-.folio-home .cp-specs{margin-top:var(--cp-gap)}
-.folio-home .cp-spec-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.folio-home .cp-spec{display:grid;grid-template-columns:minmax(0,46fr) minmax(0,54fr);align-items:stretch;min-width:0;background:var(--cp-stone)}
-.folio-home .cp-spec>figure{min-width:0;display:flex;flex-direction:column}
-.folio-home .cp-spec>figure>.cp-photo{flex:1;height:100%}
-.folio-home .cp-spec-text{display:flex;flex-direction:column;justify-content:center;padding:clamp(24px,2.6vw,40px);min-width:0}
-.folio-home .cp-spec.is-drawing{grid-column:1/-1;grid-template-columns:minmax(0,7fr) minmax(0,5fr);background:var(--cp-tint)}
-.folio-home .cp-spec.is-drawing>figure{background:#fff;box-shadow:inset 0 0 0 1px var(--cp-tint)}
-.folio-home .cp-spec.is-drawing>figure>.cp-photo{flex:none;height:auto;background:#fff}
-.folio-home .cp-spec.is-drawing>figure>.cp-photo:hover img{transform:none}
-.folio-home .cp-spec.is-drawing>figure>figcaption{margin:0;padding:0 20px 16px;background:#fff}
-.folio-home .cp-spec.is-plain{grid-template-columns:minmax(0,1fr)}
-.folio-home .cp-spec-name{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--tx-ink)}
-.folio-home .cp-spec-name>b{font:600 20px/1.4 var(--tx-serif);letter-spacing:.08em;color:var(--tx-ink)}
-.folio-home .cp-spec-name>span{font:500 12px/1 var(--tx-latin);letter-spacing:.16em;text-transform:uppercase;color:var(--tx-ink-2)}
-.folio-home .cp-spec dl>div{display:grid;grid-template-columns:5.6em minmax(0,1fr);gap:0 12px;align-items:baseline;padding:14px 0;border-bottom:1px solid rgba(31,35,32,.14)}
-.folio-home .cp-spec dt{font:400 14px/1.8 var(--tx-sans);letter-spacing:.1em;color:var(--tx-ink-2)}
-.folio-home .cp-spec dd{font:500 15.5px/1.8 var(--tx-sans);letter-spacing:.04em;color:var(--tx-ink)}
-.folio-home .cp-spec dd li+li{margin-top:2px}
-/* In the two half cards the label sits over its value, so the value has the card's whole width. */
-.folio-home .cp-spec:not(.is-drawing) dl>div{grid-template-columns:minmax(0,1fr);gap:2px}
-.folio-home .cp-spec:not(.is-drawing) dt{font-size:13px}
-.folio-home .cp-spec:not(.is-drawing) .cp-spec-text{padding:clamp(22px,2.2vw,34px)}
-.folio-home .cp-note{margin-top:16px;font:400 13.5px/1.9 var(--tx-sans);letter-spacing:.04em;color:var(--tx-ink-2)}
+/* Specification: one table under an ink rule, the two small photos in their own rows, the drawing beside. */
+.folio-home .cp-specs{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:start;margin-top:var(--cp-gap)}
+.folio-home .cp-specs>.cp-body{grid-column:1/6;min-width:0}
+.folio-home .cp-specs>.cp-drawing{grid-column:7/13;min-width:0}
+.folio-home .cp-table{margin-top:clamp(28px,3vw,44px);border-top:1px solid var(--tx-ink)}
+.folio-home .cp-table>div{display:grid;grid-template-columns:5.6em minmax(0,1fr);gap:0 16px;align-items:start;padding:18px 0;border-bottom:1px solid var(--cp-line)}
+.folio-home .cp-table>div.has-photo{grid-template-columns:5.6em minmax(0,1fr) clamp(104px,9.5vw,136px)}
+.folio-home .cp-table dt{font:400 14px/1.9 var(--tx-sans);letter-spacing:.1em;color:var(--tx-muted)}
+.folio-home .cp-table dd{font:400 15.5px/1.9 var(--tx-sans);letter-spacing:.05em;color:var(--tx-ink)}
+.folio-home .cp-table dd li+li{margin-top:2px}
+.folio-home .cp-note{margin-top:18px;font:400 13.5px/1.95 var(--tx-sans);letter-spacing:.04em;color:var(--tx-muted);text-align:justify}
 .folio-home .cp-note a{color:var(--tx-ink);text-decoration:underline;text-underline-offset:4px;white-space:nowrap}
+.folio-home .cp-drawing>.cp-photo{background:#fff;box-shadow:inset 0 0 0 1px var(--cp-line)}
+.folio-home .cp-drawing>.cp-photo:hover img{transform:none}
 
-/* Photos: one strip on ink, edge to edge of the window. Every slide keeps its own shape at one height. */
-.folio-home .cp-gallery{--cp-h:clamp(300px,58vh,580px);--cp-pad:4.17%;margin:var(--cp-gap) -4.5494% 0;padding:clamp(40px,4.5vw,72px) 0 clamp(36px,4vw,60px);background:#1c1e1c;color:#fff}
-.folio-home .cp-gallery-top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:16px 32px;padding:0 var(--cp-pad)}
-.folio-home .cp-gallery-top>.cp-head{margin-bottom:0;grid-column:1/-1}
-.folio-home .cp-gallery-tools{grid-column:1/-1;display:flex;align-items:center;justify-content:flex-end;gap:10px}
-.folio-home .cp-count{margin-right:12px;font:400 14px/1 var(--tx-latin);letter-spacing:.12em;color:rgba(255,255,255,.7)}
-.folio-home .cp-count>b{margin-right:8px;font:300 clamp(34px,3.2vw,48px)/1 var(--tx-latin);letter-spacing:-.01em;color:#fff}
-.folio-home .cp-arrow{display:grid;place-items:center;width:48px;height:48px;padding:0;border:1px solid rgba(255,255,255,.5);border-radius:50%;background:none;color:#fff;cursor:pointer;transition:background .25s,color .25s,border-color .25s,opacity .25s}
+/* Photos: one strip, running off the right edge of the window. */
+.folio-home .cp-gallery{--cp-h:clamp(280px,50vh,500px);margin-top:var(--cp-gap)}
+.folio-home .cp-gallery-top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px 32px}
+.folio-home .cp-gallery-tools{display:flex;align-items:center;gap:10px}
+.folio-home .cp-count{display:flex;align-items:center;gap:12px;margin-right:14px;font:400 14px/1 var(--tx-latin);letter-spacing:.12em;color:var(--tx-muted)}
+.folio-home .cp-count>b{font-weight:500;color:var(--tx-ink)}
+.folio-home .cp-count>i{width:32px;height:1px;background:var(--cp-line)}
+.folio-home .cp-arrow{display:grid;place-items:center;width:48px;height:48px;padding:0;border:1px solid var(--cp-line);border-radius:50%;background:#fff;color:var(--tx-ink);cursor:pointer;transition:background .25s,color .25s,border-color .25s,opacity .25s}
 .folio-home .cp-arrow.is-prev .rv-icon{transform:scaleX(-1)}
-.folio-home .cp-arrow:hover:not(:disabled),.folio-home .cp-arrow:focus-visible{background:#fff;color:#1c1e1c;border-color:#fff}
-.folio-home .cp-arrow:focus-visible{outline:2px solid #fff;outline-offset:3px}
-.folio-home .cp-arrow:disabled{opacity:.3;cursor:default}
-.folio-home .cp-track{display:flex;gap:12px;margin-top:clamp(20px,2.2vw,32px);padding:0 var(--cp-pad);overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:var(--cp-pad);overscroll-behavior-x:contain;scrollbar-width:none;cursor:grab}
+.folio-home .cp-arrow:hover:not(:disabled),.folio-home .cp-arrow:focus-visible{background:var(--tx-ink);color:#fff;border-color:var(--tx-ink)}
+.folio-home .cp-arrow:focus-visible{outline:2px solid var(--tx-ink);outline-offset:3px}
+.folio-home .cp-arrow:disabled{opacity:.35;cursor:default}
+.folio-home .cp-track{display:flex;gap:16px;margin:clamp(28px,3vw,44px) -4.5494% 0 0;padding-right:4.5494%;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;cursor:grab}
 .folio-home .cp-track::-webkit-scrollbar{display:none}
-.folio-home .cp-track:focus-visible{outline:2px solid #fff;outline-offset:-2px}
+.folio-home .cp-track:focus-visible{outline:2px solid var(--tx-ink);outline-offset:4px}
 .folio-home .cp-track.is-dragging{scroll-snap-type:none;cursor:grabbing;user-select:none}
-.folio-home .cp-track>li{flex:none;height:var(--cp-h);scroll-snap-align:start;opacity:.42;transition:opacity .5s cubic-bezier(.2,.7,.2,1)}
-.folio-home .cp-track>li.is-on,.folio-home .cp-track>li:hover{opacity:1}
-.folio-home .cp-track>li>button{display:block;width:100%;height:100%;padding:0;border:0;background:#2a2c2a;overflow:hidden;cursor:pointer}
-.folio-home .cp-track>li.is-on>button{cursor:zoom-in}
+.folio-home .cp-track>li{flex:none;scroll-snap-align:start}
+.folio-home .cp-track>li>button{display:block;height:var(--cp-h);padding:0;border:0;background:#f4f3ef;overflow:hidden;cursor:zoom-in}
 .folio-home .cp-track.is-dragging>li>button{cursor:grabbing}
-.folio-home .cp-track>li>button:focus-visible{outline:2px solid #fff;outline-offset:-4px}
+.folio-home .cp-track>li>button:focus-visible{outline:2px solid var(--tx-ink);outline-offset:-4px}
 .folio-home .cp-track img{display:block;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none;user-select:none;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
-.folio-home .cp-track>li.is-on>button:hover img{transform:scale(1.025)}
-.folio-home .cp-gallery-foot{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:clamp(20px,2.2vw,28px);padding:0 var(--cp-pad)}
-.folio-home .cp-progress{display:block;height:2px;background:rgba(255,255,255,.22);overflow:hidden}
-.folio-home .cp-progress>i{display:block;height:100%;background:#fff;transform-origin:0 50%;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
-.folio-home .cp-gallery-foot>p{display:flex;align-items:baseline;gap:14px;font:400 15px/1.7 var(--tx-sans);letter-spacing:.08em;color:rgba(255,255,255,.92)}
-.folio-home .cp-gallery-foot>p>b{font:500 12px/1 var(--tx-latin);letter-spacing:.14em;color:rgba(255,255,255,.62)}
+.folio-home .cp-track>li>button:hover img{transform:scale(1.025)}
+.folio-home .cp-track>li>p{display:flex;align-items:baseline;gap:12px;margin-top:14px;font:400 13px/1.8 var(--tx-sans);letter-spacing:.08em;color:var(--tx-ink-2)}
+.folio-home .cp-track>li>p>b{font:500 12px/1 var(--tx-latin);letter-spacing:.14em;color:var(--tx-muted)}
+.folio-home .cp-progress{display:block;height:1px;margin-top:clamp(20px,2.2vw,28px);background:var(--cp-line)}
+.folio-home .cp-progress>i{display:block;height:100%;background:var(--tx-ink);transform-origin:0 50%;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
 
-/* Ordering steps: three cards deepening in colour, the last on ink; a round arrow leads from each to the next. */
-.folio-home .cp-block{margin-top:var(--cp-gap)}
-.folio-home .cp-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.folio-home .cp-steps>li{position:relative;display:flex;flex-direction:column;min-width:0;min-height:300px;padding:clamp(24px,2.4vw,36px);background:var(--cp-stone);color:var(--tx-ink)}
-.folio-home .cp-steps>li:nth-child(2){background:var(--cp-tint)}
-.folio-home .cp-steps>li:nth-child(3){background:#1c1e1c;color:#fff}
-.folio-home .cp-num{font:300 clamp(48px,4.6vw,68px)/1 var(--tx-latin);letter-spacing:-.02em}
-.folio-home .cp-steps h3{margin-top:auto;padding-top:32px;font:600 21px/1.5 var(--tx-serif);letter-spacing:.06em;color:inherit}
-.folio-home .cp-steps p,.folio-home .cp-steps ul li{font:400 15px/1.95 var(--tx-sans);letter-spacing:.04em;color:var(--tx-ink-2);line-break:strict}
-.folio-home .cp-steps>li:nth-child(3) p{color:rgba(255,255,255,.86)}
+/* Ordering steps and notes: the heading in a narrow column at the left, the content beside it, under one hairline. */
+.folio-home .cp-rail{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:start;margin-top:var(--cp-gap);padding-top:clamp(36px,4vw,56px);border-top:1px solid var(--cp-line)}
+.folio-home .cp-rail+.cp-rail{margin-top:clamp(56px,6vw,88px)}
+.folio-home .cp-rail>.cp-head{grid-column:1/4}
+.folio-home .cp-rail>:not(.cp-head){grid-column:5/13;min-width:0}
+.folio-home .cp-num{display:block;font:500 12px/1 var(--tx-latin);letter-spacing:.16em;color:var(--tx-muted)}
+.folio-home .cp-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.folio-home .cp-steps>li{min-width:0;padding:4px 0 4px clamp(20px,2.2vw,32px);border-left:1px solid var(--cp-line)}
+.folio-home .cp-steps>li:first-child{padding-left:0;border-left:0}
+.folio-home .cp-steps>li:not(:last-child){padding-right:clamp(20px,2.2vw,32px)}
+.folio-home .cp-steps h3{margin-top:16px;font:600 19px/1.6 var(--tx-serif);letter-spacing:.08em;color:var(--tx-ink)}
+.folio-home .cp-steps p,.folio-home .cp-steps ul li,.folio-home .cp-notes p{font:400 15px/2 var(--tx-sans);letter-spacing:.05em;color:var(--tx-body);line-break:strict}
 .folio-home .cp-steps p{margin-top:10px}
-.folio-home .cp-steps p a{color:var(--tx-ink);text-decoration:underline;text-underline-offset:4px;white-space:nowrap}
-.folio-home .cp-steps ul{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.folio-home .cp-steps ul li{padding:5px 14px;border-radius:999px;background:#fff;font-size:14px;line-height:1.7;color:var(--tx-ink)}
-.folio-home .cp-next{position:absolute;z-index:1;top:clamp(24px,2.4vw,36px);right:-30px;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#fff;color:var(--tx-ink);box-shadow:0 8px 20px -10px rgba(31,35,32,.45)}
+/* The address and the number each on a line of their own, so neither is ever broken across lines. */
+.folio-home .cp-steps .cp-contact{display:flex;flex-direction:column;align-items:flex-start;margin-top:14px}
+.folio-home .cp-steps .cp-contact a{font:500 15px/2 var(--tx-latin);letter-spacing:.04em;color:var(--tx-ink);white-space:nowrap;text-decoration:underline;text-decoration-color:var(--cp-line);text-underline-offset:5px;transition:text-decoration-color .25s}
+.folio-home .cp-steps .cp-contact a:hover,.folio-home .cp-steps .cp-contact a:focus-visible{text-decoration-color:var(--tx-ink)}
+.folio-home .cp-steps ul{margin-top:10px}
+.folio-home .cp-steps ul li{position:relative;padding-left:22px;color:var(--tx-ink)}
+.folio-home .cp-steps ul li::before{content:"";position:absolute;left:0;top:1em;width:12px;height:1px;background:var(--tx-ink)}
+.folio-home .cp-notes>li{display:grid;grid-template-columns:3.2em 8.5em minmax(0,1fr);gap:0 16px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--cp-line)}
+.folio-home .cp-notes>li:first-child{padding-top:4px}
+.folio-home .cp-notes h3{font:600 16px/2 var(--tx-serif);letter-spacing:.1em;color:var(--tx-ink)}
+.folio-home .cp-made{margin-top:24px;font:500 12px/1 var(--tx-latin);letter-spacing:.22em;text-transform:uppercase;color:var(--tx-muted)}
 
-/* Notes: a stone panel holding four white cards. */
-.folio-home .cp-care{padding:clamp(28px,3.2vw,48px);background:var(--cp-stone)}
-.folio-home .cp-care-head{position:relative}
-.folio-home .cp-care-head .cp-head p{display:none}
-.folio-home .cp-made{position:absolute;right:0;top:26px;font:500 12px/1 var(--tx-latin);letter-spacing:.2em;text-transform:uppercase;color:var(--tx-muted)}
-.folio-home .cp-notes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.folio-home .cp-notes>li{display:flex;flex-direction:column;min-width:0;padding:24px 22px 26px;background:#fff}
-.folio-home .cp-note-num{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--cp-tint-2);font:500 14px/1 var(--tx-latin);color:var(--tx-ink)}
-.folio-home .cp-notes h3{margin-top:20px;font:600 17px/1.5 var(--tx-serif);letter-spacing:.08em;color:var(--tx-ink)}
-.folio-home .cp-notes p{margin-top:8px;font:400 14.5px/1.95 var(--tx-sans);letter-spacing:.04em;color:var(--tx-body);line-break:strict}
-
-/* Closing: the model's deeper tint, the studio button again. */
-.folio-home .cp-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 32px;margin-top:16px;padding:clamp(28px,3.2vw,48px);background:var(--cp-tint-2)}
-.folio-home .cp-cta>p{font:500 clamp(20px,1.8vw,26px)/1.6 var(--tx-serif);letter-spacing:.05em;color:var(--tx-ink)}
+/* Closing: one ruled line, the studio button again. */
+.folio-home .cp-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px 32px;margin-top:var(--cp-gap);padding-top:clamp(36px,4vw,56px);border-top:1px solid var(--tx-ink)}
+.folio-home .cp-cta>p{font:500 clamp(20px,1.8vw,26px)/1.7 var(--tx-serif);letter-spacing:.06em;color:var(--tx-ink)}
 .folio-home .cp-cta>.cp-actions{margin-top:0}
-.folio-home .cp-cta .rv-btn-ghost{box-shadow:none}
 
 @media(max-width:1180px){
- .folio-home .cp-top{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:32px}
+ .folio-home .cp-title,.folio-home .cp-lead{grid-column:1/7}
+ .folio-home .cp-hero{grid-column:7/13}
  .folio-home .cp-concept>.cp-body{grid-column:7/13;padding-left:16px}
- .folio-home .cp-spec:not(.is-drawing){grid-template-columns:minmax(0,1fr)}
- .folio-home .cp-spec:not(.is-drawing)>figure>.cp-photo{flex:none;height:auto}
- .folio-home .cp-notes{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .folio-home .cp-specs>.cp-body{grid-column:1/7}
+ .folio-home .cp-rail>.cp-head{grid-column:1/-1}
+ .folio-home .cp-rail>:not(.cp-head){grid-column:1/-1;margin-top:32px}
 }
 @media(max-width:820px){
- .folio-home .cp{--cp-gap:64px}
- .folio-home .cp-top{display:flex;flex-direction:column;gap:24px}
- .folio-home .cp-title,.folio-home .cp-lead{padding:0}
+ .folio-home .cp{--cp-gap:72px}
+ .folio-home .cp .cp-clause{display:inline}
+ .folio-home .cp-top{display:flex;flex-direction:column;gap:28px}
  .folio-home .cp-title,.folio-home .cp-lead,.folio-home .cp-hero{align-self:stretch}
+ /* Table rows: the label sits over its value, the small photo keeps its place at the right. */
+ .folio-home .cp-table>div{grid-template-columns:minmax(0,1fr);gap:2px 16px}
+ .folio-home .cp-table>div.has-photo{grid-template-columns:minmax(0,1fr) 104px}
+ .folio-home .cp-table>div.has-photo>.cp-photo{grid-column:2;grid-row:1/3;align-self:start}
+ .folio-home .cp-table dt{font-size:13px}
  .folio-home .cp-brief{margin-top:0}
- .folio-home .cp-concept{display:flex;flex-direction:column;align-items:stretch;gap:32px}
+ .folio-home .cp-concept,.folio-home .cp-specs{display:flex;flex-direction:column;align-items:stretch;gap:36px}
  .folio-home .cp-concept>.cp-body{padding-left:0}
- .folio-home .cp-spec-grid{grid-template-columns:minmax(0,1fr)}
- .folio-home .cp-spec.is-drawing{grid-template-columns:minmax(0,1fr)}
- .folio-home .cp-spec-text{padding:24px 20px 28px}
- .folio-home .cp-steps{grid-template-columns:minmax(0,1fr)}
- .folio-home .cp-steps>li{min-height:0}
- .folio-home .cp-steps h3{margin-top:0;padding-top:20px}
- .folio-home .cp-next{top:auto;right:24px;bottom:-30px;transform:rotate(90deg)}
- .folio-home .cp-made{top:28px}
- .folio-home .cp-actions>.rv-btn{flex:1 1 100%;justify-content:space-between}
- .folio-home .cp-text p,.folio-home .cp-finishes dd{font-size:15.5px;line-height:2.05}
- .folio-home .cp-zoom{right:10px;bottom:10px;width:36px;height:36px}
-}
-@media(max-width:760px){
- .folio-home .cp-gallery{--cp-h:64vw;--cp-pad:24px;margin-inline:-24px}
- .folio-home .cp-care,.folio-home .cp-cta{margin-inline:-24px;padding:32px 24px}
+ .folio-home .cp-text p,.folio-home .cp-finishes dd{font-size:15.5px;line-height:2.1}
+ .folio-home .cp-gallery{--cp-h:62vw}
+ .folio-home .cp-gallery-top{align-items:flex-end}
+ .folio-home .cp-count{display:none}
  .folio-home .cp-arrow{width:44px;height:44px}
+ .folio-home .cp-steps{grid-template-columns:minmax(0,1fr)}
+ .folio-home .cp-steps>li,.folio-home .cp-steps>li:not(:last-child){padding:24px 0;border-left:0;border-bottom:1px solid var(--cp-line)}
+ .folio-home .cp-steps>li:first-child{padding-top:0}
+ .folio-home .cp-steps>li:last-child{padding-bottom:0;border-bottom:0}
+ .folio-home .cp-notes>li{grid-template-columns:2.6em minmax(0,1fr)}
+ .folio-home .cp-notes>li>p{grid-column:2}
+ .folio-home .cp-actions>.rv-btn{flex:1 1 100%;justify-content:space-between}
 }
-@media(max-width:560px){.folio-home .cp-notes{grid-template-columns:minmax(0,1fr)}.folio-home .cp-notes>li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:0 16px;padding:20px}.folio-home .cp-notes h3{margin-top:4px}.folio-home .cp-notes p{grid-column:2}}
-@media(max-width:360px){.folio-home .cp-gallery{--cp-pad:20px;margin-inline:-20px}.folio-home .cp-care,.folio-home .cp-cta{margin-inline:-20px;padding-inline:20px}}
-@media(prefers-reduced-motion:reduce){.folio-home .cp-zoom,.folio-home .cp-track>li,.folio-home .cp-track img,.folio-home .cp-progress>i{transition:none}}
-/* Phones: every label sits over its value, so a measure keeps to one line. */
-@media(max-width:820px){.folio-home .cp-spec dl>div{grid-template-columns:minmax(0,1fr);gap:2px}.folio-home .cp-spec dt{font-size:13px}}
+@media(max-width:760px){.folio-home .cp-track{margin-right:-24px;padding-right:24px;gap:12px}}
+@media(max-width:360px){.folio-home .cp-track{margin-right:-20px;padding-right:20px}}
+@media(prefers-reduced-motion:reduce){.folio-home .cp-track img,.folio-home .cp-progress>i,.folio-home .cp-arrow{transition:none}}

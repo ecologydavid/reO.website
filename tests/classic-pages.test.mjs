@@ -50,6 +50,11 @@ test('the home cards and Classic photos open the model pages; the studio is ente
   assert(page.includes('以 {id} 款進入銘版排版工作室') && page.includes('{...studioTab}'));
   // Price and lead time are said once, with the name; the specification holds the measures only (owner, v1.8.0).
   assert(page.includes('商品規格') && !page.includes('商品參數') && !page.includes('<dt>高度</dt>'));
+  // v1.9.0 (owner): white throughout. No tinted blocks, no dark band, no mark laid over a photo.
+  const css = read('src/content/classic-page.css').replace(/\/\*[\s\S]*?\*\//g, '');
+  assert(!/cp-zoom|tints|--cp-tint/.test(page + css), 'no photo mark, no tints');
+  const fills = [...css.matchAll(/background:\s*([^;}]+)/g)].map(m => m[1].trim());
+  assert(fills.every(f => /^(#fff|#f4f3ef|var\(--cp-line\)|var\(--tx-ink\)|none)$/.test(f)), 'fills: ' + fills.join(' | '));
   // The list cards of the five models use the photos framed for their frames, never a centre crop of the 4:3 photo.
   const library = read('src/content/ContentLibrary.jsx');
   assert(library.includes('classicPhotos[named].tall') && library.includes('classicPhotos[model].wide'));
