@@ -90,8 +90,9 @@ function useShatter(canvas,image,run,slug){
    const scale=Math.max(W/im.naturalWidth,H/im.naturalHeight),ox=(W-im.naturalWidth*scale)/2,oy=(H-im.naturalHeight*scale)/2;
    const pieces=fx.make(W,H),out=fx.out;
    const whole=alpha=>{ctx.globalAlpha=alpha;ctx.drawImage(im,-ox/scale,-oy/scale,W/scale,H/scale,0,0,W,H);ctx.globalAlpha=1};
-   // The ring: right of the text on desktop, above it on phones. Angles run counter-clockwise on screen (negative).
-   const R=Math.min(W*(narrow?.26:.17),H*(narrow?.13:.3)),cx=narrow?W*.5:W*.7,cy=narrow?H*.19:H*.46,band=R*.075,gap=Math.PI*11/180,arc=Math.PI*2-gap*2;
+   // The ring sits in the middle of the frame (v1.13.0: the photograph is a frame beside the words, no longer the
+   // whole window with the words over it). Angles run counter-clockwise on screen (negative).
+   const R=Math.min(W*.2,H*.3),cx=W*.5,cy=H*.5,band=R*.075,gap=Math.PI*11/180,arc=Math.PI*2-gap*2;
    // Grain colours: a small copy of the photo, read once.
    const small=document.createElement('canvas');small.width=64;small.height=Math.max(1,Math.round(64*H/W));
    const sctx=small.getContext('2d');sctx.drawImage(im,-ox/scale,-oy/scale,W/scale,H/scale,0,0,small.width,small.height);
@@ -198,12 +199,8 @@ export default function MaterialIntro({page,lead,onWorks}){
  const replay=useCallback(()=>setRun(r=>r+1),[]);
  const hero=page.hero;
  return <header className="mat-intro">
-  <div className="mat-intro-stage">
-   <img ref={image} src={hero.src} alt={hero.alt||`${page.title}原材料`} width={hero.width} height={hero.height} fetchPriority="high"/>
-   <canvas ref={canvas} aria-hidden="true"/>
-  </div>
-  <div className="mat-intro-text folio-gutter">
-   <p className="mat-intro-no">{at>=0&&<><b>{String(at+1).padStart(2,'0')}</b><span>/ {String(materials.length).padStart(2,'0')}</span></>}<em>循環材料</em></p>
+  <div className="mat-intro-text">
+   <p className="mat-intro-no">{at>=0&&<><b>{String(at+1).padStart(2,'0')}</b><span>/ {String(materials.length).padStart(2,'0')}</span></>}<em>re.O 循環材料</em></p>
    <h1>{m?m[0]:page.title}</h1>
    {m&&<p className="mat-intro-en" lang="en">{m[1]}</p>}
    {lead.map((p,i)=><p className="mat-intro-lead" key={i}>{p}</p>)}
@@ -211,6 +208,11 @@ export default function MaterialIntro({page,lead,onWorks}){
     {onWorks&&<a href="#material-works" onClick={e=>{e.preventDefault();onWorks()}}>看這個材料做成的作品<span aria-hidden="true"> ↓</span></a>}
     <button type="button" onClick={replay}><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13 3v3h-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>再看一次</button>
    </p>
+  </div>
+  {/* v1.13.0: the stage is a frame beside the words, no wider than the photograph can hold (--nat). */}
+  <div className="mat-intro-stage" style={{'--nat':hero.width}}>
+   <img ref={image} src={hero.src} alt={`re.O 循環材料：${m?m[0]:page.title}的原料`} width={hero.width} height={hero.height} fetchPriority="high"/>
+   <canvas ref={canvas} aria-hidden="true"/>
   </div>
  </header>;
 }

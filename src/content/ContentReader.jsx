@@ -7,7 +7,8 @@ import {studioTab} from '../components/site/ui.jsx';
 import {ContentCard} from './ContentLibrary.jsx';
 import {justifyRows} from './justify.js';
 import {setPageMeta} from '../seo.js';
-import {articleMeta,articleData} from './pageMeta.js';
+import {articleMeta,articleData,materialData} from './pageMeta.js';
+import {notes as materialNotes} from './materialNotes.js';
 import {priceOf} from './landings.jsx';
 import {classicNames} from '../components/site/classics.js';
 import {materials} from '../components/site/materials.js';
@@ -15,6 +16,7 @@ import DoorNote from '../components/site/DoorNote.jsx';
 import Statement from '../components/site/Statement.jsx';
 import {edgeFill} from './edgeFill.js';
 import MaterialIntro from './MaterialIntro.jsx';
+import MaterialBody,{hasNotes} from './MaterialBody.jsx';
 import ShippingPolicy from './ShippingPolicy.jsx';
 import ClassicPage,{arrangeClassic} from './ClassicPage.jsx';
 import {arrangeArticle,flowParagraphs} from './arrange.js';
@@ -78,7 +80,7 @@ function Works({works}){
 export default function ContentReader({path,draft}){
  const index=draft||findPage(path),[loaded,setPage]=useState(()=>draft?null:peekPage(index?.id)),page=draft||loaded,[error,setError]=useState(''),[gallery,setGallery]=useState(8),[lightbox,setLightbox]=useState(null);
  const closeImage=useRef(null),root=useRef(null);
- useEffect(()=>{if(draft)return;let live=true;setPage(peekPage(index?.id));setError('');setGallery(8);if(!index){setError('找不到這篇內容。');return}loadPage(index.id).then(p=>{if(live){setPage(p);const cat=editorFor(p)||p.subcategory==='公版獎盃'?'standard':categoryInfo[p.category]?p.category:'about';const id=editorFor(p),stuff=materials.find(m=>m[2]===decodeURIComponent(p.path.split('/').pop())),extra={classic:id?{id,name:classicNames[id],price:priceOf(id)}:null,material:stuff?[stuff[0],stuff[1]]:null},shot=cardImage(index)||p.hero;setPageMeta({...articleMeta(index,extra),trail:[['首頁','#/'],[categoryInfo[cat].label,`#/explore/${cat}`],[p.title,p.path]],image:shot,data:articleData(index,{...extra,image:shot})})}}).catch(()=>{if(live)setError('內容暫時無法載入，請重新整理。')});return()=>{live=false}},[index?.id,Boolean(draft)]);
+ useEffect(()=>{if(draft)return;let live=true;setPage(peekPage(index?.id));setError('');setGallery(8);if(!index){setError('找不到這篇內容。');return}loadPage(index.id).then(p=>{if(live){setPage(p);const cat=editorFor(p)||p.subcategory==='公版獎盃'?'standard':categoryInfo[p.category]?p.category:'about';const id=editorFor(p),stuff=materials.find(m=>m[2]===decodeURIComponent(p.path.split('/').pop())),extra={classic:id?{id,name:classicNames[id],price:priceOf(id)}:null,material:stuff?[stuff[0],stuff[1],materialNotes[stuff[2]]?.about]:null},shot=cardImage(index)||p.hero;setPageMeta({...articleMeta(index,extra),trail:[['首頁','#/'],[categoryInfo[cat].label,`#/explore/${cat}`],[p.title,p.path]],image:shot,data:stuff&&materialNotes[stuff[2]]?materialData(extra.material,materialNotes[stuff[2]].facts,shot):articleData(index,{...extra,image:shot})})}}).catch(()=>{if(live)setError('內容暫時無法載入，請重新整理。')});return()=>{live=false}},[index?.id,Boolean(draft)]);
  useEffect(()=>{if(!lightbox)return;const old=document.body.style.overflow,previous=document.activeElement;document.body.style.overflow='hidden';closeImage.current?.focus();const key=e=>{if(e.key==='Escape')setLightbox(null);if(e.key==='Tab'){e.preventDefault();closeImage.current?.focus()}};document.addEventListener('keydown',key);return()=>{document.body.style.overflow=old;document.removeEventListener('keydown',key);previous?.focus()}},[lightbox]);
  useEffect(()=>{if(!page||!root.current)return;const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.04});root.current.querySelectorAll('[data-reveal]:not(.is-visible)').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[page,gallery]);
  if(error)return <main className="content-not-found folio-gutter"><h1>{error}</h1><a className="folio-link" href="#/explore/cases">探索站內內容<SiteArrow/></a></main>;
@@ -96,12 +98,16 @@ export default function ContentReader({path,draft}){
  // v65: a material page opens with MaterialIntro (photo, name, its opening text) instead of the plain heading and lead.
  const material=page.category==='materials'&&!isIndexPage(page)&&!!page.hero;
  // v1.7.0: the five classic models open as a designed page (ClassicPage), photo strip included (v1.8.0).
- const classic=editor&&!draft?arrangeClassic(page):null,shown=classic?[]:photos;
+ // v1.13.0: a material page reads as a reference entry (MaterialBody). The process picture's words are now text on
+ // the page, so the picture itself (and its phone copy) leaves the photographs.
+ const slug=decodeURIComponent(page.path.split('/').pop()),noted=material&&hasNotes(slug);
+ const classic=editor&&!draft?arrangeClassic(page):null,shown=classic?[]:noted?photos.filter(im=>!(im.height===1440&&(im.width===960||im.width===849))):photos;
  const toWorks=()=>document.getElementById('material-works')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
  return <main className={`content-reader folio-gutter ${!page.hero?'text-only':''}`} ref={root}><nav className="content-breadcrumb has-back" aria-label="麵包屑"><a className="content-back" href={`#/explore/${category}`}><span aria-hidden="true">←</span>返回{label}</a><a href="#/">首頁</a><span aria-hidden="true">/</span><a href={`#/explore/${category}`}>{label}</a><span aria-hidden="true">/</span><span aria-current="page">{classic?`${editor} 款 ${classicNames[editor]}`:page.title}</span></nav>{classic?<ClassicPage page={page} id={editor} data={classic} onOpen={setLightbox}/>:material?<MaterialIntro page={page} lead={flowParagraphs([...(page.summary&&!repeats(page.summary,first)?[page.summary]:[]),...(first?.paragraphs||[])])} onWorks={works||chapters.length?toWorks:null}/>:<><div className="content-article-heading"><div><h1>{page.title}</h1>{page.subcategory&&<p>{page.subcategory}</p>}{page.published&&<p className="content-date">發表於 <time dateTime={page.published}>{page.published.replace(/-/g,'.')}</time></p>}</div><dl className="content-metadata">{metadata.map(([key,label])=><div key={key}><dt>{label}</dt><dd>{Array.isArray(page.metadata[key])?page.metadata[key].join('、'):String(page.metadata[key])}</dd></div>)}</dl></div>{editor&&<div className="content-product-cta"><p>選擇這款公版獎盃，編排你的專屬文字與圖案。</p><a className="folio-link" href={`#/preview/${editor}`} {...studioTab}>以 {editor} 款進入銘版排版工作室<SiteArrow/></a></div>}
    <div className={`content-article-lead${page.hero&&ratioOf(page.hero)<.9?' is-portrait':''}`}>{page.hero&&<figure style={{'--r':ratioOf(page.hero)}}><button style={frameStyle(page.hero)} onClick={()=>setLightbox(page.hero)} aria-label={`放大圖片：${page.title}`}><img src={page.hero.src} {...small(page.hero,half)} alt={page.hero.alt||page.title} width={page.hero.width} height={page.hero.height} fetchPriority="high"/></button></figure>}<div>{page.summary&&!repeats(page.summary,first)&&<Statement text={page.summary}/>}{lead}{page.path==='#/read/pages/chanz-studio'&&<DoorNote/>}</div></div></>}
    {classic?null:plain?!!chapters.length&&<div className="content-article-body"><aside className="content-toc" aria-label="本頁內容"><span>本頁內容</span>{chapters.map((c,i)=><a key={i} href={`#${page.path.slice(1)}?section=${i+1}`} onClick={e=>{e.preventDefault();document.getElementById(`section-${i+1}`)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})}}>{c.section.heading||'內容介紹'}</a>)}</aside><div className="content-prose">{chapters.map((c,i)=><Section section={c.section} index={i+1} key={i}/>)}</div></div>
    :<div className="content-chapters">{details.length>0&&<Details details={details} title={page.title} onOpen={setLightbox}/>}{chapters.map((c,i)=><Chapter chapter={c} index={i+1} title={page.title} onOpen={setLightbox} key={i}/>)}</div>}
+   {noted&&<MaterialBody slug={slug}/>}
    {!!shown.length&&<section className="content-gallery" id="article-gallery"><header className="content-gallery-head"><h2>{works?'材料與工藝':'更多照片'}</h2><span>{pad(shown.length)}</span></header><Gallery images={shown.slice(0,gallery)} title={page.title} onOpen={setLightbox}/>{shown.length>gallery&&<button className="content-load-more" onClick={()=>setGallery(gallery+12)}>查看更多照片（{shown.length-gallery}）<SiteArrow/></button>}</section>}
    {/* v72: 材料與工藝 (origin and process) first, then the works. */}
    {material&&<span id="material-works" className="content-anchor"/>}

@@ -82,7 +82,8 @@ export const nameOf = page => { const parts = String(page.title || '').split('�
 
 // ── Everything else, by rule, from the fields the page already has ──
 // classic: {id, name, price} for the five classic product pages (name APEX…, price '2,300' or '2,500～2,800').
-// material: [name, English name] for the nine material pages.
+// material: [name, English name, about] for the nine material pages; `about` is the page's own opening sentence
+// on how re.O makes the material (materialNotes.js, v1.13.0) and, when given, is the description's second sentence.
 export function articleMeta(page, {classic, material} = {}) {
   const hand = written[page.path];
   if (hand) return hand;
@@ -93,8 +94,8 @@ export function articleMeta(page, {classic, material} = {}) {
     description: `${classic.id} 款 ${classic.name} 公版獎盃，NT$ ${classic.price}，3 個工作天起製作，10 座以上工期另計。可在銘版排版工作室編排文字與 LOGO，再來信或來電下單。${/：.*：/.test(said) ? '' : said}`
   };
   if (material) return {
-    title: `${material[0]} ${material[1]}｜循環材料`,
-    description: `${material[0]}（${material[1]}）是 re.O 的九種循環材料之一。${said}`
+    title: `${material[0]} ${material[1]}｜re.O 循環材料`,
+    description: `${material[0]}（${material[1]}）是 re.O 的九種循環材料之一。${material[2] || said}`
   };
   if (page.category === 'cases') {
     const stuff = one(m.material).replace(/[、,，]\s*/g, '・');
@@ -134,4 +135,9 @@ export function articleData(page, {classic, image} = {}) {
   return null;
 }
 // Questions and answers exactly as the FAQ page shows them: [[question, answer text], …].
+// A material page (v1.13.0): what re.O makes of the material, and the questions and answers shown under 背景知識.
+export const materialData = ([name, en, about], facts = [], image) => [
+  {'@type': 'Article', headline: `${name} ${en}｜re.O 循環材料`, description: about || undefined, image: image?.src, about: {'@type': 'Thing', name, alternateName: en}, author: {'@id': org}, publisher: {'@id': org}},
+  facts.length ? faqData(facts.map(f => [f.q, f.a.join('')])) : null
+].filter(Boolean);
 export const faqData = pairs => ({'@type': 'FAQPage', mainEntity: pairs.map(([q, a]) => ({'@type': 'Question', name: q, acceptedAnswer: {'@type': 'Answer', text: a}}))});

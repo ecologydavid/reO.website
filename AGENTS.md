@@ -1272,3 +1272,38 @@ The owner liked two things from v1.11.0 and v48 and asked for them elsewhere.
   the number, 「A 款」 and the name with its arrow under the photograph are removed. ClassicTab now lives in
   src/components/site/ClassicTab.jsx with classic-tab.css (context class `.ct-card`); home keeps its own sizes
   through `.rv-product` in home-v10.css.
+
+## Material pages as reference entries (v1.13.0, 2026-11-28, by request)
+Owner: the nine material pages opened on a photograph spread so wide it turned soft, then went from a few lines
+straight to pictures and felt empty. He asked for more detailed explanation (searched for), careful text setting, a
+page that feels like it has depth, and re.O's name on it for search.
+- Opening (MaterialIntro.jsx, material-intro.css): a spread on ink. Name and opening words left, the photograph in
+  a frame on the right that is never wider than about 1.12 times the file's own width (--nat). The coming-apart
+  animation of v65 to v68 plays inside the frame; its ring now sits in the middle of the frame.
+- Reading part (MaterialBody.jsx, material-body.css, words in materialNotes.js), in the white-and-hairline language
+  of the classic model pages:
+    材料檔案      「re.O 的＿＿」: one sentence, then label and value rows (原料來源, 再製方式, 外觀與質感, 做成的作品 …)
+    從廢料到材料  the studio's own three steps. They were transcribed from each page's process picture, where the
+                  text used to exist only as pixels; the three round photographs are cut from the same picture
+                  (public/assets/materials/<slug>-1..3.webp). Wording kept; spacing, full stops and two typos set
+                  right. The picture and its phone copy no longer show in the gallery.
+    背景知識      questions and answers from public sources, each with numbered source notes and the year.
+- Sources: three research passes (2026-11-28) returned facts with verbatim quotes; before use, the key wording of
+  each cited page was checked again by fetching it (HTML pages by text, three PDFs with pypdf). Sources that could
+  not be opened here were not used (a 監察院 report, a Taipower greennet page, 中時, ministry waste PDFs).
+- The studio's own figures inside 從廢料到材料 are shown as the studio's (「以上三個步驟為 re.O 工作室的說明」).
+  Research could not support some of them, and they are not repeated in 背景知識. For the owner to review:
+    咖啡渣    28.5 億杯 / 130 杯: old media figures attributed to ICO. 環境部 (2025-12): 37 億杯, 11.1 萬噸咖啡渣.
+    水庫淤泥  96 座 / 28.4 億噸 / 三分之一 / 石門 300 萬噸: 水利署 (114 年底) 95 座, effective capacity 76.53% of design;
+              石門 yearly dredging about 354.8 萬立方公尺 (a volume, not a stock in tonnes).
+    煤灰      82.1%: Taipower system 2024, counting cogeneration; national coal share 2025 is 35.3% (能源署).
+              「煤灰是全球暖化的焦點原因」 is not what the sources say (ash is a by-product; CO2 is the issue).
+    焚化粒料  24 座 / 630 萬 / 100 萬公噸: the RAMS site's own older wording; recent 環境部 figure 83 to 85 萬噸底渣.
+    回收玻璃  20-23 萬噸 is the yearly weight of glass containers collected for recycling, not glass discarded;
+              1260 度 has no public source (present it as the kiln's own setting if that is what it is).
+    再生大理石 46 萬公噸 is a commonly quoted estimate without a year; 回收率不足 25% has no source found.
+    木頭拼板  30-50% 彎曲樹根 and 「更耐用」 have no source; stability against warping is supported.
+- Search: title 「＿＿ ＿＿｜re.O 循環材料」, description from the page's own 「re.O …」 sentence, Article + FAQPage
+  structured data (pageMeta.js materialData), photographs' alt texts name re.O.
+- Rules for later edits are at the top of materialNotes.js and enforced by tests/materials.test.mjs: every fact has
+  a source that was opened, every quantity its year, and the studio's unsupported figures stay out of 背景知識.
