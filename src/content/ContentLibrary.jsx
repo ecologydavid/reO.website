@@ -20,7 +20,7 @@ const pad=n=>String(n).padStart(2,'0');
 const cta=page=>page.category==='materials'?'閱讀材料應用':page.category==='cases'?'閱讀完整案例':page.category==='products'?'查看商品詳情':'閱讀完整內容';
 // Small card kept for related-content rows on article pages. Pages without a photo (policies, guides)
 // get a text card under an ink rule rather than an empty grey box.
-export function ContentCard({page}){const image=cardImage(page);return <article className={`content-entry${image?'':' is-text'}`}>{image&&<a className="content-entry-image" href={page.path} style={isBanner(image)?{aspectRatio:'2/1'}:undefined}><img src={image.src} {...small(image,third)} alt={image.alt||page.title} loading="lazy" width={image.width} height={image.height}/></a>}<p className="content-entry-category">{page.subcategory||page.category_label}</p><h2><a href={page.path}>{page.title}</a></h2><p className="content-entry-description">{page.summary}</p><a className="folio-link" href={page.path}>{cta(page)}<SiteArrow/></a></article>}
+export function ContentCard({page}){const model=editorFor(page),image=model?{src:classicPhotos[model].wide,width:1200,height:900,alt:page.hero?.alt}:cardImage(page);return <article className={`content-entry${image?'':' is-text'}`}>{image&&<a className="content-entry-image" href={page.path} style={isBanner(image)?{aspectRatio:'2/1'}:undefined}><img src={image.src} {...small(image,third)} alt={image.alt||page.title} loading="lazy" width={image.width} height={image.height}/></a>}<p className="content-entry-category">{page.subcategory||page.category_label}</p><h2><a href={page.path}>{page.title}</a></h2><p className="content-entry-description">{page.summary}</p><a className="folio-link" href={page.path}>{cta(page)}<SiteArrow/></a></article>}
 // Case photo. On hover the photo narrows (to its own shape where it can, so the whole piece shows)
 // and two detail shots slide in beside it, the last one counting the photos still to see; the client
 // rises in a tab at the lower left. Details load on the first hover only.
@@ -40,11 +40,13 @@ export function CasePhoto({page,image,client,early=false}){
 // Index entry in the same language as the works index: photo, number and group, title, one line.
 // Case cards lead with the work; the client's name stays off the photo until hover or focus.
 // v51 (owner, 2026-11-09): the six classic models go by their English names, as on home.
+// v1.8.0 (owner: still off centre here): a model's card takes the photo framed for its frame (classicPhotos: tall for
+// the 4:5 frames of the desktop row, wide for the 4:3 frames below 1101px), not a centre crop of the catalogue photo.
 function Entry({page,index,group,showLine,named}){
  const isCase=page.category==='cases',image=cardImage(page),[first,...rest]=page.title.split('｜');
  const {work,client}=isCase?splitCase(page.title):{work:first,client:''},title=named?classicNames[named]:work,line=isCase||named?'':rest.join('｜')||(showLine?page.summary:'');
  return <li data-reveal><a href={page.path}>
-  {isCase&&image?<CasePhoto page={page} image={image} client={client} early={index<5}/>:<span className="content-works-photo" style={isBanner(image)?{aspectRatio:'2/1'}:undefined}>{image?<img src={image.src} {...small(image,third)} alt={image.alt||page.title} width={image.width} height={image.height} loading="lazy"/>:<span className="content-type-letter">{page.category_label}</span>}</span>}
+  {isCase&&image?<CasePhoto page={page} image={image} client={client} early={index<5}/>:<span className="content-works-photo" style={isBanner(image)?{aspectRatio:'2/1'}:undefined}>{named?<picture style={{display:'contents'}}><source media="(min-width: 1101px)" srcSet={classicPhotos[named].tall}/><img src={classicPhotos[named].wide} alt={image?.alt||page.title} width="1200" height="900" loading="lazy"/></picture>:image?<img src={image.src} {...small(image,third)} alt={image.alt||page.title} width={image.width} height={image.height} loading="lazy"/>:<span className="content-type-letter">{page.category_label}</span>}</span>}
   <span className="content-works-meta"><em>{pad(index+1)}</em><span>{group}</span></span>
   <span className={`content-works-title${named?' is-named':''}`}><strong lang={named?'en':undefined}>{title}</strong><SiteArrow/></span>
   {line&&<span className="content-works-line">{line}</span>}

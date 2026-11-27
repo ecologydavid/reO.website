@@ -18,9 +18,10 @@ test('each classic model page holds the short concept, the full concept, five sp
     assert.equal(entry.title, page.title);
     assert.equal(entry.summary, page.summary);
     assert(page.summary.length > 30 && page.summary.endsWith('。'), id + ' summary');
-    assert.deepEqual(page.sections.map(s => s.heading), ['設計概念', '商品參數']);
+    assert.deepEqual(page.sections.map(s => s.heading), ['設計概念', '商品規格']);
     const [concept, spec] = page.sections;
-    assert(concept.paragraphs.some(p => p !== page.summary && p.length > 60), id + ' concept');
+    // The concept reads in short paragraphs (v1.8.0): none runs past about four lines of the column.
+    assert(concept.paragraphs.filter(p => p !== page.summary).length >= 3 && concept.paragraphs.every(p => p.length <= 100), id + ' concept');
     // Rows are 「項目：內容」; the labels stay short so the value keeps its width on a phone.
     assert.deepEqual(spec.paragraphs.map(p => p.split('：')[0]), ['材質', '尺寸', '包裝', '包裝尺寸', '淨重']);
     // One way of writing sizes and weights: 長 × 寬 × 高 with the unit once, a space before the unit.
@@ -32,6 +33,10 @@ test('each classic model page holds the short concept, the full concept, five sp
     for (const p of [page.summary, ...concept.paragraphs, ...spec.paragraphs, ...spec.items]) assert(!/[一-鿿][,()+/][一-鿿]/.test(p), p);
     const photos = [page.hero, ...page.images];
     assert.equal(page.images.filter(im => im.kind === 'drawing').length, 1, id + ' drawing');
+    // Each part of the specification has its picture (E has no photo of its box yet), and every photo a caption.
+    assert.equal(page.images.filter(im => im.kind === 'material').length, 1, id + ' material photo');
+    assert.equal(page.images.filter(im => im.kind === 'package').length, id === 'E' ? 0 : 1, id + ' package photo');
+    assert(photos.every(im => im.caption && im.caption.length <= 20), id + ' captions');
     assert(photos.every(im => im.alt.includes(names[id]) || im.alt.includes('PEAK')) && new Set(photos.map(im => im.alt)).size === photos.length, id + ' photo descriptions');
     assert(photos.every(im => existsSync(new URL('public' + im.src, root))), id + ' photo files');
   }
@@ -43,5 +48,10 @@ test('the home cards and Classic photos open the model pages; the studio is ente
   assert.match(home, /<a className="rv-product-photo" href=\{classicPage\(m\.id\)\}/);
   assert.equal(home.match(/onPreview\(/g).length, 1, 'only the hero button 開始 X 款排版 opens the studio from home');
   assert(page.includes('以 {id} 款進入銘版排版工作室') && page.includes('{...studioTab}'));
+  // Price and lead time are said once, with the name; the specification holds the measures only (owner, v1.8.0).
+  assert(page.includes('商品規格') && !page.includes('商品參數') && !page.includes('<dt>高度</dt>'));
+  // The list cards of the five models use the photos framed for their frames, never a centre crop of the 4:3 photo.
+  const library = read('src/content/ContentLibrary.jsx');
+  assert(library.includes('classicPhotos[named].tall') && library.includes('classicPhotos[model].wide'));
   assert(!/[①-⓿❶-➓]/.test(page.replace(/\/\/.*$/gm, '')));
 });

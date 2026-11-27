@@ -1153,3 +1153,32 @@ Second part of the GEO work; the owner approved each item.
   says 紅色區域為可客製範圍 in text); the old files are deleted.
 - Kept from the old pages, reworded only in spacing and punctuation: the three ordering steps, the four notes,
   A's 木橫擔 note (with a link to the material page). metadata.description (the old one-line dump) was removed.
+
+## Classic model pages, second round: nothing twice, pictures beside the specification, colour cards, a photo strip (v1.8.0, 2026-11-27, by request)
+The owner's notes on v1.7.0, and what answers each (src/content/ClassicPage.jsx, classic-page.css):
+- 「公版獎盃頁面的下方圖案還是歪斜」: the five model cards at the foot of 公版獎盃 (and the 繼續探索 cards on the model
+  pages) centre-cropped the 4:3 catalogue photo. They now use the photos framed for their frames (classicPhotos:
+  `tall` for the 4:5 desktop row, `wide` for 4:3 frames), as the v1.2.3 rule asks. Entry and ContentCard in
+  ContentLibrary.jsx. C's tall tile shows the piece larger than the others (wide piece in a tall frame), whole and centred.
+- Nothing said twice: price and lead time sit with the name, on a block tinted after the model's material; the height
+  row is gone. The measures are only in 商品規格 (renamed from 商品參數 everywhere, page JSON heading included).
+- 商品規格 is three parts, each with its picture beside the words: 尺寸與重量 with the dimension drawing, 材質 with a
+  photo (`images[].kind:'material'`), 包裝 with a photo (`kind:'package'`). E has no photo of its box yet: its 包裝
+  card is words only until the owner sends one (then mark it `package`).
+- 設計概念: the owner's paragraph is cut into short paragraphs at sentence ends (words unchanged; the import script
+  checked the joined text is identical). A short first paragraph is set large in the serif. Lines turn only at
+  punctuation: each clause is an inline block (`.cp-clause`), also in the opening line. Photo and words share the row
+  evenly (6 and 5 columns of 12).
+- 訂製步驟: three colour cards (stone, the model's tint, ink) with large figures and a round arrow from each to the
+  next; the two things to send are white chips. 注意事項: a stone panel of four white cards, each with a short heading
+  that only names its subject (拍攝道具, 手工製作, 非食材器皿, 運送與更換); the sentences are the owner's.
+- Photos: every photo opens large and carries a round + mark; hero and concept photos have a caption
+  (`images[].caption`, a few words). 作品照片 replaces 更多照片: one strip on ink, edge to edge (ClassicGallery). Arrows,
+  mouse drag, swipe and the keyboard move it; the photo in front is counted and named, the others wait dimmed; the one
+  in front opens large, another comes forward when chosen. Slides keep their own shape at one height. It holds every
+  photo of the piece, those not shown elsewhere on the page first.
+- Tints (`tints` in ClassicPage.jsx) are decoration: pale cypress, heat-treated wood, wood on white stone, grey-green
+  stone, anodised aluminium. The page still uses the site's stone and ink for everything else.
+- The ui-ux-pro-max skill was asked for gallery and step-card guidance and returned no match for either; the layout
+  follows the site's own language and the skill's general rules (44px targets, visible focus, reduced motion, no
+  hover-only actions, no page-level horizontal scroll: measured 0px on desktop and phone).
