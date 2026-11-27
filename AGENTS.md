@@ -1307,3 +1307,20 @@ page that feels like it has depth, and re.O's name on it for search.
   structured data (pageMeta.js materialData), photographs' alt texts name re.O.
 - Rules for later edits are at the top of materialNotes.js and enforced by tests/materials.test.mjs: every fact has
   a source that was opened, every quantity its year, and the studio's unsupported figures stay out of 背景知識.
+
+## Material pages: words and photographs set together; the owner's own photographs (v1.14.0, 2026-11-28, by request)
+Owner on v1.13.0: redesign the layout of the material pages so text and pictures sit together with quality, and add
+photographs from 東陽整理照片\物料照片, except the folder 百分料處理.
+- MaterialBody.jsx / material-body.css (words still in materialNotes.js, photographs now in materialPhotos.js):
+    re.O 的＿＿    a large photograph over six columns, the statement and the file table over five
+    從廢料到材料  heading and 「以下三個步驟為 re.O 工作室的說明」 on one line; three steps, each beside its round photograph
+    背景知識      heading and one or two photographs in a left column that stays in view while the answers scroll
+    現場紀錄      further photographs in justified rows balanced by shape (only with two or more), captions under
+  Every photograph opens large on a click. The loose 材料與工藝 gallery under the text is gone from these pages.
+- Imported from the owner's folder (resized to 1800px, WebP, public/assets/materials): 木橫擔 nine photographs
+  (beam-*), 煤灰 two (ash-*), 玻璃 two (glass-*). They lead those three pages, and their captions repeat his file
+  names (木橫擔料廠, 鎖孔, 定位黏著孔 …). fly-ash step 02's round photograph is now cut from his sharper original.
+  Not used: 百分料處理 (his instruction), and 檳榔渣 and 紅磚, which are not among the nine materials on the site
+  (new material pages would need his text). The other six pages use the photographs they already had.
+- The ui-ux-pro-max style search returned "Editorial Grid / Magazine" (asymmetric grid, figure and caption, white
+  space); the layout follows that direction with the site's own type and no pull quotes or drop caps.

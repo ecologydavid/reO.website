@@ -4,6 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync, existsSync} from 'node:fs';
 import {notes} from '../src/content/materialNotes.js';
+import {photos} from '../src/content/materialPhotos.js';
 
 const root = new URL('../', import.meta.url), read = file => readFileSync(new URL(file, root), 'utf8');
 const slugs = [...read('src/components/site/materials.js').matchAll(/\['[^']+', '[^']+', '([^']+)'/g)].map(m => m[1]);
@@ -48,11 +49,37 @@ test('background knowledge always names an opened public source, and keeps away 
 
 test('the page shows the notes, opens on a framed photograph and describes itself to search engines', () => {
   const reader = read('src/content/ContentReader.jsx'), body = read('src/content/MaterialBody.jsx'), intro = read('src/content/MaterialIntro.jsx'), css = read('src/content/material-intro.css'), meta = read('src/content/pageMeta.js');
-  assert(reader.includes('{noted&&<MaterialBody slug={slug}/>}') && reader.includes('materialData(extra.material'));
-  // The process picture's words are text now; the picture and its phone copy leave the gallery.
-  assert(reader.includes('im.height===1440&&(im.width===960||im.width===849)'));
-  for (const part of ['re.O 的{name}', '從廢料到材料', '背景知識', '資料來源', 'rel="noopener noreferrer"']) assert(body.includes(part), part);
+  assert(reader.includes('{noted&&<MaterialBody slug={slug} onOpen={setLightbox}/>}') && reader.includes('materialData(extra.material'));
+  // v1.14.0: the page places its own photographs beside the words; the loose gallery under them is gone.
+  assert(reader.includes('shown=classic||noted?[]:photos'));
+  for (const part of ['re.O 的{name}', '從廢料到材料', '背景知識', '現場紀錄', '資料來源', 'rel="noopener noreferrer"']) assert(body.includes(part), part);
   // The photograph is never spread past its own size (the owner found it soft at full width).
   assert(intro.includes("style={{'--nat':hero.width}}") && css.includes('calc(var(--nat,800)*1.12px)') && !css.includes('inset:0}\n.mat-intro-stage::after'));
   assert(meta.includes('｜re.O 循環材料') && meta.includes("'@type': 'Article'"));
+});
+
+// v1.14.0 (owner, 2026-11-28): words and photographs set together; his own photographs from 物料照片 are used,
+// except the folder 百分料處理.
+test('every material page has a large photograph beside its file and photographs beside the background', () => {
+  const sizeOf = file => { const b = readFileSync(new URL('public' + file, root)); return b.length; };
+  for (const slug of slugs) {
+    const p = photos[slug];
+    assert(p && p.lead && p.side.length >= 1 && p.side.length <= 2, slug + ' photographs');
+    const all = [p.lead, ...p.side, ...p.more];
+    assert.equal(new Set(all.map(im => im.src)).size, all.length, slug + ' repeats a photograph');
+    for (const im of all) {
+      assert(existsSync(new URL('public' + im.src, root)) && sizeOf(im.src) > 5000, im.src);
+      assert(im.width > 400 && im.height > 280 && im.alt && im.alt.length >= 5, slug + ' ' + im.src);
+      // Only the owner's own photographs carry a caption (his file names); the others stay unlabelled.
+      assert.equal(Boolean(im.caption), im.src.startsWith('/assets/materials/'), im.src + ' caption');
+    }
+    assert(p.lead.alt.includes('re.O') || !p.lead.src.startsWith('/assets/'), slug + ' lead alt');
+    // 現場紀錄 shows only when there are at least two more photographs.
+    assert(p.more.length !== 1, slug + ' has a single extra photograph');
+  }
+  // The owner's photographs are on the three pages he had photographs for.
+  for (const slug of ['wooden-beam', 'fly-ash', 'glass']) assert(photos[slug].lead.src.startsWith('/assets/materials/'), slug);
+  // Nothing from the folder he excluded (its file names), in the list or on disk.
+  const list = read('src/content/materialPhotos.js');
+  for (const name of ['IMG_8004', 'IMG_8712', 'IMG_8713']) assert(!list.includes(name), name);
 });
