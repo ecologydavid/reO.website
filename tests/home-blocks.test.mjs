@@ -38,3 +38,20 @@ test('the studio can fold its side columns away and show the product preview ove
   // The earlier 放大成品 switch stays.
   assert(editor.includes("'還原並排':'放大成品'"));
 });
+
+// v1.12.0 (owner, 2026-11-28): he liked About's photograph under the words and the name tabs inside the home
+// Classic photographs, and asked for both elsewhere.
+test('a landing page with a photograph lays it under its opening words', () => {
+  const library = read('src/content/ContentLibrary.jsx');
+  assert(library.includes("landing.hero?' pg-top-photo':''") && library.includes('landing.hero&&<img className="pg-ground"'));
+  assert(!library.includes('className="pg-hero"'), 'no separate photograph block');
+});
+
+test('the 公版獎盃 model row names each model in a tab inside its photograph', () => {
+  const library = read('src/content/ContentLibrary.jsx'), home = read('src/components/Home.jsx'), tab = read('src/components/site/classic-tab.css');
+  assert(library.includes("className={named?'ct-card':undefined}") && library.includes('{named?<ClassicTab id={named}/>:'));
+  assert(!library.includes('is-named'), 'no name row under the photograph');
+  // One tab component for home and the row.
+  assert(home.includes("import ClassicTab from './site/ClassicTab.jsx'") && !home.includes('function ClassicTab'));
+  assert(tab.includes('.ct-card:hover .rv-tab') && tab.includes('prefers-reduced-motion:reduce'));
+});

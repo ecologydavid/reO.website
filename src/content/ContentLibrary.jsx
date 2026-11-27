@@ -1,5 +1,6 @@
 import {casePreview} from './casePreviews.js';
 import Statement from '../components/site/Statement.jsx';
+import ClassicTab from '../components/site/ClassicTab.jsx';
 import {small,third} from '../components/site/responsive.js';
 import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {categoryInfo} from '../components/site/navigation.js';
@@ -46,10 +47,12 @@ export function CasePhoto({page,image,client,early=false}){
 function Entry({page,index,group,showLine,named}){
  const isCase=page.category==='cases',image=cardImage(page),[first,...rest]=page.title.split('｜');
  const {work,client}=isCase?splitCase(page.title):{work:first,client:''},title=named?classicNames[named]:work,line=isCase||named?'':rest.join('｜')||(showLine?page.summary:'');
- return <li data-reveal><a href={page.path}>
+ // v1.12.0 (owner): a classic model shows its name in a tab inside the photograph, as on home; the number, the
+ // 「A 款」 and the name with its arrow under the photograph are gone.
+ return <li data-reveal><a href={page.path} className={named?'ct-card':undefined} aria-label={named?`${named} 款 ${classicNames[named]} 公版獎盃介紹`:undefined}>
   {isCase&&image?<CasePhoto page={page} image={image} client={client} early={index<5}/>:<span className="content-works-photo" style={isBanner(image)?{aspectRatio:'2/1'}:undefined}>{named?<picture style={{display:'contents'}}><source media="(min-width: 1101px)" srcSet={classicPhotos[named].tall}/><img src={classicPhotos[named].wide} alt={image?.alt||page.title} width="1200" height="900" loading="lazy"/></picture>:image?<img src={image.src} {...small(image,third)} alt={image.alt||page.title} width={image.width} height={image.height} loading="lazy"/>:<span className="content-type-letter">{page.category_label}</span>}</span>}
-  <span className="content-works-meta"><em>{pad(index+1)}</em><span>{group}</span></span>
-  <span className={`content-works-title${named?' is-named':''}`}><strong lang={named?'en':undefined}>{title}</strong><SiteArrow/></span>
+  {named?<ClassicTab id={named}/>:<><span className="content-works-meta"><em>{pad(index+1)}</em><span>{group}</span></span>
+  <span className="content-works-title"><strong>{title}</strong><SiteArrow/></span></>}
   {line&&<span className="content-works-line">{line}</span>}
  </a></li>;
 }
@@ -100,7 +103,10 @@ export default function ContentLibrary({category,filter:routeFilter='',section='
  const choose=f=>{setFilter(f);setLimit(12);index.current?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})};
  return <main className={`pg pg-library pg-${category}`} ref={root}>
   <div className="folio-gutter"><nav className="content-breadcrumb" aria-label="麵包屑"><a href="#/">首頁</a><span>/</span><span>{info.label}</span></nav></div>
-  <header className="pg-top folio-gutter">
+  {/* v1.12.0 (owner): a landing page's photograph lies under its opening words, as on About, instead of taking a
+      block of its own below them. */}
+  <header className={`pg-top folio-gutter${landing.hero?' pg-top-photo':''}`}>
+   {landing.hero&&<img className="pg-ground" {...casePreview(landing.hero.src,'100vw')} alt={landing.hero.alt} width={landing.hero.width} height={landing.hero.height} fetchPriority="high" style={{objectPosition:landing.hero.position}}/>}
    <div className="pg-title">{landing.en&&<p className="content-display" aria-hidden="true">{landing.en}</p>}<h1>{landing.title||info.label}</h1><Statement text={written[category==='custom'?'#/read/pages/custom':`#/explore/${category}`]?.description||info.intro}/></div>
    {landing.card&&<div className={`pg-contact${landing.stats?' is-stats':landing.card==='groups'?' is-groups':''}`}>
     <dl>{landing.stats?landing.stats.map(([label,value,unit])=><div key={label}><dt>{label}</dt><dd><strong><CountUp value={value}/></strong><span>{unit}</span></dd></div>):landing.card==='groups'?filters.map(f=><div key={f}><dt><button className="pg-filter-link" onClick={()=>choose(f)}>{f}</button></dt><dd><strong>{counts[f]}</strong><span>{landing.unit}</span></dd></div>):landing.card.map(([en,label,value,wide])=><div key={en} className={wide}><dt><span>{en}</span>{label}</dt><dd>{value}</dd></div>)}</dl>
@@ -109,7 +115,6 @@ export default function ContentLibrary({category,filter:routeFilter='',section='
     {category==='products'&&<DoorNote/>}
    </div>}
   </header>
-  {landing.hero&&<figure className="pg-hero"><img {...casePreview(landing.hero.src,'100vw')} alt={landing.hero.alt} width={landing.hero.width} height={landing.hero.height} fetchPriority="high" style={{objectPosition:landing.hero.position}}/></figure>}
   {landing.band&&<landing.band/>}
 
   <section className="pg-index folio-gutter" ref={index} aria-labelledby="pg-index-title">

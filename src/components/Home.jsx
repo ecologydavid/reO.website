@@ -9,6 +9,7 @@ import ShopWindow from './site/ShopWindow.jsx';
 import { classicNames, offered } from './site/classics.js';
 import { materials } from './site/materials.js';
 import GoldDust from './GoldDust.jsx';
+import ClassicTab from './site/ClassicTab.jsx';
 import { setPageMeta } from '../seo.js';
 import { Arrow, ArrowLink, Button, SectionHead, Frame, ActionIcon } from './site/ui.jsx';
 import './hero-v64.css';
@@ -298,10 +299,7 @@ const featured = ['E', 'D'];
 // card shows only the photo and that name, grown out of the letter tab; name, spec and the start button are gone.
 // The letter stays in its square; the rest of the name rises in letter by letter as the card comes into
 // view, and rolls over (each letter swaps for its copy from below) when the photo is pointed at or focused.
-function ClassicTab({ id }) {
-  const tail = classicNames[id].slice(1);
-  return <span className="rv-tab" aria-hidden="true"><b>{id}</b><span className="rv-tab-tail">{[...tail].map((ch, i) => <i key={i} style={{ '--i': i }}><span data-ch={ch}>{ch}</span></i>)}</span></span>;
-}
+// (ClassicTab lives in site/ClassicTab.jsx since v1.12.0: the 公版獎盃 model row uses it too.)
 // The home page keeps the essentials (hero, process, the A–F classic, custom trophies, materials,
 // partners, shop). Selected works live on the custom page, IP collaborations on the cases page, and
 // the studio, craft and awards on the About page.

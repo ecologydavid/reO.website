@@ -1261,3 +1261,14 @@ or by folding the side columns); (3) on About, lay the studio photograph under t
   (`.st-slot-product.is-full`), Esc or 結束全螢幕 returns. 放大成品 stays. Nothing else in the studio changed.
 - The ui-ux-pro-max searches for this brief returned only general rules (contrast 4.5:1, line height); the palette
   and the sizing are the site's own.
+
+## Photo grounds on 合作案例 and 循環材料; name tabs on the 公版 model row (v1.12.0, 2026-11-28, by request)
+The owner liked two things from v1.11.0 and v48 and asked for them elsewhere.
+- Every landing page that has a photograph (`landing.hero` in landings.jsx: 企業與IP案例, 循環材料) lays it under its
+  opening words exactly as About does (`.pg-top-photo` + `img.pg-ground`, pages.css): veil heavier on the text side,
+  white title and statement, the facts panel a light sheet. The separate `figure.pg-hero` block is gone everywhere.
+  A new landing page with a photograph gets this automatically; do not bring the separate block back.
+- The 五款公版 row on 公版獎盃 names each model in a tab inside its photograph (ClassicTab, the home Classic tab);
+  the number, 「A 款」 and the name with its arrow under the photograph are removed. ClassicTab now lives in
+  src/components/site/ClassicTab.jsx with classic-tab.css (context class `.ct-card`); home keeps its own sizes
+  through `.rv-product` in home-v10.css.

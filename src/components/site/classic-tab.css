@@ -1,0 +1,24 @@
+/* The classic name tab outside the home page (ClassicTab.jsx): a link with .ct-card holds the photograph and the
+   tab. Same behaviour as home (home-v10.css .rv-tab under .rv-product), written out in full here so it does not
+   depend on the home page's stylesheet being loaded. */
+.folio-home .ct-card{position:relative;display:block}
+.folio-home .ct-card .content-works-photo{position:relative}
+.folio-home .ct-card .rv-tab{--h:clamp(48px,4.2vw,68px);position:absolute;left:0;bottom:0;z-index:1;display:flex;align-items:baseline;width:auto;height:var(--h);padding-right:calc(var(--h)*.34);background:#fff;color:var(--tx-ink,#1f2320);font:600 calc(var(--h)*.56)/1 var(--tx-serif,serif);transition:background .4s,color .4s;pointer-events:none}
+.folio-home .ct-card .rv-tab>b{flex:none;padding-left:calc(var(--h)*.3);margin-right:.05em;font-weight:600;line-height:var(--h)}
+.folio-home .ct-card .rv-tab-tail{display:flex;align-items:flex-start;font-size:.46em;font-weight:500;line-height:1.2;letter-spacing:.16em}
+.folio-home .ct-card .rv-tab-tail>i{display:block;font-style:normal;clip-path:inset(0 -.2em)}
+.folio-home .ct-card .rv-tab-tail>i>span{position:relative;display:block;transition:transform .55s cubic-bezier(.7,0,.2,1) calc(var(--i)*35ms)}
+.folio-home .ct-card .rv-tab-tail>i>span::after{content:attr(data-ch);position:absolute;left:0;top:100%}
+.folio-home .ct-card:hover .rv-tab,.folio-home .ct-card:focus-visible .rv-tab{background:var(--tx-ink,#1f2320);color:#fff}
+.folio-home .ct-card:hover .rv-tab-tail>i>span,.folio-home .ct-card:focus-visible .rv-tab-tail>i>span{transform:translateY(-100%)}
+.folio-home .ct-card:focus-visible{outline:2px solid var(--tx-ink,#1f2320);outline-offset:4px}
+@media(prefers-reduced-motion:no-preference){
+ .folio-home li[data-reveal]:not(.is-visible) .ct-card .rv-tab{clip-path:inset(0 calc(100% - var(--h)) 0 0)}
+ .folio-home li[data-reveal]:not(.is-visible) .ct-card .rv-tab-tail>i>span{transform:translateY(100%)}
+ .folio-home li[data-reveal].is-visible .ct-card .rv-tab{animation:ct-tab-open .8s cubic-bezier(.65,0,.2,1) .25s backwards}
+ .folio-home li[data-reveal].is-visible .ct-card .rv-tab-tail>i>span{animation:ct-tab-rise .7s cubic-bezier(.2,.7,.1,1) calc(.55s + var(--i)*60ms) backwards}
+}
+@media(prefers-reduced-motion:reduce){.folio-home .ct-card .rv-tab-tail>i>span{transition:none}.folio-home .ct-card:hover .rv-tab-tail>i>span,.folio-home .ct-card:focus-visible .rv-tab-tail>i>span{transform:none}}
+@keyframes ct-tab-open{from{clip-path:inset(0 calc(100% - var(--h)) 0 0)}to{clip-path:inset(0)}}
+@keyframes ct-tab-rise{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@media(max-width:760px){.folio-home .ct-card .rv-tab{--h:44px}}
