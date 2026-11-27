@@ -26,7 +26,7 @@ const sequence = [
   { label: '真空脫泡', line: '真空除泡，去除氣泡孔洞。', src: '/content/images/70c8dcab73d64c4d81.webp', alt: 're.O 工作室的真空脫氣設備', width: 1440, height: 1080 },
   { label: '灌注成型', line: '以矽膠模具灌注成形。', src: '/content/images/0b9cc353f2982e96ef.webp', alt: '成排的灌注模具', width: 1440, height: 1440 },
   { label: '品質檢驗', line: '逐件挑選排除氣孔、白點、刮痕。', src: '/content/images/eaa0be28bf809c8400.webp', alt: 'B 款獎盃再生大理石構件與木質盃身的表面細節', width: 1317, height: 988 },
-  { label: '異材結合', line: '結合各式異材，完成作品。', src: '/content/images/e8b500fc458fa120e4.webp', alt: 'B 款獎盃 木客微光 × 匠子 完成品', width: 1440, height: 1080, top: true }
+  { label: '異材結合', line: '結合各式異材，完成作品。', src: '/content/images/e8b500fc458fa120e4.webp', alt: 'B 款獎盃 木客微光 × 匠子 × re.O 完成品', width: 1440, height: 1080, top: true }
 ];
 // Four phases carry the idea at a glance (scrap becomes a trophy); each holds two consecutive steps.
 const phases = [

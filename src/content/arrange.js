@@ -43,7 +43,7 @@ export function arrangeArticle(page,find){
 // layout). In a reading column every phrase wraps on its own and the left edge turns ragged, so runs
 // of two or more such phrases flow into one paragraph: joined with "，" and closed with "。". The words
 // are untouched. Labels (：｜), spec lines, numbered steps and short keywords are left as they are.
-const isPhrase=p=>{p=p.trim();return p.length>8&&p.length<=90&&/[㐀-鿿]/.test(p)&&!/[。！？!?.；;」』）)…～~]$/.test(p)&&!/[|｜：:。]|STEP|每頁顯示/.test(p)&&!/^[❶-❿①-⑩]/.test(p)&&!/\s[A-Z][A-Za-z]*$/.test(p)};
+const isPhrase=p=>{p=p.trim();return p.length>8&&p.length<=90&&/[㐀-鿿]/.test(p)&&!/[。！？!?.；;」』）)…～~]$/.test(p)&&!/[|｜：:。]|STEP|每頁顯示/.test(p)&&!/^[❶-❿①-⑩]/.test(p)&&!/^\d{1,2}[.．、)]\s*(?!\d)\S/.test(p)&&!/\s[A-Z][A-Za-z]*$/.test(p)};
 export function flowParagraphs(paragraphs){
  const out=[];let run=[];
  const flush=()=>{if(run.length>1)out.push(run.map((p,i)=>i<run.length-1&&!/[，、]$/.test(p)?p+'，':p).join('').replace(/[，、]?$/,'。'));else out.push(...run);run=[]};

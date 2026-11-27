@@ -29,6 +29,9 @@
 .folio-home .cp-buy dd{display:flex;flex-direction:column;gap:4px}
 .folio-home .cp-price{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 14px}
 .folio-home .cp-price>b{font:500 17px/1.8 var(--tx-latin);letter-spacing:.03em;color:var(--tx-ink);white-space:nowrap}
+.folio-home .cp-stuff{font:500 16px/1.8 var(--tx-sans);letter-spacing:.06em;color:var(--tx-ink)}
+.folio-home .cp-stuff a{color:inherit;text-decoration:underline;text-decoration-color:var(--cp-line);text-underline-offset:6px;transition:text-decoration-color .25s}
+.folio-home .cp-stuff a:hover,.folio-home .cp-stuff a:focus-visible{text-decoration-color:var(--tx-ink)}
 .folio-home .cp-price>i{font:normal 400 13px/1.8 var(--tx-sans);letter-spacing:.06em;color:var(--tx-muted);white-space:nowrap}
 .folio-home .cp-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(28px,3vw,40px)}
 .folio-home .cp .cp-studio{min-height:56px;padding-left:28px;font-size:15px}
@@ -111,11 +114,9 @@
 .folio-home .cp-steps h3{margin-top:16px;font:600 19px/1.6 var(--tx-serif);letter-spacing:.08em;color:var(--tx-ink)}
 .folio-home .cp-steps p,.folio-home .cp-steps ul li,.folio-home .cp-notes p{font:400 15px/2 var(--tx-sans);letter-spacing:.05em;color:var(--tx-body);line-break:strict}
 .folio-home .cp-steps p{margin-top:10px}
-/* The address and the number each on a line of their own, so neither is ever broken across lines. */
-.folio-home .cp-steps .cp-contact{display:flex;flex-direction:column;align-items:flex-start;margin-top:14px}
-.folio-home .cp-steps .cp-contact a{font:500 15px/2 var(--tx-latin);letter-spacing:.04em;color:var(--tx-ink);white-space:nowrap;text-decoration:underline;text-decoration-color:var(--cp-line);text-underline-offset:5px;transition:text-decoration-color .25s}
-.folio-home .cp-steps .cp-contact a:hover,.folio-home .cp-steps .cp-contact a:focus-visible{text-decoration-color:var(--tx-ink)}
-.folio-home .cp-steps ul{margin-top:10px}
+/* Step and note sentences turn after punctuation where a phrase fits the line, and their lines are evened out. */
+.folio-home .cp-steps p,.folio-home .cp-notes p{text-wrap:balance}
+.folio-home .cp-steps ul{margin:10px 0 0 1.6em}
 .folio-home .cp-steps ul li{position:relative;padding-left:22px;color:var(--tx-ink)}
 .folio-home .cp-steps ul li::before{content:"";position:absolute;left:0;top:1em;width:12px;height:1px;background:var(--tx-ink)}
 .folio-home .cp-notes>li{display:grid;grid-template-columns:3.2em 8.5em minmax(0,1fr);gap:0 16px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--cp-line)}

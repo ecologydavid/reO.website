@@ -1,4 +1,5 @@
 import {casePreview} from './casePreviews.js';
+import Statement from '../components/site/Statement.jsx';
 import {small,third} from '../components/site/responsive.js';
 import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {categoryInfo} from '../components/site/navigation.js';
@@ -100,7 +101,7 @@ export default function ContentLibrary({category,filter:routeFilter='',section='
  return <main className={`pg pg-library pg-${category}`} ref={root}>
   <div className="folio-gutter"><nav className="content-breadcrumb" aria-label="麵包屑"><a href="#/">首頁</a><span>/</span><span>{info.label}</span></nav></div>
   <header className="pg-top folio-gutter">
-   <div className="pg-title">{landing.en&&<p className="content-display" aria-hidden="true">{landing.en}</p>}<h1>{landing.title||info.label}</h1><p>{written[category==='custom'?'#/read/pages/custom':`#/explore/${category}`]?.description||info.intro}</p></div>
+   <div className="pg-title">{landing.en&&<p className="content-display" aria-hidden="true">{landing.en}</p>}<h1>{landing.title||info.label}</h1><Statement text={written[category==='custom'?'#/read/pages/custom':`#/explore/${category}`]?.description||info.intro}/></div>
    {landing.card&&<div className={`pg-contact${landing.stats?' is-stats':landing.card==='groups'?' is-groups':''}`}>
     <dl>{landing.stats?landing.stats.map(([label,value,unit])=><div key={label}><dt>{label}</dt><dd><strong><CountUp value={value}/></strong><span>{unit}</span></dd></div>):landing.card==='groups'?filters.map(f=><div key={f}><dt><button className="pg-filter-link" onClick={()=>choose(f)}>{f}</button></dt><dd><strong>{counts[f]}</strong><span>{landing.unit}</span></dd></div>):landing.card.map(([en,label,value,wide])=><div key={en} className={wide}><dt><span>{en}</span>{label}</dt><dd>{value}</dd></div>)}</dl>
     <div className="pg-actions">{landing.actions.map(([label,href,variant])=><Button key={href} href={href} {...(href.startsWith('#/preview/')?studioTab:{})} variant={variant} icon={iconFor(href)}>{label}</Button>)}</div>

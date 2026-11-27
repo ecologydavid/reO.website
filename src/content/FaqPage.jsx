@@ -1,4 +1,5 @@
 import React,{useEffect} from 'react';
+import Statement from '../components/site/Statement.jsx';
 import {Button,ArrowLink} from '../components/site/ui.jsx';
 import {keepRanges} from './arrange.js';
 import {setPageMeta} from '../seo.js';
@@ -27,7 +28,7 @@ export default function FaqPage(){
  return <main className="pg pg-faq">
   <div className="folio-gutter"><nav className="content-breadcrumb" aria-label="麵包屑"><a href="#/">首頁</a><span>/</span><span>服務指南</span><span>/</span><span>常見問題</span></nav></div>
   <header className="pg-top folio-gutter">
-   <div className="pg-title"><p className="content-display" aria-hidden="true">FAQ</p><h1>常見問題</h1><p>訂製、交期與配送，先看這裡。</p></div>
+   <div className="pg-title"><p className="content-display" aria-hidden="true">FAQ</p><h1>常見問題</h1><Statement text="訂製、交期與配送，先看這裡。"/></div>
    <dl className="pg-faq-facts">{facts.map(([n,unit,label])=><div key={label}><dt>{label}</dt><dd><strong><CountUp value={n}/></strong><span>{unit}</span></dd></div>)}</dl>
   </header>
   <nav className="pg-faq-jump folio-gutter" aria-label="問題分類"><ul>{groups.map((g,i)=><li key={g.id}><a href={`#faq-${g.id}`}><span>{String(i+1).padStart(2,'0')}</span>{g.title}<em>{g.items.length} 題</em></a></li>)}</ul></nav>

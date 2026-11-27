@@ -12,6 +12,7 @@ import {priceOf} from './landings.jsx';
 import {classicNames} from '../components/site/classics.js';
 import {materials} from '../components/site/materials.js';
 import DoorNote from '../components/site/DoorNote.jsx';
+import Statement from '../components/site/Statement.jsx';
 import {edgeFill} from './edgeFill.js';
 import MaterialIntro from './MaterialIntro.jsx';
 import ShippingPolicy from './ShippingPolicy.jsx';
@@ -28,7 +29,18 @@ function Gallery({images,title,onOpen}){
  const gap=width<600?8:12,target=Math.max(140,Math.min(360,width*.27)),rows=justifyRows(images.map(ratioOf),width,target,gap);
  return <div className="content-justified" ref={box}>{rows.map((row,r)=><div className="content-justified-row" key={r} style={row.open?{maxWidth:row.sum*target+gap*(row.items.length-1)}:undefined}>{row.items.map(i=>{const im=images[i];return <figure key={im.src} style={{flex:`${ratioOf(im)} 1 0`}}><button style={frameStyle(im)} onClick={()=>onOpen(im)} aria-label={`放大圖片 ${i+1}：${im.caption||im.alt||title}`}><img src={im.src} {...small(im,third)} alt={im.alt||`${title} 圖片 ${i+1}`} loading="lazy" width={im.width} height={im.height}/></button>{im.caption&&<figcaption>{im.caption}</figcaption>}</figure>})}</div>)}</div>;
 }
-function Section({section,index}){return <section className="content-prose-section" id={`section-${index}`}><h2>{section.heading||'內容介紹'}</h2>{flowParagraphs(section.paragraphs).map((p,i)=><p key={i}>{p}</p>)}{!!section.items.length&&<ul>{section.items.map((p,i)=><li key={i}>{p}</li>)}</ul>}</section>}
+// Numbered lines of the original text ("1. …", "2. …") stand as rows of a list; the rest are paragraphs (v1.10.0).
+const numbered=/^\d{1,2}[.．、)]\s*(?!\d)(\S.*)$/;
+function Prose({paragraphs}){
+ const out=[];
+ flowParagraphs(paragraphs).forEach((p,i)=>{const m=typeof p==='string'&&p.match(numbered),last=out[out.length-1];if(m){if(last?.list)last.list.push(m[1]);else out.push({list:[m[1]],key:i})}else out.push({text:p,key:i})});
+ // A bare phrase that introduces the rows ends in a colon, one that follows them in a full stop (flowParagraphs
+ // closes the phrases it joins in the same way).
+ const bare=t=>typeof t==='string'&&t.length>8&&/[㐀-鿿]$/.test(t);
+ out.forEach((b,i)=>{if(b.list)return;if(out[i+1]?.list&&bare(b.text))b.text+='：';else if(out[i-1]?.list&&bare(b.text))b.text+='。'});
+ return out.map(b=>b.list?<ol className="content-numbered" role="list" key={b.key}>{b.list.map((t,i)=><li key={i}><span aria-hidden="true">{pad(i+1)}</span>{t}</li>)}</ol>:<p key={b.key}>{b.text}</p>);
+}
+function Section({section,index}){return <section className="content-prose-section" id={`section-${index}`}><h2>{section.heading||'內容介紹'}</h2><Prose paragraphs={section.paragraphs}/>{!!section.items.length&&<ul>{section.items.map((p,i)=><li key={i}>{p}</li>)}</ul>}</section>}
 // v61 (owner, 2026-11-16): a portrait photo in a fixed (square) frame is shown whole, never losing its top
 // and base; the frame's sides continue the photo's own edge colours (edgeFill), as on the case cards.
 function Photo({image,title,onOpen,eager=false,ratio}){
@@ -42,7 +54,7 @@ function Chapter({chapter,index,title,onOpen}){
  const {section,image}=chapter;
  return <section className={`content-chapter${image?'':' is-text'}`} id={`section-${index}`} data-reveal>
   {image&&<figure style={{'--r':ratioOf(image)}}><Photo image={image} title={title} onOpen={onOpen}/></figure>}
-  <div className="content-chapter-text"><p className="content-chapter-index">{pad(index)}</p><h2>{section.heading||'內容介紹'}</h2>{flowParagraphs(section.paragraphs).map((p,i)=><p key={i}>{p}</p>)}{!!section.items.length&&<ul>{section.items.map((p,i)=><li key={i}>{p}</li>)}</ul>}</div>
+  <div className="content-chapter-text"><p className="content-chapter-index">{pad(index)}</p><h2>{section.heading||'內容介紹'}</h2><Prose paragraphs={section.paragraphs}/>{!!section.items.length&&<ul>{section.items.map((p,i)=><li key={i}>{p}</li>)}</ul>}</div>
  </section>;
 }
 // Short captions from the old site ("揮竿軌跡弧形") become a row of captioned detail photos.
@@ -87,7 +99,7 @@ export default function ContentReader({path,draft}){
  const classic=editor&&!draft?arrangeClassic(page):null,shown=classic?[]:photos;
  const toWorks=()=>document.getElementById('material-works')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
  return <main className={`content-reader folio-gutter ${!page.hero?'text-only':''}`} ref={root}><nav className="content-breadcrumb has-back" aria-label="麵包屑"><a className="content-back" href={`#/explore/${category}`}><span aria-hidden="true">←</span>返回{label}</a><a href="#/">首頁</a><span aria-hidden="true">/</span><a href={`#/explore/${category}`}>{label}</a><span aria-hidden="true">/</span><span aria-current="page">{classic?`${editor} 款 ${classicNames[editor]}`:page.title}</span></nav>{classic?<ClassicPage page={page} id={editor} data={classic} onOpen={setLightbox}/>:material?<MaterialIntro page={page} lead={flowParagraphs([...(page.summary&&!repeats(page.summary,first)?[page.summary]:[]),...(first?.paragraphs||[])])} onWorks={works||chapters.length?toWorks:null}/>:<><div className="content-article-heading"><div><h1>{page.title}</h1>{page.subcategory&&<p>{page.subcategory}</p>}{page.published&&<p className="content-date">發表於 <time dateTime={page.published}>{page.published.replace(/-/g,'.')}</time></p>}</div><dl className="content-metadata">{metadata.map(([key,label])=><div key={key}><dt>{label}</dt><dd>{Array.isArray(page.metadata[key])?page.metadata[key].join('、'):String(page.metadata[key])}</dd></div>)}</dl></div>{editor&&<div className="content-product-cta"><p>選擇這款公版獎盃，編排你的專屬文字與圖案。</p><a className="folio-link" href={`#/preview/${editor}`} {...studioTab}>以 {editor} 款進入銘版排版工作室<SiteArrow/></a></div>}
-   <div className={`content-article-lead${page.hero&&ratioOf(page.hero)<.9?' is-portrait':''}`}>{page.hero&&<figure style={{'--r':ratioOf(page.hero)}}><button style={frameStyle(page.hero)} onClick={()=>setLightbox(page.hero)} aria-label={`放大圖片：${page.title}`}><img src={page.hero.src} {...small(page.hero,half)} alt={page.hero.alt||page.title} width={page.hero.width} height={page.hero.height} fetchPriority="high"/></button></figure>}<div>{page.summary&&!repeats(page.summary,first)&&<p className="content-intro">{page.summary}</p>}{lead}{page.path==='#/read/pages/chanz-studio'&&<DoorNote/>}</div></div></>}
+   <div className={`content-article-lead${page.hero&&ratioOf(page.hero)<.9?' is-portrait':''}`}>{page.hero&&<figure style={{'--r':ratioOf(page.hero)}}><button style={frameStyle(page.hero)} onClick={()=>setLightbox(page.hero)} aria-label={`放大圖片：${page.title}`}><img src={page.hero.src} {...small(page.hero,half)} alt={page.hero.alt||page.title} width={page.hero.width} height={page.hero.height} fetchPriority="high"/></button></figure>}<div>{page.summary&&!repeats(page.summary,first)&&<Statement text={page.summary}/>}{lead}{page.path==='#/read/pages/chanz-studio'&&<DoorNote/>}</div></div></>}
    {classic?null:plain?!!chapters.length&&<div className="content-article-body"><aside className="content-toc" aria-label="本頁內容"><span>本頁內容</span>{chapters.map((c,i)=><a key={i} href={`#${page.path.slice(1)}?section=${i+1}`} onClick={e=>{e.preventDefault();document.getElementById(`section-${i+1}`)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})}}>{c.section.heading||'內容介紹'}</a>)}</aside><div className="content-prose">{chapters.map((c,i)=><Section section={c.section} index={i+1} key={i}/>)}</div></div>
    :<div className="content-chapters">{details.length>0&&<Details details={details} title={page.title} onOpen={setLightbox}/>}{chapters.map((c,i)=><Chapter chapter={c} index={i+1} title={page.title} onOpen={setLightbox} key={i}/>)}</div>}
    {!!shown.length&&<section className="content-gallery" id="article-gallery"><header className="content-gallery-head"><h2>{works?'材料與工藝':'更多照片'}</h2><span>{pad(shown.length)}</span></header><Gallery images={shown.slice(0,gallery)} title={page.title} onOpen={setLightbox}/>{shown.length>gallery&&<button className="content-load-more" onClick={()=>setGallery(gallery+12)}>查看更多照片（{shown.length-gallery}）<SiteArrow/></button>}</section>}

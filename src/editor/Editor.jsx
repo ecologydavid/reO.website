@@ -151,7 +151,7 @@ export default function Editor({modelId,onModelChange,onHome}){
     </header>
     <div className={`st-layout is-${big}`}>
       <aside className="st-product" aria-label="選擇產品">
-        <div className="st-product-head"><p className="st-kicker"><span lang="en">{classicNames[model.id]}</span>{model.id} 款・{model.kind}</p><h2>{model.name}</h2><p className="st-meta">{size}<span>NT${model.price}</span></p></div>
+        <div className="st-product-head"><p className="st-kicker"><span lang="en">{classicNames[model.id]}</span>{model.id} 款・{model.kind}</p><h2>{/* v1.10.0: a joint name (木客微光 × 匠子 × re.O) turns after a ×, never inside a name. */model.name.includes(' × ')?model.name.split(' × ').map((part,i,all)=><React.Fragment key={i}><span style={{whiteSpace:'nowrap'}}>{part}{i<all.length-1?' ×':''}</span>{i<all.length-1?' ':''}</React.Fragment>):model.name}</h2><p className="st-meta">{size}<span>NT${model.price}</span></p></div>
         {/* v6: the models as photo cards (the catalogue photos), letter and English name under each. */}
         <section className="st-step st-step-models"><h3><span>01</span>款式</h3>
           <div className="st-models">{offeredModels.map(m=><button type="button" key={m.id} aria-label={`${m.id} 款 ${classicNames[m.id]} ${m.name}`} aria-pressed={model.id===m.id} onClick={()=>changeModel(m.id)}><img src={`/assets/catalogue-${m.id}.webp`} alt="" width="1200" height="900" loading="lazy"/><span lang="en"><b>{m.id}</b>{classicNames[m.id].slice(1)}</span></button>)}</div>

@@ -16,6 +16,11 @@ test('each classic model page holds the short concept, the full concept, five sp
     const {entry, page} = pageOf(id), text = JSON.stringify(page);
     assert(page.title.startsWith(`${id} 款 ${names[id]}｜`), page.title);
     assert.equal(entry.title, page.title);
+    // v1.10.0 (owner): a name that carries 匠子 also carries re.O, here and in the studio's model list.
+    if (page.title.includes('匠子')) assert(page.title.endsWith('｜木客微光 × 匠子 × re.O') && models.find(m => m.id === id).name === '木客微光 × 匠子 × re.O', page.title);
+    // The circular materials of the model, by their names in materials.js (the 循環材料 row under the price).
+    const stuff = read('src/components/site/materials.js');
+    assert(page.metadata.circular.length && page.metadata.circular.every(n => stuff.includes(`['${n}',`)), id + ' circular materials');
     assert.equal(entry.summary, page.summary);
     assert(page.summary.length > 30 && page.summary.endsWith('。'), id + ' summary');
     assert.deepEqual(page.sections.map(s => s.heading), ['設計概念', '商品規格']);
@@ -55,6 +60,8 @@ test('the home cards and Classic photos open the model pages; the studio is ente
   assert(!/cp-zoom|tints|--cp-tint/.test(page + css), 'no photo mark, no tints');
   const fills = [...css.matchAll(/background:\s*([^;}]+)/g)].map(m => m[1].trim());
   assert(fills.every(f => /^(#fff|#f4f3ef|var\(--cp-line\)|var\(--tx-ink\)|none)$/.test(f)), 'fills: ' + fills.join(' | '));
+  // v1.10.0 (owner): step 01 carries no address or number, the proof sentence is his, the page lists its materials.
+  assert(!/cp-contact|超額/.test(page + css) && page.includes('設計提供 3 次校稿，超過 3 次修改會酌收排版費。') && page.includes('<dt>循環材料</dt>'));
   // The list cards of the five models use the photos framed for their frames, never a centre crop of the 4:3 photo.
   const library = read('src/content/ContentLibrary.jsx');
   assert(library.includes('classicPhotos[named].tall') && library.includes('classicPhotos[model].wide'));

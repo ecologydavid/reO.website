@@ -2,6 +2,8 @@ import React,{useCallback,useEffect,useRef,useState} from 'react';
 import {small,half,third} from '../components/site/responsive.js';
 import {Button,ActionIcon,ArrowIcon,studioTab} from '../components/site/ui.jsx';
 import {classicNames} from '../components/site/classics.js';
+import {materials} from '../components/site/materials.js';
+import {Held} from '../components/site/Statement.jsx';
 import {prices} from './landings.jsx';
 import {keepRanges} from './arrange.js';
 import './classic-page.css';
@@ -20,6 +22,8 @@ import './classic-page.css';
 //                              named list; a line in “…” is set as a quotation
 //   sections 商品規格 paragraphs  one row each, written 「項目：內容」 (材質, 尺寸, 包裝, 包裝尺寸, 淨重); `items` are
 //                              notes on the materials
+//   metadata.circular          the circular materials the model is made with, by their names in materials.js:
+//                              the 循環材料 row under the price, each linked to its material page (v1.10.0)
 //   images[].kind              'drawing' the dimension drawing beside the table, 'material' and 'package' the small
 //                              photos in those rows; images[].caption a few words under a photo
 // The ordering steps and the notes are the same for every model and live here.
@@ -30,8 +34,10 @@ import './classic-page.css';
 // they are hard to read and to type (owner). A figure never parts from its unit at a line end (`keep`).
 const mail='service@re-o.co',phone='+886-2-8966-5369';
 const steps=[
- {title:'提供資料',text:'此商品為客製化服務，請來信或來電，提供以下資料：',items:['LOGO 圖檔（AI 檔）','獎盃上的文字內容'],contact:true},
- {title:'確認報價與付款',text:'確認款式、數量與交期後報價，付款後我們將為您繪製設計圖。設計提供 3 次校稿，超額另需費用。'},
+ // v1.10.0 (owner): no address or number under step 01 (the buttons above and below carry them), and the two
+ // things to send are set in from the sentence.
+ {title:'提供資料',text:'此商品為客製化服務，請來信或來電，提供以下資料：',items:['LOGO 圖檔（AI 檔）','獎盃上的文字內容']},
+ {title:'確認報價與付款',text:'確認款式、數量與交期後報價，付款後我們將為您繪製設計圖。設計提供 3 次校稿，超過 3 次修改會酌收排版費。'},
  {title:'手工生產',text:'製作時程依據當時訂單累積數量而定，3～10 個工作天完成。'}
 ];
 // The four notes in the owner's words; the short heading only names what each is about.
@@ -108,6 +114,7 @@ function ClassicGallery({photos,onOpen}){
 
 export default function ClassicPage({page,id,data,onOpen}){
  const name=classicNames[id],[,series]=page.title.split('｜'),options=prices.find(p=>p[0]===id)?.[1]||[];
+ const circular=(page.metadata?.circular||[]).map(n=>materials.find(m=>m[0]===n)).filter(Boolean);
  return <article className="cp">
   <header className="cp-top">
    <div className="cp-title">
@@ -121,6 +128,7 @@ export default function ClassicPage({page,id,data,onOpen}){
     <dl className="cp-buy">
      <div><dt>價格</dt><dd>{options.map(([label,n],i)=><span className="cp-price" key={i}><b>NT$ {n.toLocaleString('en-US')}</b>{label&&<i>{label}</i>}</span>)}</dd></div>
      <div><dt>製作</dt><dd><span className="cp-price"><b>3 個工作天起</b><i>10 座以上工期另計</i></span></dd></div>
+     {!!circular.length&&<div><dt>循環材料</dt><dd><span className="cp-stuff">{circular.map(([stuff,,slug],i)=><React.Fragment key={slug}>{i>0&&'、'}<a href={`#/read/pages/${slug}`}>{stuff}</a></React.Fragment>)}</span></dd></div>}
      {page.metadata?.designer&&<div><dt>合作設計師</dt><dd><span className="cp-price"><b>{page.metadata.designer}</b></span></dd></div>}
     </dl>
     <div className="cp-actions"><StudioButton id={id}/><Button href={`mailto:${mail}`} variant="ghost" icon={<ActionIcon name="mail"/>}>寄信洽詢</Button></div>
@@ -150,12 +158,12 @@ export default function ClassicPage({page,id,data,onOpen}){
 
   <section className="cp-rail" aria-labelledby="cp-order" data-reveal>
    <Head en="How to order" id="cp-order">訂製步驟</Head>
-   <ol className="cp-steps">{steps.map((s,i)=><li key={s.title}><span className="cp-num" aria-hidden="true">{pad(i+1)}</span><h3>{s.title}</h3><p>{keepRanges(s.text)}</p>{s.items&&<ul>{s.items.map(item=><li key={item}>{item}</li>)}</ul>}{s.contact&&<p className="cp-contact"><a href={`mailto:${mail}`}>{mail}</a><a href={`tel:${phone}`}>{phone}</a></p>}</li>)}</ol>
+   <ol className="cp-steps">{steps.map((s,i)=><li key={s.title}><span className="cp-num" aria-hidden="true">{pad(i+1)}</span><h3>{s.title}</h3><p><Held text={keepRanges(s.text)} max={14} hold="cp-clause"/></p>{s.items&&<ul>{s.items.map(item=><li key={item}>{item}</li>)}</ul>}</li>)}</ol>
   </section>
 
   <section className="cp-rail" aria-labelledby="cp-notes" data-reveal>
    <Head en="Notes" id="cp-notes">注意事項</Head>
-   <div><ol className="cp-notes">{notes.map(([title,text],i)=><li key={title}><span className="cp-num" aria-hidden="true">{pad(i+1)}</span><h3>{title}</h3><p>{text}</p></li>)}</ol><p className="cp-made" lang="en">Made in Taiwan</p></div>
+   <div><ol className="cp-notes">{notes.map(([title,text],i)=><li key={title}><span className="cp-num" aria-hidden="true">{pad(i+1)}</span><h3>{title}</h3><p><Held text={text} hold="cp-clause"/></p></li>)}</ol><p className="cp-made" lang="en">Made in Taiwan</p></div>
   </section>
 
   <aside className="cp-cta" aria-label="銘版排版工作室" data-reveal>

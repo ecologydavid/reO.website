@@ -1208,3 +1208,30 @@ what v1.8.0 settled about content stays. Files: src/content/ClassicPage.jsx, cla
 - Photos carry no icon. They open large on a click (zoom cursor, a slight enlargement on hover).
 - The ui-ux-pro-max skill's design system for this brief: Minimalism and Swiss style, spacious, subtle motion, avoid
   block-based colour. Its fonts and palette were not taken; the site's own type system and ink stay.
+
+## Opening words set as a statement; classic pages: materials row, plainer step 01 (v1.10.0, 2026-11-28, by request)
+Owner: the paragraph under the first heading of many pages looked machine-made (small grey text, ragged turns,
+stranded words). He showed 公版獎盃, 品牌獎盃訂製, 禮贈品訂製, 企業與IP案例, 循環材料, 關於 re.O and the 建模 article.
+- src/components/site/Statement.jsx + statement.css set those words everywhere: landing pages (ContentLibrary),
+  About, the FAQ, and the summary beside an article's opening photo (ContentReader). The first sentence is the
+  statement (Ming 500, 19 to 22px, ink); the rest is the note (15px reading text, a sentence per line). A line turns
+  only after punctuation: a clause holds together when short enough, a longer one holds piece by piece at its 、;
+  after a colon the line turns. Lines are evened (text-wrap: balance). All of this only where the column is wide
+  enough (a container query on .st, 23.6em of the statement's size); narrower columns and phones flow as ordinary
+  text. A first sentence over 80 characters (long migrated summaries) is reading text, not a statement.
+- The words are not changed: on landing pages they are still the approved descriptions in pageMeta.js `written`.
+  New pages use <Statement text=…/> under the h1; do not put a bare <p> there (tests/statement.test.mjs).
+- Articles: the text column starts level with the top of the opening photo (it used to float at its middle); the
+  first section follows the statement under a hairline. Numbered lines of the original text ("1. …") stand as rows
+  (ContentReader `Prose`, .content-numbered) instead of running into a paragraph; flowParagraphs leaves them alone.
+- Classic model pages (A to E): step 01 has no address or number and its two items are set in; step 02 reads
+  「設計提供 3 次校稿，超過 3 次修改會酌收排版費。」 (owner's wording; the FAQ still says 超過次數將另計費用);
+  step and note sentences turn after punctuation too (Held with .cp-clause). A 循環材料 row under the price lists
+  the model's circular materials, linked to their pages (page JSON metadata.circular, names from materials.js):
+  A 再生大理石、水庫淤泥、退役木橫擔; B and C 再生大理石、木頭拼板; D and E 再生大理石. B and C's 木頭拼板 is read from
+  the owner's 「北美黃檜木拼板」 and waits for his confirmation.
+- A name that carries 匠子 also carries re.O: 「木客微光 × 匠子 × re.O」 in the A, B, C page titles, the content index,
+  models.json (the studio's product name, which turns after a ×, Editor.jsx) and the home alt text. D and E have no
+  such name and are unchanged.
+- The ui-ux-pro-max skill was asked for this brief; its UX search returned general rules (line length, line height),
+  nothing specific to Chinese display text. The setting above follows the site's own type system.
