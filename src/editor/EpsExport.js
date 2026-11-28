@@ -98,6 +98,7 @@ export async function exportEps(model,scene,documents){
   '%%LanguageLevel: 3','%%DocumentData: Clean7Bit','%%DocumentNeededResources: font Helvetica','%%EndComments',
   '% Text is converted to outlines. Red lines show the editable outline from the diagram reconstruction;',
   '% sizes are approximate and the production drawing is confirmed by re.O (service@re-o.co).',
+  '% Rendered previews are for reference only: every piece is handmade, with its own grain, texture and material character.',
   '%%BeginProlog','/m {moveto} bind def /l {lineto} bind def /h {closepath} bind def','%%EndProlog',
   'save',...body,'restore','showpage','%%Trailer','%%EOF',''].join('\n');
  const blob=new Blob([eps],{type:'application/postscript'}),url=URL.createObjectURL(blob),a=document.createElement('a');

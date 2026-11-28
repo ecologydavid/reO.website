@@ -8,8 +8,10 @@ function sheet(title,subtitle,logo) {
   ctx.fillStyle='#747c70';ctx.font='19px "Microsoft JhengHei", sans-serif';ctx.fillText(subtitle,72,206);
   ctx.strokeStyle='#cdcec5';ctx.beginPath();ctx.moveTo(72,230);ctx.lineTo(1168,230);ctx.stroke();
   ctx.fillStyle='#747c70';ctx.font='18px "Microsoft JhengHei", sans-serif';
-  ctx.fillText('排版預覽確認稿｜非 1:1 製作尺寸，實際製作需由 re.O 校稿確認。',72,1660);
-  ctx.fillText('service@re-o.co  /  +886-2-8966-5369',72,1698);
+  // v1.14.2 (owner, 2026-11-28): the render is a reference; every real piece is handmade, with its own grain.
+  ctx.fillText('排版預覽確認稿｜非 1:1 製作尺寸，實際製作需由 re.O 校稿確認。',72,1632);
+  ctx.fillText('圖片渲染效果僅供參考，實際作品為手工製作，每件都有獨一無二的紋理與材質特性。',72,1666);
+  ctx.fillText('service@re-o.co  /  +886-2-8966-5369',72,1704);
   return {canvas:c,ctx};
 }
 function place(ctx,image,x,y,w,h) {

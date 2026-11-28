@@ -1330,3 +1330,9 @@ photographs from 東陽整理照片\物料照片, except the folder 百分料處
   public photograph of each linked report, which the owner supplied (public/assets/press/). They were taken at the
   event, so they are not marked 示意照片. Photographs from outlets are used only when the owner hands them over.
 - IDDI 設計驅動產業創新 is a grant (補助案) and left the record; there is no kind for grants yet (33 entries).
+
+## Handmade note on exports, new studio photo on 公版 (v1.14.2, 2026-11-28)
+- The PDF sheets add 「圖片渲染效果僅供參考，實際作品為手工製作，每件都有獨一無二的紋理與材質特性。」 above the contact line;
+  the EPS carries the same note as a comment (EPS stays 7-bit, so in English).
+- 公版 ordering step 02 shows the owner's screenshot of the current studio (3D preview and plate), set as two overlapping
+  panels on the stage colour in a 1600×1200 picture so the band's 4:3 frame shows it whole.

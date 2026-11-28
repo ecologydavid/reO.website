@@ -82,3 +82,10 @@ test('the record shows the report photographs the owner chose and leaves the gra
   assert(!entry.generic&&entry.href&&existsSync(new URL('public'+entry.src,root)),title);
  }
 });
+// Owner, 2026-11-28: exports say the render is a reference and the piece is handmade; the 公版 step 02 photo shows the
+// current studio (3D preview beside the plate), set to the band's 4:3 frame.
+test('studio exports carry the handmade note and the 公版 flow shows the current studio',()=>{
+ const pdf=readFileSync(new URL('src/editor/PdfExport.js',root),'utf8'),eps=readFileSync(new URL('src/editor/EpsExport.js',root),'utf8');
+ assert(pdf.includes('圖片渲染效果僅供參考，實際作品為手工製作') && eps.includes('every piece is handmade'));
+ assert(readFileSync(new URL('src/content/landings.jsx',root),'utf8').includes("src:'/assets/studio-preview.webp',width:1600,height:1200"));
+});

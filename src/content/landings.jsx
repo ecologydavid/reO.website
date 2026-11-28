@@ -23,7 +23,7 @@ const flow=[
   ['10 座以上','可以請我們協助免費設計排版。'],
   // v71 (owner, 2026-11-17): one merged row; the layout-help fee is NT$300.
   ['低於 10 座',<>可以至「<a href="#/preview/D" {...studioTab}>銘版排版工作室</a>」自行擺放滿意版型（完成後可下載 .PDF 及 .EPS 檔案），上傳至 <a href="mailto:service@re-o.co">service@re-o.co</a>，收件後會依實際印刷條件協助免費調整。可以請我們協助設計排版，會酌收排版費 。</>]
- ],src:'/assets/studio-preview.webp',width:1600,height:1000,position:'50% 0',alt:'re.O 銘版排版工作室畫面'},
+ ],src:'/assets/studio-preview.webp',width:1600,height:1200,position:'50% 50%',alt:'re.O 銘版排版工作室畫面：左邊 3D 成品預覽，右邊銘板排版'},
  {title:'手工生產',line:'製作工期依訂購數量而定。',src:'/assets/flow-casting.webp',width:1800,height:1202,position:'50% 50%',alt:'再生大理石漿料灌注入模'}
 ];
 const two=n=>String(n).padStart(2,'0');
