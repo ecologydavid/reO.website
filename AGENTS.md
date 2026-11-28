@@ -1324,3 +1324,9 @@ photographs from 東陽整理照片\物料照片, except the folder 百分料處
   (new material pages would need his text). The other six pages use the photographs they already had.
 - The ui-ux-pro-max style search returned "Editorial Grid / Magazine" (asymmetric grid, figure and caption, white
   space); the layout follows that direction with the site's own type and no pull quotes or drop caps.
+
+## About record: report photographs, IDDI out (v1.14.1, 2026-11-28)
+- Owner's request: the 2026 TISDC talk (outlet now 「TISDC演講」, like 2025's), 永續串造, 瘋設祭 2025 and La vie show the
+  public photograph of each linked report, which the owner supplied (public/assets/press/). They were taken at the
+  event, so they are not marked 示意照片. Photographs from outlets are used only when the owner hands them over.
+- IDDI 設計驅動產業創新 is a grant (補助案) and left the record; there is no kind for grants yet (33 entries).

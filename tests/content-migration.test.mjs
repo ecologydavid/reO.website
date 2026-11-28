@@ -70,3 +70,15 @@ test('logo entries (39 with a case, one per case; 20 marks only since 2026-11-27
 test('canonical old source URLs resolve to new internal paths',()=>{assert(findPage(contentHref('https://www.re-o.co/pages/ase-outstanding-supplier-trophy')));assert(findPage(contentHref('https://www.re-o.co/products/trophy-1')));});
 test('homepage hero figures match the content libraries',async()=>{const {siteStats}=await import('../src/components/site/stats.js');const models=JSON.parse(readFileSync(new URL('src/data/models.json',root),'utf8'));assert.deepEqual(siteStats.map(([n])=>Number(n)),[models.filter(m=>m.id!=='F').length,classicPages('cases').length,classicPages('materials').length]);for(const [,,href] of siteStats)assert(classicPages(href.slice(10)).length>0,href);});
 test('case cards show a clean product photo and keep the client for hover',async()=>{const {cardImage,isBanner,splitCase}=await import('../src/content/catalogue.js');const photos=JSON.parse(readFileSync(new URL('src/data/case-photos.json',root),'utf8'));for(const [path,im] of Object.entries(photos)){assert(findPage(path),path);assert(!isBanner(im),path);assert(existsSync(new URL('public'+im.src,root)),im.src)}const cases=classicPages('cases');assert(cases.length>=60);for(const p of cases)assert(!isBanner(cardImage(p)),p.path);assert.deepEqual(splitCase('作品｜T.B. Design x re.O'),{work:'作品',client:'T.B. Design'});assert.deepEqual(splitCase('台達｜50週年模範獎座'),{work:'50週年模範獎座',client:'台達'});assert.deepEqual(splitCase('Uber Eats 商家合作夥伴獎｜快點行銷委製'),{work:'Uber Eats 商家合作夥伴獎',client:'快點行銷'});});
+// Owner, 2026-11-28: four record entries show the public photograph of their linked report; IDDI (a grant) is out.
+test('the record shows the report photographs the owner chose and leaves the grant out',async()=>{
+ const {record}=await import('../src/content/record.js');
+ assert(!record.some(event=>/IDDI/.test(event.title)));
+ const tisdc=record.find(event=>event.title==='校園循環經濟講座：國立臺灣藝術大學');
+ assert.equal(tisdc.outlet,'TISDC演講');
+ for(const [title,name] of [['校園循環經濟講座：國立臺灣藝術大學','tisdc-ntua-2026'],['永續串造','sustain-chain-2026'],['瘋設祭','pinkoi-design-fest-2025'],['岩石蠟燭、大理石萬用筒！5 款台灣設計的再生居家配件','lavie-desk-2020']]){
+  const entry=record.find(event=>event.title===title);
+  assert.equal(entry.src,`/assets/press/${name}.webp`,title);
+  assert(!entry.generic&&entry.href&&existsSync(new URL('public'+entry.src,root)),title);
+ }
+});
