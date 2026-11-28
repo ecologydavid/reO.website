@@ -1,0 +1,40 @@
+# Browser caching on Cloudflare Pages (v1.2.1). Without these every file is re-checked on every page view.
+# Rules must not overlap: Cloudflare joins the values of rules that match the same file.
+#
+# Files whose name changes whenever their content does: kept for a year.
+/app/*
+  Cache-Control: public, max-age=31536000, immutable
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+# Share pictures for link previews (tools/images.mjs shareCards).
+/og/*
+  Cache-Control: public, max-age=31536000, immutable
+# Photos renamed by the build to follow their content, and the small copies for phones (tools/images.mjs).
+/i/*
+  Cache-Control: public, max-age=31536000, immutable
+/content/images/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/case-previews/*
+  Cache-Control: public, max-age=31536000, immutable
+#
+# Photos that keep their name: used for a day without asking, then refreshed in the background.
+# (:file matches files directly in /assets/, not its folders, so nothing here overlaps the rules around it.)
+/assets/:file
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+/assets/about-events/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+/assets/brand-previews/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+/assets/case-cards/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+/assets/logos/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+/assets/case-details/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+/assets/material-refs/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+/assets/models/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+/assets/process/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+# Pages (HTML) and page data (JSON) keep Cloudflare's default: always checked, so an update shows at once.
